@@ -1,0 +1,6 @@
+*
+!~/bin
+!~/.config/systemd
+!~/.config/vim
+!~/.config/zsh
+!~/.config/i3

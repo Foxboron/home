@@ -1,0 +1,2 @@
+[core]
+	excludesfile = ~/.config/git/ignore.home
