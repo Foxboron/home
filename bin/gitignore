@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+
+import http.client
+import json
+import sys
+import os
+
+
+def get(url):
+    conn = http.client.HTTPSConnection('api.github.com')
+
+    headers = {
+        'user-agent': 'gitignore-cli',
+    }
+
+    conn.request('GET', url, headers=headers)
+    res = conn.getresponse()
+    data = res.read()
+
+    return json.loads(data.decode('utf-8'))
+
+
+if os.path.exists('.gitignore'):
+    print('.gitignore already exists')
+    sys.exit(1)
+
+templates = get('/gitignore/templates')
+if sys.argv[1] == '--list':
+    print('Available templates:')
+    print('\n'.join(templates))
+    sys.exit()
+
+for tpl in templates:
+    if sys.argv[1].lower() == tpl.lower():
+        gitignore = get('/gitignore/templates/' + tpl)['source']
+        with open('.gitignore', 'w') as f:
+            f.write(gitignore)
+        sys.exit()
+
+print('Gitignore template for {} not found'.format(sys.argv[1]))
+sys.exit(1)

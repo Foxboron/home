@@ -1,0 +1,8 @@
+set realname = 'Morten Linderud'
+set from = foxboron@archlinux.org
+set sendmail  = "/usr/bin/msmtp -a archlinux"
+set ssl_verify_host=yes
+set crypt_autosign=yes
+set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
+set status_format="$from: %f (%s/%S)"
+

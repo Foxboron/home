@@ -1,0 +1,6 @@
+#!/usr/bin/bash
+set -uxo pipefail
+readonly TMP_DIR=$(mktemp -p /var/tmp)
+
+readonly ARCHIVE_NAME="$(basename $PWD)-"
+

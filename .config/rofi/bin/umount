@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+POINT=$(ls /run/media/fox | rofi -i -dmenu -p "")
+udiskie-umount -2 "/run/media/fox/${POINT}"

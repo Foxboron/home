@@ -1,0 +1,22 @@
+#!/bin/bash
+sync-pics() {
+    readonly ROOT=`pwd`
+    readonly DIR=`echo $ROOT | awk -F"/" '{print $NF}'`
+    readonly YEAR=`echo $ROOT | awk -F"/" '{print $--NF}'`
+    if [ $# -eq 0 ]
+      then
+          NN=usortert
+      else
+          NN=$1
+    fi
+    rsync -hpavzs *.{JPG,jpg} "pics:./albums/$DIR $YEAR"
+}
+
+for D in *
+do
+    [ -d "${D}" ] && ( cd "${D}" && sync-pics pics )
+done
+
+
+
+ssh pics ""

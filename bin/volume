@@ -1,0 +1,12 @@
+case "$1" in
+  inc)
+    amixer -D pulse sset Master 5%+
+    ;;
+  dec)
+    amixer -D pulse sset Master 5%-
+    ;;
+  toggle)
+    amixer -D pulse sset Master toggle
+    ;;
+esac
+pkill -RTMIN+10 i3blocks

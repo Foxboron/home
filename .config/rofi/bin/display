@@ -1,0 +1,10 @@
+export XAUTHORITY=/home/fox/.Xauthority
+export DISPLAY=:0.0
+
+screen=$(xrandr -q | egrep " connected" | awk '{print $1}' | rofi -dmenu -p "") || exit
+orientation=$(echo -e "above\nbelow\nleft-of\nright-of\nauto" | rofi -dmenu -p"") || exit
+if [[ orientation == "auto" ]]; then
+    xrandr --auto
+else
+    xrandr --output $screen --$orientation --auto
+fi

@@ -1,0 +1,16 @@
+#!/bin/bash
+ROOT=`pwd`
+readonly DIR=`echo $ROOT | awk -F"/" '{print $NF}'`
+readonly YEAR=`echo $ROOT | awk -F"/" '{print $--NF}'`
+if [ $# -eq 0 ]
+  then
+      NN=usortert
+  else
+      NN=$1
+fi
+# rsync -hpavzs *.jpg "pics:./$nn/albums/$dir $year"
+# echo $NN
+# echo $DIR
+# echo $YEAR
+# echo $ROOT
+rsync -hpavzs *.{JPG,jpg} "pics:./albums/$YEAR/$DIR"

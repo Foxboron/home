@@ -1,0 +1,198 @@
+set $mod Mod4
+
+font pango: monospace 9
+floating_modifier $mod
+
+bindsym $mod+Return exec termite
+
+
+focus_follows_mouse	no
+for_window [class="^.*"] border pixel 0
+
+smart_gaps on
+gaps inner 20
+gaps outer 5
+
+for_window [class="Firefox"] move container to workspace 1
+for_window [class="Chromium"] move container to workspace 1
+for_window [class="qutebrowser"] move container to workspace 1
+for_window [class="Spotify"] move container to workspace 8
+for_window [title="ix edit"] floating enable 
+
+for_window [title="irc-rofi"] move container to workspace 6
+for_window [title="mutt-rofi"] move container to workspace 7
+
+for_window [class="imv"] floating enable
+
+for_window [title="open-float"] floating enable 
+for_window [class="Pinentry"] floating enable 
+
+# float
+for_window [title="float"] floating enable 
+for_window [title="float"] move position center
+
+# notes
+for_window [title="fox-notes"] floating enable 
+for_window [title="fox-notes"] resize set 550 600
+for_window [title="fox-notes"] move position center
+for_window [title="fox-notes"] move to scratchpad
+
+#default_border pixel
+force_focus_wrapping no
+hide_edge_borders both
+
+exec --no-startup-id feh --no-fehbg --bg-scale ~/.config/i3/bckg/mountain.png
+exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
+exec --no-startup-id ~/bin/lock 
+exec --no-startup-id redshift 
+exec --no-startup-id ~/.config/rofi/bin/notes
+
+bindsym $mod+Shift+c kill
+
+bindsym $mod+d exec rofi -show run 
+bindsym $mod+Tab exec ~/bin/rofi-run 
+
+set $Locker i3lock -n -c 000000 -i /home/fox/.config/i3/wallpaper.png && sleep 1
+
+bindsym $mod+Shift+Control+l exec $Locker
+
+bindsym $mod+Shift+minus move scratchpad
+# bindsym $mod+minus scratchpad show
+bindsym $mod+space scratchpad show; move position center
+
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+bindsym $mod+o split h
+bindsym $mod+v split v
+
+bindsym $mod+f fullscreen toggle
+bindsym $mod+s sticky toggle
+
+bindsym $mod+Control+Shift+s layout stacking
+bindsym $mod+Control+Shift+w layout tabbed
+bindsym $mod+Control+Shift+e layout toggle split
+
+bindsym $mod+Control+Shift+space floating toggle
+
+bindsym $mod+a focus parent
+bindsym $mod+u focus parent
+bindsym $mod+n focus child
+
+bindsym $mod+1 workspace 1
+bindsym $mod+2 workspace 2
+bindsym $mod+3 workspace 3
+bindsym $mod+4 workspace 4
+bindsym $mod+5 workspace 5
+
+bindsym $mod+q workspace 6
+bindsym $mod+w workspace 7
+bindsym $mod+e workspace 8
+bindsym $mod+r workspace 9
+bindsym $mod+t workspace 10
+
+bindsym $mod+Shift+1 move container to workspace 1
+bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+3 move container to workspace 3
+bindsym $mod+Shift+4 move container to workspace 4
+bindsym $mod+Shift+5 move container to workspace 5
+bindsym $mod+Shift+q move container to workspace 6
+bindsym $mod+Shift+w move container to workspace 7
+bindsym $mod+Shift+e move container to workspace 8
+bindsym $mod+Shift+r move container to workspace 9
+bindsym $mod+Shift+t move container to workspace 10
+
+workspace 1 output primary eDP1 DP1-1
+workspace 2 output primary eDP1
+workspace 3 output primary eDP1
+workspace 4 output primary eDP1
+workspace 5 output primary eDP1
+workspace 6 output left
+workspace 7 output left 
+workspace 8 output left
+workspace 9 output left
+workspace 10 output left
+
+workspace_auto_back_and_forth yes
+
+bindsym $mod+Control+h focus output left
+bindsym $mod+Control+j focus output down
+bindsym $mod+Control+k focus output up
+bindsym $mod+Control+l focus output right
+
+
+bindsym $mod+Control+Shift+r restart
+
+set $resize resize (h,j,k,l,v,q)
+mode "$resize"{
+	bindsym h resize shrink width 10 px or 10 ppt
+	bindsym j resize grow height 10 px or 10 ppt
+	bindsym k resize shrink height 10 px or 10 ppt
+	bindsym l resize grow width 10 px or 10 ppt
+
+	bindsym v sticky enable; resize set 530 300; move absolute position 1391 0
+
+	bindsym Left resize shrink width 10 px or 10 ppt
+	bindsym Down resize grow height 10 px or 10 ppt
+	bindsym Up resize shrink height 10 px or 10 ppt
+	bindsym Right resize grow width 10 px or 10 ppt
+
+	bindsym Return mode "default"
+	bindsym Escape mode "default"
+	bindsym q mode "default"
+}
+bindsym $mod+Control+r mode "$resize"
+
+
+set $media Media Player (j,k,q,space)
+mode "$media"{
+	bindsym space exec playerctl play-pause, mode "default"
+	bindsym j exec playerctl previous
+	bindsym k exec playerctl next 
+	bindsym q mode "default"
+	bindsym m mode "$volume"
+}
+bindsym $mod+p mode "$media"
+
+set $volume Volume
+mode "$volume"{
+	bindsym space exec ~/bin/volume toggle, mode "default"
+	bindsym j exec ~/bin/volume dec
+	bindsym k exec ~/bin/volume inc 
+	bindsym q mode "default"
+	bindsym p mode "$media"
+}
+bindsym $mod+m mode "$volume"
+
+
+bar {
+	tray_output primary
+	position top
+	mode dock
+	workspace_buttons yes
+	strip_workspace_numbers yes
+	status_command i3blocks -c ~/.config/i3/i3blocks.conf
+		colors {
+			background #101010
+			statusline #605c5a
+			separator #323131
+	}
+}

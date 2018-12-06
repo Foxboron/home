@@ -1,0 +1,28 @@
+#!/bin/bash
+
+#killall synergyc 2>&1 >/dev/null || true 
+
+
+move-irc-window(){
+  i3-msg workspace 6
+  i3-msg move workspace to output VGA1
+  i3-msg workspace back_and_forth
+}
+
+
+export XAUTHORITY=/home/fox/.Xauthority
+export DISPLAY=:0.0
+
+# Force HDMI
+xrandr --addmode HDMI-1 1920x1080
+
+xrandr  --output eDP-1 --auto --output HDMI-1 --mode 1920x1080 --primary
+xrandr  --output VGA-1 --auto --left-of HDMI-1 --rotate left
+move-irc-window > /dev/null 2>&1
+
+# if [[ -n $(xrandr | grep -E "TheGibson|Auto Etherneet") ]]; then
+#     synergyc --debug NOTE 192.168.2.156
+# else
+#     killall synergyc 2>&1 >/dev/null || true 
+# fi
+feh --bg-scale ~/.config/i3/wallpaper.png

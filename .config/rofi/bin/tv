@@ -1,0 +1,8 @@
+#!/bin/bash
+declare -A assoc
+while read -r -a array
+do 
+    assoc["${array[0]}"]="${array[1]}"
+done < <(cat ~/.rofi/.playlist | xargs -L 2 | sed 's/#EXTINF:-1,//')
+key=$(printf "%s\n" "${!assoc[@]}" | rofi -dmenu -p"tv: " -i)
+mpv "${assoc[$key]}"

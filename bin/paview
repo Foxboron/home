@@ -1,0 +1,8 @@
+#!/bin/bash
+pacman -Sl | \
+    fzf -e -m +s --reverse --prompt='> ' \
+    --preview 'pacman -Sii {2}' \
+    --bind "ctrl-l:toggle-preview"
+    
+    
+    

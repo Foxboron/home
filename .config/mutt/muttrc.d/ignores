@@ -1,0 +1,14 @@
+ignore *
+unignore To
+unignore Subject
+unignore From
+unignore Reply-To
+unignore Bcc
+unignore Cc
+unignore Date
+unignore Resent*
+unignore User-Agent
+unignore X-Mailer
+unignore X-MimeOLE
+unignore X-Spam-Report
+unignore X-Spam-Score

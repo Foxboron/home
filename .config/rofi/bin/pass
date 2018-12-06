@@ -1,0 +1,11 @@
+#!/bin/bash
+list_passwords() {
+  cd ~/.password-store/ || exit
+  find -L . -not -path '*/\.*' -iname '*.gpg' -printf '%P\n' | sort -n | \
+    while read -r filename; do
+      printf '%s\n' "${filename%.gpg}"
+  done
+}
+entry=$(list_passwords | rofi -dmenu -p "pass:")
+password=$(pass "$entry" | head -n1)
+echo "$password" | xdotool type --clearmodifiers --file -

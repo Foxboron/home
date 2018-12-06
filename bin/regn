@@ -1,0 +1,38 @@
+#!/bin/python
+import sys
+import requests
+from functools import reduce
+
+def date(time):
+    return time.split("T")[-1].split("+")[0]
+
+def parse_json(json):
+    period = False
+    for i in json["points"]:
+        # print(i)
+        if i["precipitation"]["intensity"] > 0.0 and not period:
+            print("There will be rain at {0}".format(date(i["time"])))
+            period = True
+        if i["precipitation"]["intensity"] == 0.0 and period:
+            print("Rain stops at {0}".format(date(i["time"])))
+            period = False
+
+def main(id):
+    r = requests.get("https://www.yr.no/api/v0/locations/id/1-{0}/forecast/now".format(id))
+    if r.text:
+        parse_json(r.json())
+    else:
+        print("No weather info")
+
+
+if not sys.argv[1:]:
+    arg = "bergen"
+else:
+    arg = sys.argv[1].lower()
+
+if arg == "bergen":
+    main(92416)
+elif arg == "elverum":
+    main(2765000)
+elif arg == "mia":
+    print("All day everyday")

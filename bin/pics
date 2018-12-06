@@ -1,0 +1,1 @@
+ranger $(lsblk -l | grep mmcblk0p1 | awk '{ print $7 }')/DCIM

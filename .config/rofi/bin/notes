@@ -1,0 +1,2 @@
+#!/bin/bash
+termite --title="fox-notes" --exec="vim --servername notes +VimwikiIndex +Goyo 81x100%" &

@@ -1,0 +1,76 @@
+#!/bin/sh --
+# asr - download arch linux build files from the svntogit repositories
+
+# requires git expac pacman pacutils
+
+readonly argv0=asr
+
+error() {
+    printf -- "%s: $1" "$argv0" "${@:2}" >&2
+    exit 1
+}
+
+clone() {
+    local repo pkg=$1
+
+    set -- 'git://projects.archlinux.org/svntogit/packages.git' \
+           'git://projects.archlinux.org/svntogit/community.git'
+
+    for repo in "${@}"; do
+        # Determine which repository the package exists in.
+        if git ls-remote --exit-code "$repo" refs/heads/packages/"$pkg"; then
+            git clone -nb packages/"$pkg" --single-branch "$repo" "$pkg"
+
+            # Break out if we succeed to avoid duplicate packages being found.
+            return 0
+        fi
+    done
+
+    # No package found
+    return 1
+}
+
+checkout() {
+    local pkg=$1
+
+    if clone "$pkg" && cd "$pkg"; then
+        git checkout HEAD:trunk -- .
+    else
+        return
+    fi
+}
+
+if [ ! "$1" ]; then
+    error 'usage: asr package\n'
+fi
+
+if ! checkout "$1"; then
+    if ! pacman -T "$1" > /dev/null; then
+        error '%s: not available in official repositories\n' "$1"
+    fi
+
+    if pkgbase=$(expac -S %e "$1"); then
+        # XXX expac cannot yet be configured to only search specific
+        #     repositories so it might pass the prior pacman -T test
+        #     only to fail here.
+        if [ "$pkgbase" = "(null)" ]; then
+            error '%s: not available in official repositories\n' "$1"
+        fi
+
+        # We got a pkgbase, so let's try checking out that package instead.
+        if ! checkout "$pkgbase"; then
+            error '%s: checkout failed\n' "$pkgbase"
+        fi
+    else
+        # Sometimes we might get a virtual package which requires manual user
+        # intervention as otherwise we would have to guess their intention.
+        if satisfies=$(pacsift --sync --exact --satisfies="$1"); then
+            printf -- '%s is provided by the following packages:\n' "$1" >&2
+            printf -- '%s\n' "$satisfies" >&2
+            exit 1
+        fi
+
+        # This shouldn't be reachable.
+        error '%s: package exists but unable to checkout\n' "$1"
+    fi
+fi

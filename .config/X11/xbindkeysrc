@@ -1,0 +1,21 @@
+"~/bin/volume dec"
+    XF86AudioLowerVolume
+
+"~/bin/volume inc"
+    XF86AudioRaiseVolume
+
+"~/bin/volume toggle"
+    XF86AudioMute
+
+"asus-kbd-backlight down"
+    XF86KbdBrightnessDown
+
+"asus-kbd-backlight up"
+        XF86KbdBrightnessUp
+
+"synclient TouchpadOff=$(synclient -l | grep -c 'TouchpadOff.*=.*0')"
+    XF86TouchpadToggle
+
+"xrandr -display :0 --output HDMI1 --mode 1920x1080 --above eDP1 --output eDP1 --primary"
+    XF86Display
+

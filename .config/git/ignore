@@ -1,0 +1,6 @@
+.venv
+tags
+Session.vim
+target*
+.git
+.gitignore

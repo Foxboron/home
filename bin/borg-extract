@@ -1,0 +1,30 @@
+#!/bin/bash
+set -eou pipefail
+shopt -s nullglob globstar
+
+
+if [[ $# -eq 2 ]] ; then
+    echo 'Wrong usage: <repository> <archive> <extract>'
+    exit 0
+fi
+
+readonly client=$1
+readonly repository=$2
+
+BORG_PASSPHRASE=$(pass backup/$1)
+export BORG_PASSPHRASE
+
+BORG_LAST_ARCHIVE=$(borg list borg@velox.pw:$client/$repository | tail -n1 | awk '{print $1}')
+
+TMP_DIR=$(mktemp -d -p /var/tmp)
+pushd $TMP_DIR &> /dev/null
+cleanup() {
+    rm -rf $TMP_DIR
+}
+trap cleanup EXIT
+BORG_EXTRACT=$(cut -d"/" -f3- <<< $3)
+BORG_EXTRACT_PATH="$repository/.snapshots/backup/snapshot/$BORG_EXTRACT"
+
+borg extract --strip-components 4 borg@velox.pw:$client/$repository::$BORG_LAST_ARCHIVE "$BORG_EXTRACT_PATH"
+
+rsync -av . /home > /dev/null

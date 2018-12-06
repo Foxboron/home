@@ -1,0 +1,86 @@
+[user]
+	email = morten@linderud.pw
+	name = Morten Linderud
+	signingkey = 9FECBE16
+[commit]
+    gpgSign = true
+	verbose = true
+[format]
+    signOff = true
+[color]
+	ui = auto
+[alias]
+	s = status
+	co = checkout
+
+	dt = difftool
+	d = diff
+	dc = diff --cached
+
+	aa = add --all
+	rem = remote -v
+
+	ff = merge --ff-only
+	pullff = pull --ff-only
+	noff = merge --no-ff
+	fa = fetch --all
+
+	c = commit
+	amend = commit --amend
+	fixup = commit --fixup
+	message = commit -m
+	ba = branch -a
+
+	ap = add -p
+	p = push
+    l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+    hd = show -p --pretty="tformat:"
+	edit = "!vim `git ls-files -m` -p"
+
+    difftex = difftool -y -t latex
+
+
+    unstage = reset HEAD --
+    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
+    overview = log --all --oneline --no-merges
+    recap = !git log --all --oneline --no-merges --author=${1-$(git config user.email)}
+    today = !git log --all --since=00:00:00 --oneline --no-merges --author=${1-$(git config user.email)}
+    changelog = !git log --oneline --no-merges ${1-$(git describe --abbrev=0)}..HEAD
+    upstream = !git log --oneline --no-merges HEAD..${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}
+    local = !git log --oneline --no-merges ${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}..HEAD
+    graph = log --oneline --graph --all --decorate --date=iso
+
+[core]
+	excludesfile = ~/.config/git/ignore
+[init]
+	template = ~/.config/git/templates
+[diff]
+	tool = vimdiff
+[difftool]
+	prompt = false
+[difftool "vimdiff"]
+	cmd = vim -d $BASE $LOCAL 
+[difftool.latex]
+	cmd = latexdiff-git "$LOCAL" "$REMOTE"
+[merge]
+	tool = vimdiff 
+[mergetool]
+	prompt = false
+[push]
+	default = current
+[rebase]
+    autoStash = true
+[sendemail]
+	suppresscc = self
+[includeIf "gitdir:~/jobb/"]
+	path = ~/jobb/.gitconfig
+[includeIf "gitdir:~/.config/home.git"]
+	path = ~/.config/git/config.home
+[tig]
+    line-graphics = utf-8
+    main-view-date = relative-compact
+    refresh-mode = periodic
+    refresh-interval = 5
+[tig "bind"]
+    status = C !git c
+

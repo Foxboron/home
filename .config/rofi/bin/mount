@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+POINT=$(ls /dev/sd* | rofi -i -dmenu -p "")
+udiskie-mount -2 $POINT 

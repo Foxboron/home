@@ -1,0 +1,4 @@
+#!/bin/bash
+while IFS='$\n' read -r line; do
+    task add $@ -- $line 
+done

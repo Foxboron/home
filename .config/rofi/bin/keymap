@@ -1,0 +1,18 @@
+keymap_layout=$(setxkbmap -query | awk '
+    BEGIN{layout=""}
+    /^layout/{layout=$2}
+    END{printf("%s",layout)}')
+
+
+case "$keymap_layout" in
+us)
+  setxkbmap -option 'ctrl:nocaps' no
+  notify-send 'Set keymap: NO'
+  ;;
+no)
+  setxkbmap -layout us -variant altgr-intl -option 'ctrl:nocaps'
+  notify-send 'Set keymap: US International'
+  ;;
+esac
+
+

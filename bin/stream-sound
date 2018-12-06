@@ -1,0 +1,24 @@
+#!/bin/bash
+SINK=spotify
+ICECAST_IP=localhost
+ICECAST_PORT=8000
+ICECAST_PASSWORD=hackme
+ICECAST_MOUNT=stream
+COMPRESSION=1
+
+active=$(pgrep -f spotify.monitor)
+client=$(pactl list sink-inputs | grep -B 17 Spotify | head -n1 | cut -d"#" -f 2)
+stream_sink=$(pactl list short sinks | grep spotify | cut -d$'\t' -f 1)
+default_sink=0
+
+
+if [[ $active ]]; then
+    kill -9 $active
+    pactl move-sink-input $client 0
+else
+    pactl move-sink-input $client $stream_sink
+    gst-launch-1.0 -e pulsesrc device=$SINK.monitor ! audioconvert ! flacenc quality=$COMPRESSION ! oggmux ! shout2send ip=$ICECAST_IP port=$ICECAST_PORT password=$ICECAST_PASSWORD mount=$ICECAST_MOUNT >& /dev/null &
+fi
+
+
+

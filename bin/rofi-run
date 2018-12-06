@@ -1,0 +1,4 @@
+#export XAUTHORITY=/home/fox/.Xauthority
+export DISPLAY=:0.0
+
+exec "~/.config/rofi/bin/$(ls ~/.config/rofi/bin | rofi -dmenu -p "")"

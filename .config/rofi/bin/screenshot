@@ -1,0 +1,1 @@
+exec ~/.config/rofi/bin/.screenshot/$(ls ~/.config/rofi/bin/.screenshot | rofi -dmenu -p "") | ix | xsel

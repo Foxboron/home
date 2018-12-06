@@ -1,0 +1,14 @@
+#!/bin/bash
+
+server_name=$(basename `pwd`)
+socket_file=$(kak -l | grep $server_name)
+tmux_session=$(tmux ls | grep $server_name)
+
+if [[ $tmux_session == "" ]]; then
+    tmux new-session -d -s $server_name 2> /dev/null
+    tmux send -t $server_name "kak -e ide -s $server_name" ENTER
+    tmux new-window -t $server_name "tig"
+    tmux select-window -t $server_name -p
+fi
+
+tmux attach-session -d -t $server_name

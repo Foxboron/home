@@ -1,0 +1,6 @@
+tmux new-session -d -s irc 'sleep 5; perl ~/.irssi/scripts/autorun/adv_windowlist.pl'
+tmux rename-window 'IRC'
+tmux select-window -t irc:0
+tmux split-window -h -t 0 'irssi'
+tmux set-option -t irc status off
+tmux -2 attach-session -t irc

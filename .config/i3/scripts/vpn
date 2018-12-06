@@ -1,0 +1,60 @@
+#!/bin/bash
+
+vpn_name=$2
+
+
+turnoff(){
+    if [[ -n $(nmcli con show  | grep -E "vpn.*wlp3s0") ]]; then
+        nmcli con down id $vpn_name
+    fi
+    if [ -f /tmp/sh.pid ]; then
+        kill `cat /tmp/sh.pid`
+    fi
+    echo "" > ~/.config/i3/vpn-status
+
+}
+
+vpn(){ 
+    if [[ -n $(nmcli con show  | grep -E "vpn.*wlp3s0") ]]; then
+        nmcli con down id $vpn_name
+    else
+        nmcli con up id $vpn_name || true
+    fi
+}
+
+sshtun() {
+    if [ -f /tmp/sh.pid ]; then
+        kill `cat /tmp/sh.pid`
+    else
+        export SUDO_ASKPASS=/usr/lib/ssh/x11-ssh-askpass
+        /usr/bin/sshuttle --dns -D --pidfile=/tmp/sh.pid -r $vpn_name 0.0.0.0/0 || true
+    fi
+}
+
+check(){
+
+    if [[ -n $(nmcli con show  | grep -E "vpn.*wlp3s0") ]]; then
+        echo "VPN: " 
+    elif [ -f /tmp/sh.pid ]; then
+        echo "SSH: " 
+    else
+        echo ""
+    fi
+}
+
+
+case "$1" in
+    vpn)
+        vpn
+        ;;
+    ssh)
+        sshtun
+        ;;
+    off)
+        turnoff
+        ;;
+    *)
+        check
+esac
+pkill -RTMIN+5 i3blocks
+exit 0

@@ -1,0 +1,36 @@
+#!/usr/bin/bash
+
+if [ $# -lt 2 ]; then
+    echo "mkwg <NAME> <IP>"
+fi
+
+readonly NAME="$1"
+readonly IP="$2"
+
+if [ ! -d "~/.password-store/wireguard/peer/$NAME" ]; then
+    printf "Peer named %s allready\n" $NAME
+    exit 1
+fi
+
+readonly PRIVATEKEY=$(wg genkey)
+readonly PUBLICKEY=$(wg pubkey <<<$PRIVATEKEY)
+readonly PSK=$(wg genpsk) 
+readonly PEERKEY=$(pass wireguard/peer/velox/public_key) 
+
+echo 
+
+    cat <<-EOF
+[Interface]
+Address = $IP/32
+PrivateKey = $PRIVATEKEY
+# PublicKey = $PUBLICKEY
+DNS = 10.200.100.1
+
+[Peer]
+PublicKey = $PEERKEY
+PresharedKey = $PSK
+AllowedIPs = 0.0.0.0/0, ::0/0
+Endpoint = velox.pw:51820
+PersistentKeepalive = 25
+EOF
+

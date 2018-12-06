@@ -1,0 +1,103 @@
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+xvt.buffered          : true
+xft.dpi		      : 98
+!URxvt*font            : xft:Inconsolata\ for\ Powerline:size=10:antialias=true:hinting=true
+urxvt*font            : xft:DejaVu\ Sans\ Mono\ for\ Powerline:size=10:antialias=true:hinting=true,xft:Inconsolata\ for\ Powerline:pixelsize=20:antialias=true:hinting=true,xft:Unifont:pixelsize=12:antialias=true,xft:Source\ Code\ Pro:size=10:antialias=true,xft:Icons:size=10:antialias=true,xft:FontAwesome:size=10:antialias=true
+
+URxvt.lineSpace: 1
+URxvt.letterSpace: -1
+
+URxvt.title           : urxvt
+URxvt.scrollBar       : False
+URxvt.termName: rxvt-unicode-256color
+urxvt.saveLines: 1000000 xterm*dynamicColors: true
+URxvt*dynamicColors: on
+
+URxvt.urgentOnBell:  true
+
+URxvt.perl-ext-common:  default,matcher,url-select,keyboard-select,clipboard,resize-font
+!URxvt.url-launcher:      /usr/bin/firefox
+URxvt.matcher.button:   1
+URxvt.keysym.C-S-u: perl:keyboard-select:activate
+
+URxvt.keysym.C-v: perl:keyboard-select:activate
+!URxvt.keysym.M-s: perl:keyboard-select:search
+URxvt.keysym.M-s:    perl:matcher:list
+
+
+
+!URxvt.keysym.C-S-C:   perl:clipboard:copy
+!URxvt.keysym.C-S-V:   perl:clipboard:paste
+
+URxvt.clipboard.autocopy: true
+
+URxvt.keysym.C-u: perl:url-select:select_next
+
+URxvt.url-select.launcher: /usr/bin/firefox
+URxvt.url-select.underline: true
+
+URxvt.resize-font.smaller: C-Down
+URxvt.resize-font.bigger: C-Up
+
+
+URxvt.colorUL: #4682B4
+
+! Molokai theme
+URxvt*background: #000000
+!URxvt*foreground: #d0d0d0
+URxvt*foreground: #66D9EF
+
+!black
+URxvt*color0: #262729
+URxvt*color8: #554444
+
+!red
+URxvt*color1: #F92671
+URxvt*color9: #F92671
+!URxvt*color9: #FF669D
+
+!green
+URxvt*color2: #A6E22E
+URxvt*color10: #A6E22E
+!URxvt*color10: #BEED5F
+
+!yellow
+URxvt*color3: #FD971F
+URxvt*color11: #FD971F
+!URxvt*color11: #E6DB74
+
+!blue
+!URxvt*color4: #66D9EF
+!URxvt*color12: #66D9EF
+URxvt*color4: #7493d2
+URxvt*color12: #7493d2
+
+
+!magenta
+URxvt*color5: #9E6FFE
+URxvt*color13: #9E6FFE
+
+!cyan
+!URxvt*color6: #5E7175
+!URxvt*color14: #A3BABF
+URxvt*color6: #80d9d8
+URxvt*color14: #80d9d8
+
+
+!white
+!URxvt*color7: #CCCCC6
+URxvt*color7: #F8F8F2
+URxvt*color15: #F8F8F2
+
+
+
+
+
+
+!rofi.font : xft:Source\ Code\ Pro:pixelsize=11.1
+rofi.fuzzy: true
+rofi.case-sensitive: fale
+rofi.hide-scrollbar: true
+rofi.color-normal: #000000, #888888, #000000, #285577, #ffffff
+rofi.color-window: #000000, #101010

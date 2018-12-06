@@ -1,0 +1,14 @@
+text/html;  elinks -config-dir .config/elinks -dump ; copiousoutput;
+
+# Images
+image/jpg; eog %s
+image/jpeg; eog %s
+image/pjpeg; eog %s
+image/png; eog %s
+image/gif; eog %s
+
+# PDFs
+application/pdf; zathura %s
+
+# GPG
+application/pgp-encrypted; gpg --decrypt; copiousoutput

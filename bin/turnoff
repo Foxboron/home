@@ -1,0 +1,28 @@
+#!/bin/bash
+
+touchpad=14
+keyboard=13
+
+toggle_device(){
+  state=`xinput list-props "$1" | grep "Device Enabled" | grep -o "[01]$"`
+  if [ $state == '1' ];then
+    xinput --disable $1
+    echo "$1 is OFF"
+  else
+    xinput --enable $1
+    echo "$1 is ON"
+  fi
+}
+
+case "$1" in
+  all)
+    toggle_device $touchpad
+    toggle_device $keyboard
+    ;;
+  keyboard)
+    toggle_device $keyboard
+    ;;
+  touchpad)
+    toggle_device $touchpad
+    ;;
+esac

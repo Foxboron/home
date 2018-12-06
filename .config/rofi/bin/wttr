@@ -1,0 +1,12 @@
+set -e
+hist_file=~/.rofi/.wttr_hist
+touch $hist_file
+
+loc=$(cat ~/.rofi/.wttr_hist | rofi -i -dmenu -p "wttr: ") || exit
+h=$(curl -s wttr.in/"$loc" | head -n7 | perl -pe 's/\x1b\[[0-9;]*[mG]//g')
+rofi -e "$h" 
+rloc=$(echo "$h" | head -n1 | awk '{$1=$2=""; print $0}' | xargs)
+if ! grep -q $rloc $hist_file;
+then
+    echo $rloc >> $hist_file
+fi

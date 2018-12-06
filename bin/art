@@ -1,0 +1,5 @@
+curl -s http://artpip.com/api/featured |
+jq -r '.artworks | map(.url) | join("\n")' |
+shuf -n 1 |
+xargs curl -s > /tmp/wall.jpg &&
+feh --bg-fill /tmp/wall.jpg

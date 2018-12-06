@@ -1,0 +1,152 @@
+set editor = "vim +$" 
+set my_name = "Morten Linderud"
+set header_cache = "~/.cache/mutt"
+set imap_check_subscribed
+set imap_keepalive = 520
+unset imap_passive
+set mbox_type=Maildir
+set mailcap_path = ~/.config/mutt/mailcap
+set signature = ~/.config/mutt/signature
+
+# Default
+set ssl_verify_host=no
+set realname = 'Morten Linderud'
+set from = morten@linderud.pw
+set sendmail  = "/usr/bin/msmtp -a linderud"
+set send_charset="us-ascii:utf-8"
+
+set check_new=yes       # Check for new messages in maildir
+set mail_check=5        # Check mail every 5 seconds
+set timeout=5           # Time out 5 seconds after last keypress to check for mail
+set forward_quote=no    # Don't quote forwards
+set help=no	            # Disable the help header
+set indent_string="> "  # Proper quoting
+set read_inc=1000
+set beep_new=yes
+set write_inc=1000
+set followup_to=yes
+
+set charset=utf-8
+set send_charset=utf-8
+
+alternative_order text/plain text/html text/enriched
+auto_view text/html
+
+set reverse_name
+set reverse_realname
+set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
+set index_format="%Z %{%a %d %b %Y} %3M %-15.15L │%s"
+set status_format="$from: %f (%s/%S)"
+set sort=threads
+set sort_aux=last-date-received
+
+set quit=no
+set move=no
+set confirmappend=no
+set collapse_unread=no
+set uncollapse_jump=yes
+
+set fast_reply=yes
+#set smart_wrap=yes
+
+set sidebar_sort_method="path"
+set sidebar_width = 30
+set sidebar_visible = yes
+set sidebar_folder_indent = yes
+set sidebar_format= '%B%*  %N'
+#set sidebar_short_path = yes
+set mail_check_stats = yes
+set pager_index_lines=10
+
+macro index b '<enter-command>toggle sidebar_visible<enter><refresh>'
+macro pager b '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
+
+bind index,pager \CP sidebar-prev
+bind index,pager \CN sidebar-next
+bind index,pager \CO sidebar-open
+
+
+bind index gg       first-entry
+bind index G        last-entry
+bind index,pager R  group-reply
+bind index <space>  collapse-thread
+bind index -        collapse-all
+
+bind index,pager   \t          next-unread
+bind index,pager  ,\t      previous-unread
+bind index,pager u        sync-mailbox
+
+# imap
+set imap_user="morten@linderud.pw"
+set ssl_verify_host=yes
+#set imap_pass=`pass mail/morten@linderud.pw`
+set imap_pass=`pass service/mail`
+set folder="imaps://91.213.203.94/"
+set spoolfile=+INBOX
+set record=+Sent
+set postponed=+Drafts
+
+# set realname = 'Morten Linderud'
+# set from = morten@linderud.pw
+# set sendmail = "/usr/bin/msmtp"
+set use_from = yes
+set envelope_from
+set hidden_host
+set ssl_force_tls = yes
+set ssl_starttls = yes
+
+set pgp_use_gpg_agent = yes
+set pgp_sign_as = 9FECBE16
+set pgp_timeout = 20
+set crypt_replyencrypt = yes
+set crypt_use_gpgme 
+
+# Alias
+set alias_file= ~/.config/mutt/muttrc.d/aliases
+set sort_alias= alias
+set reverse_alias=yes
+
+macro index,pager D \
+    "<save-message>+Trash<enter>" \
+    "mark message as Trash"
+
+macro index,pager S \
+    "<save-message>+Spam<enter>" \
+    "mark message as Spam"
+
+macro index,pager A \
+    "<save-message>+Archive<enter>" \
+    "mark message as Archive"
+
+macro index,pager I \
+    "<save-message>+Important<enter>" \
+    "mark message as Important"
+
+# Edit sieve rules
+macro index,pager x \
+    "<shell-escape> pass service/mail | \
+    sieve-connect \
+        --user \"morten@linderud.pw\" \
+        --port=4190 \
+        --server imap.linderud.pw \
+        --notlsverify \
+        --remotesieve main \
+        --edit <enter>"
+
+macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
+macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
+
+folder-hook . "exec collapse-all"
+message-hook . "source ~/.config/mutt/account.d/linderud"
+message-hook "~C morten@linderud.pw" "source ~/.config/mutt/account.d/linderud"
+message-hook "~C @archlinux.org" "source ~/.config/mutt/account.d/archlinux"
+message-hook "~C @uib.no" "source ~/.config/mutt/account.d/uib"
+message-hook "~C @student.uib.no" "source ~/.config/mutt/account.d/uib"
+macro pager,index ,a ":source ~/.config/mutt/account.d/archlinux\n"
+macro pager,index ,l ":source ~/.config/mutt/account.d/linderud\n"
+macro pager,index ,u ":source ~/.config/mutt/account.d/uib\n"
+
+source /home/fox/.config/mutt/muttrc.d/aliases
+source /home/fox/.config/mutt/muttrc.d/colors
+source /home/fox/.config/mutt/muttrc.d/ignores
+source /home/fox/.config/mutt/muttrc.d/gpg.rc

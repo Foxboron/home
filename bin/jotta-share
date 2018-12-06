@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+find $1 -type f | while read file; do jotta-cli archive ${file} --nogui --remote ${file%/*}; done

@@ -1,0 +1,3 @@
+#!/bin/bash
+set -oue pipefail
+maim -s | zbarimg -q --raw - | tee >(ykman oath uri) >(pass otp insert -p totp)

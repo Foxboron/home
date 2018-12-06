@@ -1,0 +1,4 @@
+pacaur -S $(package-query -ASl -f "%n  %v -  %d" | sort | \
+fzf -e -m +s --reverse --prompt='Select packages to install (use TAB to toggle selection) > ' | \
+awk '{print $1}')
+

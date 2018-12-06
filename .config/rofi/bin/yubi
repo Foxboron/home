@@ -1,0 +1,3 @@
+#!/bin/bash
+entry=$(ykman oath list | rofi -dmenu -p "yubikey:")
+ykman oath code "$entry" | awk '{print $2}' | xdotool type --clearmodifiers --file -

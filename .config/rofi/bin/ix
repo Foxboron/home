@@ -1,0 +1,4 @@
+export XAUTHORITY=/home/fox/.Xauthority
+export DISPLAY=:0.0
+
+xsel | ~/bin/ix | xsel -i

@@ -1,0 +1,36 @@
+#!/usr/bin/python
+
+
+s ="""NEXT                          LEFT           LAST                          PASSED        UNIT                         ACTIVATES
+Sun 2018-04-29 14:00:00 CEST  7min left      Sun 2018-04-29 13:12:07 CEST  40min ago     timer@hourly.timer           timer@hourly.target
+Mon 2018-04-30 00:00:00 CEST  10h left       Sun 2018-04-29 13:12:07 CEST  40min ago     logrotate.timer              logrotate.service
+Mon 2018-04-30 00:00:00 CEST  10h left       Sun 2018-04-29 13:12:07 CEST  40min ago     man-db.timer                 man-db.service
+Mon 2018-04-30 00:00:00 CEST  10h left       Sun 2018-04-29 13:12:07 CEST  40min ago     shadow.timer                 shadow.service
+Mon 2018-04-30 00:00:00 CEST  10h left       Sun 2018-04-29 13:12:07 CEST  40min ago     timer@daily.timer            timer@daily.target
+Mon 2018-04-30 09:06:23 CEST  19h left       Fri 2018-04-27 22:43:47 CEST  1 day 15h ago systemd-tmpfiles-clean.timer systemd-tmpfiles-clean.service
+Tue 2018-05-01 00:00:00 CEST  1 day 10h left Fri 2018-04-27 17:44:35 CEST  1 day 20h ago btrfs-scrub@-.timer          btrfs-scrub@-.service"""
+
+header, *body = s.splitlines()
+
+def get_ranges(header):
+    columns = header.split()
+    ranges = [header.find(i) for i in columns]
+    indices = [(ranges[k], ranges[(k+1)%len(ranges)]) for k,_ in enumerate(ranges, start=0)]
+    return {columns[n]: indices[n] for n,_ in enumerate(columns, start=0)}
+
+def get_info(columns, ranges, text):
+    start, end = ranges[columns]
+    if end == 0:
+        end = len(text)
+    return text[start:end]
+
+# print(header.split())
+ranges = get_ranges(header)
+
+for i in body:
+    left = get_info("LEFT", ranges, i)
+    passed = get_info("PASSED", ranges, i)
+    unit = get_info("UNIT", ranges, i) 
+    activates = get_info("ACTIVATES", ranges, i)
+    print(f"{left} {passed} {unit} {activates}")
+

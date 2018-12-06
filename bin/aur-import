@@ -1,0 +1,9 @@
+#!/bin/bash
+if [ $# -eq 0 ]
+then
+	echo "No arguments" && exit
+fi
+
+pushd ~/Git/PKGBUILD-community
+curl https://aur.archlinux.org/cgit/aur.git/snapshot/$1.tar.gz | tar xzm
+rm "$1/.SRCINFO"

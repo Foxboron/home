@@ -1,0 +1,8 @@
+*/.cache
+*/Media
+*/Bilder
+*/Pictures
+*/Downloads
+*/.rustup
+*/.cargo
+*/mail

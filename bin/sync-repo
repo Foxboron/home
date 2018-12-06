@@ -1,0 +1,1 @@
+rsync -HPavzs /var/cache/pacman/foxboron/* repo:foxboron/

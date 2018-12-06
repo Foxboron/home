@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+rsync -HPavzs Git velox:projects
+rsync -HPavzs velox:projects/Git .

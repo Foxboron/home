@@ -1,0 +1,17 @@
+#!/bin/bash
+parse_service(){
+    echo "$@" | awk '{ print $NF }'
+}
+
+connmanctl scan wifi
+service=$(connmanctl services | rofi -dmenu -i -p "")
+if `echo $service | grep -Eq "\*AO|\*AR"`;
+then
+    name=$(parse_service $service)
+    connmanctl disconnect $name
+    connmanctl connect $name | notify -
+
+else `echo $service | grep -Eq "\*A "`
+    name=$(parse_service $service)
+    connmanctl connect $name | notify -
+fi
