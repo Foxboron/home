@@ -1,62 +1,74 @@
 set editor = "vim +$" 
 set my_name = "Morten Linderud"
-set header_cache = "~/.cache/mutt"
-set imap_check_subscribed
-set imap_keepalive = 520
-unset imap_passive
-set mbox_type=Maildir
 set mailcap_path = ~/.config/mutt/mailcap
 set signature = ~/.config/mutt/signature
+set header_cache = ~/.cache/neomutt
+set message_cachedir = $header_cache
 
 # Default
-set ssl_verify_host=no
 set realname = 'Morten Linderud'
 set from = morten@linderud.pw
+alternates ^foxboron@archlinux\.org$ ^mcfoxax@gmail\.com$ ^morten@linderud\.pw$
 set sendmail  = "/usr/bin/msmtp -a linderud"
-set send_charset="us-ascii:utf-8"
+set charset          = "utf-8" # Terminal charset for display/input
+set send_charset     = "utf-8" # Charset for outgoing messages
+set config_charset   = "utf-8"
 
-set check_new=yes       # Check for new messages in maildir
-set mail_check=5        # Check mail every 5 seconds
 set timeout=5           # Time out 5 seconds after last keypress to check for mail
-set forward_quote=no    # Don't quote forwards
 set help=no	            # Disable the help header
-set indent_string="> "  # Proper quoting
 set read_inc=1000
-set beep_new=yes
 set write_inc=1000
-set followup_to=yes
-
-set charset=utf-8
-set send_charset=utf-8
-
-alternative_order text/plain text/html text/enriched
-auto_view text/html
-
-set reverse_name
-set reverse_realname
-set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
-set index_format="%Z %{%a %d %b %Y} %3M %-15.15L │%s"
-set status_format="$from: %f (%s/%S)"
-set sort=threads
-set sort_aux=last-date-received
-
+set beep_new=yes
 set quit=no
 set move=no
 set confirmappend=no
 set collapse_unread=no
 set uncollapse_jump=yes
-
 set fast_reply=yes
-#set smart_wrap=yes
-
-set sidebar_sort_method="path"
-set sidebar_width = 30
-set sidebar_visible = yes
-set sidebar_folder_indent = yes
-set sidebar_format= '%B%*  %N'
-#set sidebar_short_path = yes
-set mail_check_stats = yes
+set use_envelope_from 
+set hidden_host
 set pager_index_lines=10
+# set sidebar_sort_method="unsorted"
+set sidebar_width = 20
+set sidebar_visible = yes
+
+alternative_order text/plain text/html text/enriched
+auto_view text/html
+
+set reverse_name
+set sort=threads
+set sort_aux=last-date-received
+
+set crypt_replyencrypt = yes
+set crypt_use_gpgme 
+set pgp_use_gpg_agent = yes
+set pgp_default_key = "0x9FECBE16"
+set pgp_sign_as = "0x9FECBE16!"
+set pgp_timeout = 20
+
+# Alias
+set alias_file= ~/.config/mutt/muttrc.d/aliases
+set sort_alias=alias
+set reverse_alias=yes
+
+set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
+set status_format="$from: %f (%s/%S)"
+set sidebar_format= '%B%*  %N'
+set index_format="%?GI?%GI& ? %?GT?%GT& ? %?GR?%GR& ? %?GS?%GS& ? %?GE?%GE& ? %<[y?%<[m?%<[d?%[ %H:%M]&%[%a %d]>&%[%b %d]>&%[%m/%y ]> │ %-15.15L │ %s"
+
+set mbox_type = Maildir
+set folder = ~/mail/velox
+set spoolfile="+INBOX"
+set postponed=+Drafts
+set record=+Sent
+set trash=+Trash
+
+set nm_default_uri = "notmuch:///home/fox/mail/velox"
+set nm_record = yes
+set nm_record_tags = "-inbox,archive,me"
+set nm_query_window_current_position = 1
+
+bind attach <return> view-mailcap
 
 macro index b '<enter-command>toggle sidebar_visible<enter><refresh>'
 macro pager b '<enter-command>toggle sidebar_visible<enter><redraw-screen>'
@@ -65,9 +77,6 @@ bind index,pager \CP sidebar-prev
 bind index,pager \CN sidebar-next
 bind index,pager \CO sidebar-open
 
-
-bind index gg       first-entry
-bind index G        last-entry
 bind index,pager R  group-reply
 bind index <space>  collapse-thread
 bind index -        collapse-all
@@ -76,39 +85,47 @@ bind index,pager   \t          next-unread
 bind index,pager  ,\t      previous-unread
 bind index,pager u        sync-mailbox
 
-# imap
-set imap_user="morten@linderud.pw"
-set ssl_verify_host=yes
-#set imap_pass=`pass mail/morten@linderud.pw`
-set imap_pass=`pass service/mail`
-set folder="imaps://91.213.203.94/"
-set spoolfile=+INBOX
-set record=+Sent
-set postponed=+Drafts
+macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
+macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
 
-# set realname = 'Morten Linderud'
-# set from = morten@linderud.pw
-# set sendmail = "/usr/bin/msmtp"
-set use_from = yes
-set envelope_from
-set hidden_host
-set ssl_force_tls = yes
-set ssl_starttls = yes
+mailboxes `find ~/mail/ -type d -name cur -printf '%h '`
 
-set pgp_use_gpg_agent = yes
-set pgp_sign_as = 9FECBE16
-set pgp_timeout = 20
-set crypt_replyencrypt = yes
-set crypt_use_gpgme 
+virtual-mailboxes \
+        "inbox"                       "notmuch://?query=folder:INBOX"\
+        "inbox-t"                       "notmuch://?query=tag:INBOX"\
+        "unread"                    "notmuch://?query=tag:unread"\
+        "todo"                      "notmuch://?query=tag:todo"\
+        "important"                      "notmuch://?query=tag:important"\
+        "sent"                       "notmuch://?query=tag:sent"\
+        "draft"                       "notmuch://?query=tag:draft"\
+        "github"                       "notmuch://?query=tag:github"\
+        "lists/wireguard"          "notmuch://?query=tag:lists/wireguard"\
+        "lists/arch-general"          "notmuch://?query=tag:lists/arch-general"\
+        "lists/arch-dev-public"          "notmuch://?query=tag:lists/arch-dev-public"\
+        "lists/arch-staff"          "notmuch://?query=tag:lists/staff"\
+        "lists/arch-events"          "notmuch://?query=tag:lists/arch-events"\
+        "lists/arch-projects"          "notmuch://?query=tag:lists/arch-projects"\
+        "lists/arch-requests"             "notmuch://?query=tag:lists/arch-requests"\
+        "lists/aur-general"             "notmuch://?query=tag:lists/aur-general"\
+        "lists/arch-security"          "notmuch://?query=tag:lists/arch-security"\
+        "lists/pacman-dev"          "notmuch://?query=tag:lists/pacman-dev"\
+        "lists/rb-general"          "notmuch://?query=tag:lists/rb-general"\
+        "lists/oss-security"          "notmuch://?query=tag:lists/oss-security"\
+        "lists/efn"             "notmuch://?query=tag:lists/efn"\
+        "new"                       "notmuch://?query=tag:new"\
+        "replied"                   "notmuch://?query=tag:replied"\
+        "archive"                       "notmuch://?query=tag:archive"\
+        "spam"                      "notmuch://?query=tag:spam"\
 
-# Alias
-set alias_file= ~/.config/mutt/muttrc.d/aliases
-set sort_alias= alias
-set reverse_alias=yes
+bind index,pager \` modify-labels
+
+macro index,pager T \
+    "<modify-labels>!todo<enter>" \
+    "Mark message 'todo' tag"
 
 macro index,pager D \
     "<save-message>+Trash<enter>" \
-    "mark message as Trash"
+    "mark message as Junk"
 
 macro index,pager S \
     "<save-message>+Spam<enter>" \
@@ -119,23 +136,36 @@ macro index,pager A \
     "mark message as Archive"
 
 macro index,pager I \
-    "<save-message>+Important<enter>" \
+    "<modify-labels>!INBOX !important<enter>"\
     "mark message as Important"
 
-# Edit sieve rules
-macro index,pager x \
-    "<shell-escape> pass service/mail | \
-    sieve-connect \
-        --user \"morten@linderud.pw\" \
-        --port=4190 \
-        --server imap.linderud.pw \
-        --notlsverify \
-        --remotesieve main \
-        --edit <enter>"
+# Unsure
+set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
+tag-transforms "attachment" "@" \
+               "encrypted"  "" \
+               "important"  "!" \
+               "signed"     "✎" \
+               "replied"	"↻" \
+               "sent"		"➥" \
+               "todo"       "🗹"
 
-macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
-macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
+tag-formats "attachment"    "GA" \
+            "encrypted"     "GE" \
+            "signed"        "GS" \
+            "important"     "GI" \
+            "todo"          "GT" \
+            "replied"       "GR" \
+            "sent"          "Gs"
 
+bind index,pager X change-vfolder
+bind index,pager B sidebar-toggle-virtual
+bind index,pager + entire-thread
+bind index,pager / vfolder-from-query
+bind index < vfolder-window-backward
+bind index > vfolder-window-forward
+
+
+# Account managament
 folder-hook . "exec collapse-all"
 message-hook . "source ~/.config/mutt/account.d/linderud"
 message-hook "~C morten@linderud.pw" "source ~/.config/mutt/account.d/linderud"
@@ -146,6 +176,7 @@ macro pager,index ,a ":source ~/.config/mutt/account.d/archlinux\n"
 macro pager,index ,l ":source ~/.config/mutt/account.d/linderud\n"
 macro pager,index ,u ":source ~/.config/mutt/account.d/uib\n"
 
+# Source
 source /home/fox/.config/mutt/muttrc.d/aliases
 source /home/fox/.config/mutt/muttrc.d/colors
 source /home/fox/.config/mutt/muttrc.d/ignores

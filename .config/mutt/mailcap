@@ -1,11 +1,14 @@
-text/html;  elinks -config-dir .config/elinks -dump ; copiousoutput;
+text/html;  elinks -config-dir .config/elinks -dump %s                  ; copiousoutput ;       nametemplate=%s.html
+text/plain; /home/fox/.config/mutt/scripts/tiny.pl %s %{charset} 't'    ; copiousoutput	;       nametemplate=%s.html
+text/*; vim %s; edit=/usr/bin/vim %s; compose=/usr/bin/vim %s
+
 
 # Images
-image/jpg; eog %s
-image/jpeg; eog %s
-image/pjpeg; eog %s
-image/png; eog %s
-image/gif; eog %s
+image/jpg; imv %s
+image/jpeg; imv %s
+image/pjpeg; imv %s
+image/png; imv %s
+image/gif; imv %s
 
 # PDFs
 application/pdf; zathura %s
