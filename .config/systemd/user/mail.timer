@@ -1,0 +1,10 @@
+[Unit]
+Description=Mail target timer
+
+[Timer]
+OnBootSec=1m
+OnUnitInactiveSec=1m
+Unit=mail.target
+
+[Install]
+WantedBy=default.target

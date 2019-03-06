@@ -1,0 +1,13 @@
+[Unit]
+Description=Notmuch service(oneshot)
+Documentation=man:notmuch(1)
+Requires=offlineimap.service
+After=offlineimap.service
+
+[Service]
+Type=oneshot
+Environment=NOTMUCH_CONFIG="/home/fox/.config/notmuch/config"
+ExecStart=/usr/bin/notmuch new
+
+[Install]
+WantedBy=mail.target

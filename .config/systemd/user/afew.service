@@ -1,0 +1,13 @@
+[Unit]
+Description=Afew service(oneshot)
+Documentation=man:afew(1)
+Requires=notmuch.service
+After=notmuch.service
+
+[Service]
+Type=oneshot
+Environment=NOTMUCH_CONFIG="/home/fox/.config/notmuch/config"
+ExecStart=/usr/bin/afew --tag --new
+
+[Install]
+WantedBy=mail.target
