@@ -4,4 +4,4 @@
 !~/.config/vim
 !~/.config/zsh
 !~/.config/i3
-!~/.config/systemd
+!.config/systemd
