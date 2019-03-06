@@ -1,0 +1,50 @@
+#!/usr/bin/bash
+
+set -euo pipefail
+
+readonly rssdir=${XDG_DATA_HOME:-$HOME/.local/share}/rss
+readonly xslt=$rssdir/feed.xslt
+
+
+pullfeed() {
+    if ! curl -sSfL "$1" | xsltproc "$xslt" -; then
+        printf 'webfeeds: %s: errors processing url\n' "$1" >&2
+    fi
+}
+
+prefixdomain() {
+    awk '/^https?:/{split($1, a, "/"); print a[3], $0}'
+}
+
+prefixdomain < "$rssdir/urls" | while read -r domain url title; do
+    db=$rssdir/db/$domain/$title
+    mkdir -p "$db"
+    pullfeed "$url" > "$db"/new
+done
+
+for db in "$rssdir"/db/*; do
+    if [ ! -f "$db"/new ]; then
+        continue
+    fi
+
+    if [ -f "$db"/current ]; then
+        grep -Fxvf "$db"/current "$db"/new | sponge "$db"/new
+    fi
+
+    new=$(wc -l < "$db"/new)
+
+    if [ "$new" -gt 0 ]; then
+        printf '\a\033[1m[%s] %s\033[0m\n' "$new" "${db##*/}"
+
+        while read -r link title; do
+            printf '\033[1m*\033[0m %s \033[0;34m<%s>\033[0m\n' "$title" "$link"
+        done < "$db"/new
+    fi
+
+    # Silence errors from cat as it will complain on the first run when no
+    # current file exists, however all the information gets to the right place
+    # in the end.  This avoids needing to use an additional if statement.
+    cat "$db"/current "$db"/new 2> /dev/null | sponge "$db"/current
+    rm "$db"/new
+done
+
