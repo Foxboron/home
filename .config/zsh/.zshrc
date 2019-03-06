@@ -99,6 +99,7 @@ alias ls="exa"
 alias l='ls -lF'
 alias la='ls -laF'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
+compdef _git home # So we get git complteions with the alias
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 
@@ -164,6 +165,8 @@ if [[ $VTE_VERSION ]]; then
     source /etc/profile.d/vte.sh
     __vte_prompt_command
 fi
+
+gpg-connect-agent UPDATESTARTUPTTY /bye > /dev/null
 # }}}
 
 # vim: fdm=marker
