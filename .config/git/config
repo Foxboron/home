@@ -39,7 +39,6 @@
 
     difftex = difftool -y -t latex
 
-
     unstage = reset HEAD --
     recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
     overview = log --all --oneline --no-merges
@@ -61,7 +60,7 @@
 [difftool "vimdiff"]
 	cmd = vim -d $BASE $LOCAL 
 [difftool.latex]
-	cmd = latexdiff-git "$LOCAL" "$REMOTE"
+	cmd = latexdiff "$LOCAL" "$REMOTE"
 [merge]
 	tool = vimdiff 
 [mergetool]
@@ -71,14 +70,21 @@
 [rebase]
     autoStash = true
 [sendemail]
-	suppresscc = self
+	suppresscc = all
+    smtpuser =
+    smtpserver = "/usr/bin/msmtp"
+    smtpencryption = tls
+    chainreplyto = false
 [includeIf "gitdir:~/jobb/"]
 	path = ~/jobb/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
 	path = ~/.config/git/config.home
+[includeIf "gitdir:~/Git/PKGBUILD/community-checkout"]
+	path = ~/.config/git/config.community
 [tig]
     line-graphics = utf-8
     main-view-date = relative-compact
+    main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,graph=no,refs,overflow=no
     refresh-mode = periodic
     refresh-interval = 5
 [tig "bind"]

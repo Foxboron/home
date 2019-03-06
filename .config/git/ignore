@@ -1,6 +1,10 @@
 .venv
+.venv2
 tags
 Session.vim
 target*
 .git
 .gitignore
+__pycache__
+.idea
+.netrwhist
