@@ -13,31 +13,26 @@ smart_gaps on
 gaps inner 20
 gaps outer 5
 
-for_window [class="Firefox"] move container to workspace 1
-for_window [class="Chromium"] move container to workspace 1
-for_window [class="qutebrowser"] move container to workspace 1
-for_window [class="Spotify"] move container to workspace 8
+assign [class="Firefox"] 1
+assign [class="Chromium"] 2
+assign [class="qutebrowser"] 1
+assign [class="Spotify"] 8
+assign [title="irc-rofi"] 6
+assign [title="mutt-rofi"] 7
+
 for_window [title="ix edit"] floating enable 
-
-for_window [title="irc-rofi"] move container to workspace 6
-for_window [title="mutt-rofi"] move container to workspace 7
-
 for_window [class="imv"] floating enable
-
 for_window [title="open-float"] floating enable 
 for_window [class="Pinentry"] floating enable 
-
-# float
 for_window [title="float"] floating enable 
 for_window [title="float"] move position center
 
 # notes
-for_window [title="fox-notes"] floating enable 
+for_window [title="fox-notes"] floating enable
 for_window [title="fox-notes"] resize set 550 600
 for_window [title="fox-notes"] move position center
 for_window [title="fox-notes"] move to scratchpad
 
-#default_border pixel
 force_focus_wrapping no
 hide_edge_borders both
 
@@ -148,7 +143,8 @@ mode "$resize"{
 	bindsym k resize shrink height 10 px or 10 ppt
 	bindsym l resize grow width 10 px or 10 ppt
 
-	bindsym v sticky enable; resize set 530 300; move absolute position 1391 0
+	bindsym v floating enable; sticky enable; resize set 530 300; move absolute position 1391 0
+	bindsym f for_window [title="stream"] fullscreen toggle
 
 	bindsym Left resize shrink width 10 px or 10 ppt
 	bindsym Down resize grow height 10 px or 10 ppt
