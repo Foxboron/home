@@ -9,8 +9,6 @@ call plug#begin('~/.config/vim/bundle')
 " 1. Plugins
 "   Vim-plug - Plugin manager
     Plug 'junegunn/vim-plug'
-    Plug 'junegunn/vim-emoji'
-    set completefunc=emoji#complete
 
     Plug './archlinux-snippets'
 
@@ -24,12 +22,13 @@ call plug#begin('~/.config/vim/bundle')
     Plug 'posva/vim-vue', {'for': 'vue'}
 
 "   Vim-Wiki - For notes and stuff
-    Plug 'vimwiki/vimwiki', {'on' : 'VimwikiIndex', 'for': 'wiki' }
+    Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
+    Plug 'itchyny/calendar.vim', {'on' : 'Calendar', 'for': 'wiki' }
     Plug 'tbabej/taskwiki', {'on': 'VimwikiIndex', 'for': 'wiki'}
 
 " Comletion and linting
+    let g:ale_completion_enabled = 1
     Plug 'w0rp/ale'
-    " Plug 'maralla/completor.vim'
 
 "   GIT STUFF
 "   Because its great
@@ -131,6 +130,8 @@ colorscheme gotham
 set ff=unix
 set nocompatible
 set shell=/bin/zsh
+set enc=utf-8
+set fenc=utf-8
 
 " =========
 " Visual 
@@ -155,10 +156,10 @@ set mouse=""              " We don't want the mouse
 set clipboard=unnamed   " We want to access clipboard from X
 set scrolloff=10 	    " 10 lines space between frame and cursor
 set splitright          " Splitting right feels more natrual
-set splitbelow
+" set splitbelow
 set ttyfast
 set diffopt+=vertical
-set hidden              " So we can create new buffers and dont need to save them
+"set hidden              " So we can create new buffers and dont need to save them
 set noesckeys           " Remap esc!
 
 set wrap
@@ -280,7 +281,7 @@ nnoremap <leader>bj  :bnext<CR>
 nnoremap <leader>bk  :bprev<CR>
 nnoremap <leader>j  :bnext<CR>
 nnoremap <leader>k  :bprev<CR>
-nnoremap <leader>c  :bd<CR>
+" nnoremap <leader>c  :bd<CR>
 nnoremap <leader>bn  :enew<CR>
 
 " Tabs
@@ -292,6 +293,14 @@ nnoremap <leader>tm  :tabm<Space>
 nnoremap <leader>tn  :tabnew<CR>
 nmap <leader>tf :tab sb<CR>
 nmap <leader>tc :tabclose<CR>
+
+" Fugitive
+nnoremap gs :Gstatus<CR>
+nnoremap gd :Gdiff<CR>
+"nnoremap gc :Gcommit<CR>
+nnoremap gm :Gmerge<CR>
+nnoremap gr :Grebase<CR>
+
 "}}}
 "{{{2 New mappings
 " ========
@@ -325,6 +334,8 @@ augroup filetypes
     au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
     au Filetype mail setlocal tw=80 
     au Filetype latex setlocal tw=80 
+    au Filetype sh setlocal noexpandtab
+    au Filetype gitcommit setlocal spell | setlocal tw=72
 augroup END
 
 augroup vimrc_autocommands
@@ -345,9 +356,7 @@ augroup vimwiki_template
     function! InitTemplate()
         let f = system("date \"+%Y-%m-%d\" | tr -d '\n' | xargs -d '\n' -0 printf '= %s ='")
         let l = append(0, f)
-        let f2 = system("cat ~/Notes/diary/$(exa -soldest /home/fox/Notes/diary | grep `date +%Y` | head -1) | grep -E '^=.*=$' | tail -n+2 | xargs -d '\n' printf '%s\n\n'")
-        put =f2
-        normal gg
+        normal G
     endfunction
     autocmd BufEnter    *   setlocal nowrap
     autocmd BufNewFile */diary/*.wiki call InitTemplate()
@@ -370,6 +379,7 @@ function! s:goyo_leave()
   augroup! goyo_enter 
 endfunction
 
+
 autocmd User GoyoEnter nested call <SID>goyo_enter()
 autocmd User GoyoLeave nested call <SID>goyo_leave()
 "}}}
@@ -380,6 +390,9 @@ packadd! matchit
 "}}}
 "{{{2 plugin: vimtex
 let g:vimtex_compiler_callback_hooks = ['CleanFiles']
+let g:vimtex_complete_enabled = 1
+let g:vimtex_complete_bib = {"recursive": 1, "simple": 1}
+"let g:vimtex_complete_bib.recursive = 1
 function! CleanFiles(status)
     call system('latexmk -c')
 endfunction
@@ -404,9 +417,10 @@ let g:fzf_colors =
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
 let g:fzf_tags_command = 'ctags -R'
- map <leader>f :FZF<CR>
- map <leader>s :Tags<CR>
- map <leader>v :BCommits<CR>
+map <leader>f :FZF<CR>
+map <leader>s :Tags<CR>
+map <leader>v :BCommits<CR>
+map <c-l> <C-o>:Snippet<CR>
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -420,7 +434,6 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsListSnippets="<c-l>"
 "}}}
 "{{{2 plugin: vim-go
 let g:go_info_mode = 'guru'
@@ -434,26 +447,61 @@ noremap <localleader>n :GoRename<cr>
 "{{{2 plugin: vimwiki
 let g:vimwiki_hl_headers = 1
 let g:vimwiki_hl_cb_checked = 1
+let g:vimwiki_use_calendar=1
 let g:vimwiki_listsyms = '✗○◐●✓'
 let g:vimwiki_folding = ''
+"{{{3 vimwiki:main
 let main_wiki = {}
-let main_wiki.path = '~/Notes'
-let main_wiki.path_html = '~/.cache/vimwiki/html'
+let main_wiki.path = '~/Notes/main'
+let main_wiki.path_html = '~/.cache/vimwiki/main/html'
 let main_wiki.automatic_nested_syntaxes = 1
 let main_wiki.list_margin = 0
-let g:vimwiki_list = [main_wiki]
+"}}}
+"{{{3 vimwiki:main
+let master_wiki = {}
+let master_wiki.path = '~/Notes/master'
+let master_wiki.path_html = '~/.cache/vimwiki/master/html'
+let master_wiki.automatic_nested_syntaxes = 1
+let master_wiki.list_margin = 0
+"}}}
+let g:vimwiki_list = [main_wiki, master_wiki]
 hi VimwikiBold term=bold cterm=bold gui=bold ctermfg=178 guifg=#dfaf00
 hi VimwikiItalic term=italic cterm=italic gui=italic ctermfg=178 guifg=#dfaf00
+"}}}
+"{{{2 plugin: calendar.vim
+let g:calendar_date_full_month_name=1
+let g:calendar_frame = "unicode"
+let g:calendar_first_day = 'monday'
+let g:calendar_date_endian = 'big'
+let g:calendar_week_number = 1
+let g:calendar_google_calendar = 1
+nnoremap <silent> <leader>c :Calendar -position=here<cr>
+" Connect to diary
+function! Open_diary() abort " {{{3
+  let l:date = printf('%d-%0.2d-%0.2d',
+        \ b:calendar.day().get_year(),
+        \ b:calendar.day().get_month(),
+        \ b:calendar.day().get_day())
+
+  call vimwiki#diary#make_note(1, l:date)
+endfunction
+"}}}
+augroup vimrc_calendar
+  autocmd!
+  autocmd FileType calendar
+        \ nnoremap <silent><buffer> <cr>
+        \ :<c-u>call Open_diary()<cr>
+ autocmd FileType calendar nmap <buffer> q :bprev<cr>
+augroup END
 "}}}
 "{{{2 plugin: taskwiki
 let g:taskwiki_disable_concealcursor = 'yes'
 "}}}
 "{{{2 plugin: ale
 
-let g:ale_linters = {'python': ['pyls', 'black'], 'rust': ['rls'], 'go': ['golangserver', 'goimports', 'go vet', 'golint']}
+let g:ale_linters = {'python': ['pyls', 'black'], 'rust': ['rls'], 'go': ['golangserver', 'goimports', 'go vet', 'golint'], 'tex': ['lacheck']}
 let g:ale_fixers = {'python': ['black']}
 let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_completion_enabled = 1
 let g:ale_sign_column_always = 1
 "}}}
 "}}}

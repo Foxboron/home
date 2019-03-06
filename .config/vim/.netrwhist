@@ -1,4 +1,0 @@
-let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =2
-let g:netrw_dirhist_1='/home/fox/.gnupg'
-let g:netrw_dirhist_2='/home/fox/.go/src/github.com/foxboron/master/migrations'
