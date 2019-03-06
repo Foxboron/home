@@ -1,0 +1,39 @@
+[general]
+accounts = velox
+
+[Account velox]
+localrepository = velox-local
+remoterepository = velox-remote
+synclabels = yes
+
+[Account glundandra]
+localrepository = velox-local
+remoterepository = glundandra-remote
+synclabels = yes
+
+[Repository velox-local]
+type = Maildir
+localfolders = ~/mail/velox
+status_backend = sqlite
+
+[Repository velox-remote]
+type = IMAP
+remotehost = linderud.pw
+remoteuser = morten@linderud.pw
+remotepassfile = ~/mail/velox-pass
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+maxconnections = 4
+#readonly = yes
+
+[Repository glundandra-remote]
+type = IMAP
+remotehost = glundandra.arbol.no
+remoteuser = morten@linderud.pw
+remotepassfile = ~/mail/glundandra-pass
+ssl = yes
+cert_fingerprint = AB05564EDC9484160BCC41E420E10FE2D4225E9A
+#sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+maxconnections = 4
+readonly = yes
+

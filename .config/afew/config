@@ -1,0 +1,24 @@
+[SpamFilter]
+[KillThreadsFilter]
+[ListMailsFilter]
+[ArchiveSentMailsFilter]
+
+[Filter.1]
+query = tag:spam
+tags = -new;-unread;-INBOX;-archive;-replied;-github
+
+[Filter.2]
+message = gh
+query = from:'notifications@github.com'
+tags = +github
+
+[InboxFilter]
+
+
+[FolderNameFilter]
+folder_explicit_list = INBOX Sent Drafts archlinux archweb AUR Important Archive
+folder_transforms = Sent:sent Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Important:important Archive:archive
+
+[MailMover]
+folders = INBOX
+INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam
