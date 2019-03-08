@@ -1,0 +1,9 @@
+[papers]
+dir = ~/Documents/papers
+
+[settings]
+default-library = papers
+editor = vim
+opentool = xdg-open
+add-name = {doc[author]}-{doc[year]}
+
