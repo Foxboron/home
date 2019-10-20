@@ -1,14 +1,19 @@
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
-export TASKDATA="$XDG_DATA_HOME"/task
+
 export TASKRC="$XDG_CONFIG_HOME"/task/taskrc
-export XAUTHORITY="$XDG_RUNTIME_DIR"/Xauthority
-export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
-export LESSHISTFILE="$XDG_CACHE_HOME/lesshst"
 export GNUPGHOME="$XDG_CONFIG_HOME/gnupg"
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/d.9mnncqwudgr47xbf99yfancp/S.gpg-agent.ssh"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME/docker"
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/config"
+
+export TASKDATA="$XDG_DATA_HOME"/task
+
+export LESSHISTFILE="$XDG_CACHE_HOME/lesshst"
+
+export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
+export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gnupg/d.9mnncqwudgr47xbf99yfancp/S.gpg-agent.ssh"
 
 # XDG Patches
 export VIMINIT=":source $XDG_CONFIG_HOME/vim/vimrc"

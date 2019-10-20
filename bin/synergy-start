@@ -1,5 +1,5 @@
 #ip=$(arp -a Fox-PC | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
-ip=192.168.1.156
+ip=10.0.0.32
 
 killall synergyc || true
 

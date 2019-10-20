@@ -98,6 +98,7 @@ alias ..="cd .."
 alias ls="exa"
 alias l='ls -lF'
 alias la='ls -laF'
+alias ip='ip -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
 compdef _git home # So we get git complteions with the alias
 

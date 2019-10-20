@@ -7,13 +7,13 @@ fi
 readonly NAME="$1"
 readonly IP="$2"
 
-if [ ! -d "~/.password-store/wireguard/peer/$NAME" ]; then
-    printf "Peer named %s allready\n" $NAME
+if [ ! -d "$HOME/.password-store/wireguard/peer/$NAME" ]; then
+    printf "Peer named %s allready\n" "$NAME"
     exit 1
 fi
 
 readonly PRIVATEKEY=$(wg genkey)
-readonly PUBLICKEY=$(wg pubkey <<<$PRIVATEKEY)
+readonly PUBLICKEY=$(wg pubkey <<<"$PRIVATEKEY")
 readonly PSK=$(wg genpsk) 
 readonly PEERKEY=$(pass wireguard/peer/velox/public_key) 
 
@@ -30,7 +30,7 @@ DNS = 10.200.100.1
 PublicKey = $PEERKEY
 PresharedKey = $PSK
 AllowedIPs = 0.0.0.0/0, ::0/0
-Endpoint = velox.pw:51820
+Endpoint = 5.135.225.251:51820
 PersistentKeepalive = 25
 EOF
 
