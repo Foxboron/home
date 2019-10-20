@@ -1,41 +1,43 @@
 [user]
-	email = morten@linderud.pw
-	name = Morten Linderud
-	signingkey = 9FECBE16
+    email = morten@linderud.pw
+    name = Morten Linderud
+    signingkey = 9FECBE16
 [commit]
     gpgSign = true
-	verbose = true
+    verbose = true
 [format]
     signOff = true
 [color]
-	ui = auto
+    ui = auto
 [alias]
-	s = status
-	co = checkout
+    s = status
+    co = checkout
 
-	dt = difftool
-	d = diff
-	dc = diff --cached
+    dt = difftool
+    d = diff
+    dc = diff --cached
 
-	aa = add --all
-	rem = remote -v
+    aa = add --all
+    rem = remote -v
 
-	ff = merge --ff-only
-	pullff = pull --ff-only
-	noff = merge --no-ff
-	fa = fetch --all
+    ff = merge --ff-only
+    pullff = pull --ff-only
+    noff = merge --no-ff
+    fa = fetch --all
 
-	c = commit
-	amend = commit --amend
-	fixup = commit --fixup
-	message = commit -m
-	ba = branch -a
+    c = commit
+    amend = commit --amend
+    fixup = !git c --fixup=HEAD && git rebase -i --autosquash HEAD~2
+    message = commit -m
+    ba = branch -a
 
-	ap = add -p
-	p = push
+    ap = add -p
+    p = push
     l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     hd = show -p --pretty="tformat:"
-	edit = "!vim `git ls-files -m` -p"
+    files = diff-tree --no-commit-id --name-only -r
+    edit = "!vim `git ls-files -m` -p"
+    edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
     difftex = difftool -y -t latex
 
@@ -48,39 +50,40 @@
     upstream = !git log --oneline --no-merges HEAD..${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}
     local = !git log --oneline --no-merges ${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}..HEAD
     graph = log --oneline --graph --all --decorate --date=iso
+    ignored = status --ignored
 
 [core]
-	excludesfile = ~/.config/git/ignore
+    excludesfile = ~/.config/git/ignore
 [init]
-	template = ~/.config/git/templates
+    template = ~/.config/git/templates
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 [difftool]
-	prompt = false
+    prompt = false
 [difftool "vimdiff"]
-	cmd = vim -d $BASE $LOCAL 
+    cmd = vim -d $BASE $LOCAL 
 [difftool.latex]
-	cmd = latexdiff "$LOCAL" "$REMOTE"
+    cmd = latexdiff --flatten "$LOCAL" "$REMOTE"
 [merge]
-	tool = vimdiff 
+    tool = vimdiff 
 [mergetool]
-	prompt = false
+    prompt = false
 [push]
-	default = current
+    default = current
 [rebase]
     autoStash = true
 [sendemail]
-	suppresscc = all
+    suppresscc = all
     smtpuser =
     smtpserver = "/usr/bin/msmtp"
     smtpencryption = tls
     chainreplyto = false
 [includeIf "gitdir:~/jobb/"]
-	path = ~/jobb/.gitconfig
+    path = ~/jobb/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
-	path = ~/.config/git/config.home
+    path = ~/.config/git/config.home
 [includeIf "gitdir:~/Git/PKGBUILD/community-checkout"]
-	path = ~/.config/git/config.community
+    path = ~/.config/git/config.community
 [tig]
     line-graphics = utf-8
     main-view-date = relative-compact
