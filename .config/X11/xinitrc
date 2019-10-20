@@ -3,5 +3,5 @@ xbindkeys -f ~/.config/X11/xbindkeysrc
 udiskie & 
 unclutter -idle 4 & 
 xset -dpms; xset s off 
-compton -b
+ibus-daemon --xim &
 exec i3

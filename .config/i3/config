@@ -6,7 +6,7 @@ floating_modifier $mod
 bindsym $mod+Return exec termite
 
 
-focus_follows_mouse	no
+focus_follows_mouse no
 for_window [class="^.*"] border pixel 0
 
 smart_gaps on
@@ -82,10 +82,6 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 bindsym $mod+s sticky toggle
 
-bindsym $mod+Control+Shift+s layout stacking
-bindsym $mod+Control+Shift+w layout tabbed
-bindsym $mod+Control+Shift+e layout toggle split
-
 bindsym $mod+Control+Shift+space floating toggle
 
 bindsym $mod+a focus parent
@@ -115,16 +111,16 @@ bindsym $mod+Shift+e move container to workspace 8
 bindsym $mod+Shift+r move container to workspace 9
 bindsym $mod+Shift+t move container to workspace 10
 
-workspace 1 output primary eDP1 DP1-1
-workspace 2 output primary eDP1
-workspace 3 output primary eDP1
-workspace 4 output primary eDP1
-workspace 5 output primary eDP1
-workspace 6 output left
-workspace 7 output left 
-workspace 8 output left
-workspace 9 output left
-workspace 10 output left
+workspace 1 output primary DP1-1 eDP1 
+workspace 2 output primary DP1-1 eDP1
+workspace 3 output primary DP1-1 eDP1
+workspace 4 output primary DP1-1 eDP1
+workspace 5 output primary DP1-1 eDP1
+workspace 6 output DP1-1
+workspace 7 output DP1-1
+workspace 8 output DP1-1
+workspace 9 output DP1-1
+workspace 10 output DP1-1
 
 workspace_auto_back_and_forth yes
 
@@ -178,6 +174,16 @@ mode "$volume"{
 }
 bindsym $mod+m mode "$volume"
 
+set $layout Layout (s)tacking (t)abbed (d)efault
+mode "$layout" {
+    bindsym s layout stacking, mode "default"
+    bindsym t layout tabbed, mode "default"
+    bindsym d layout tabbed, mode "default"
+	bindsym q mode "default"
+
+}
+bindsym $mod+x mode "$layout"
+
 
 bar {
 	tray_output primary
@@ -186,9 +192,9 @@ bar {
 	workspace_buttons yes
 	strip_workspace_numbers yes
 	status_command i3blocks -c ~/.config/i3/i3blocks.conf
-		colors {
-			background #101010
-			statusline #605c5a
-			separator #323131
-	}
+    colors {
+        background #101010
+        statusline #605c5a
+        separator #323131
+    }
 }

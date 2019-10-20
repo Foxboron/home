@@ -4,5 +4,5 @@ Documentation=man:dirmngr(8)
 Requires=dirmngr.socket
 
 [Service]
-ExecStart=/usr/bin/dirmngr --homedir "/home/fox/.config/gnupg" --supervised
+ExecStart=/usr/bin/dirmngr --homedir "/home/fox/.config/gnupg" --supervised --debug-level guru
 ExecReload=/usr/bin/gpgconf --reload dirmngr
