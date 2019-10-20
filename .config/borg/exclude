@@ -1,4 +1,5 @@
 */.cache
+*/.local/share
 */Media
 */Bilder
 */Pictures
@@ -6,3 +7,4 @@
 */.rustup
 */.cargo
 */mail
+*/.go
