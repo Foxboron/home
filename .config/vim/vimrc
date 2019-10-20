@@ -29,6 +29,7 @@ call plug#begin('~/.config/vim/bundle')
 " Comletion and linting
     let g:ale_completion_enabled = 1
     Plug 'w0rp/ale'
+    " Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 "   GIT STUFF
 "   Because its great
@@ -144,6 +145,8 @@ set noshowmode
 set laststatus=2    " always show statusbar  
 set ttimeoutlen=50
 set shortmess=Iat    "We dont care for the intro message
+set list
+set listchars=tab:>-
 
 
 " =========
@@ -277,11 +280,11 @@ map <leader>m :make<cr>
 
 
 " Buffers
-nnoremap <leader>bj  :bnext<CR>
-nnoremap <leader>bk  :bprev<CR>
-nnoremap <leader>j  :bnext<CR>
-nnoremap <leader>k  :bprev<CR>
-" nnoremap <leader>c  :bd<CR>
+nnoremap <leader>bj  :bprev<CR>
+nnoremap <leader>bk  :bnext<CR>
+nnoremap <leader>j  :bprev<CR>
+nnoremap <leader>k  :bnext<CR>
+nnoremap <leader>bc  :bd<CR>
 nnoremap <leader>bn  :enew<CR>
 
 " Tabs
@@ -307,6 +310,12 @@ nnoremap gr :Grebase<CR>
 " New Maps
 " ========
 map <silent><ESC> :set hlsearch!<CR>
+nnoremap <esc>^[ <esc>^[
+map <ScrollWheelUp> <nop>
+map <S-ScrollWheelUp> <nop>
+map <ScrollWheelDown> <nop>
+map <S-ScrollWheelDown> <nop>
+
 noremap <silent><C-S> :silent update<CR>
 inoremap <silent> <C-S> <C-O>:update<CR>
 nnoremap <leader><TAB> :tabnext<CR>
@@ -392,7 +401,6 @@ packadd! matchit
 let g:vimtex_compiler_callback_hooks = ['CleanFiles']
 let g:vimtex_complete_enabled = 1
 let g:vimtex_complete_bib = {"recursive": 1, "simple": 1}
-"let g:vimtex_complete_bib.recursive = 1
 function! CleanFiles(status)
     call system('latexmk -c')
 endfunction
@@ -416,9 +424,10 @@ let g:fzf_colors =
   \ 'marker':  ['fg', 'Keyword'],
   \ 'spinner': ['fg', 'Label'],
   \ 'header':  ['fg', 'Comment'] }
-let g:fzf_tags_command = 'ctags -R'
+let g:fzf_tags_command = 'ctags -R --options=/home/fox/.config/ctags'
 map <leader>f :FZF<CR>
 map <leader>s :Tags<CR>
+nmap <Space><Space> :Buffers<CR>
 map <leader>v :BCommits<CR>
 map <c-l> <C-o>:Snippet<CR>
 
@@ -457,7 +466,7 @@ let main_wiki.path_html = '~/.cache/vimwiki/main/html'
 let main_wiki.automatic_nested_syntaxes = 1
 let main_wiki.list_margin = 0
 "}}}
-"{{{3 vimwiki:main
+"{{{3 vimwiki:master
 let master_wiki = {}
 let master_wiki.path = '~/Notes/master'
 let master_wiki.path_html = '~/.cache/vimwiki/master/html'
@@ -499,7 +508,7 @@ let g:taskwiki_disable_concealcursor = 'yes'
 "}}}
 "{{{2 plugin: ale
 
-let g:ale_linters = {'python': ['pyls', 'black'], 'rust': ['rls'], 'go': ['golangserver', 'goimports', 'go vet', 'golint'], 'tex': ['lacheck']}
+let g:ale_linters = {'python': ['pyls', 'black'], 'rust': ['rls'], 'go': ['gopls', 'goimports', 'go vet', 'golint']}
 let g:ale_fixers = {'python': ['black']}
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_sign_column_always = 1
