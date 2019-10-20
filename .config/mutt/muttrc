@@ -42,8 +42,8 @@ set sort_aux=last-date-received
 set crypt_replyencrypt = yes
 set crypt_use_gpgme 
 set pgp_use_gpg_agent = yes
-set pgp_default_key = "0x9FECBE16"
-set pgp_sign_as = "0x9FECBE16!"
+set pgp_default_key = "C100346676634E80C940FB9E9C02FF419FECBE16!"
+set pgp_sign_as = "C100346676634E80C940FB9E9C02FF419FECBE16!"
 set pgp_timeout = 20
 
 # Alias
@@ -64,9 +64,10 @@ set record=+Sent
 set trash=+Trash
 
 set nm_default_uri = "notmuch:///home/fox/mail/velox"
-set nm_record = yes
-set nm_record_tags = "-inbox,archive,me"
+set nm_record = no
+#set nm_record_tags = "unread,new,me,sent"
 set nm_query_window_current_position = 1
+set nm_query_type = "threads"
 
 bind attach <return> view-mailcap
 
@@ -123,10 +124,6 @@ macro index,pager T \
     "<modify-labels>!todo<enter>" \
     "Mark message 'todo' tag"
 
-macro index,pager D \
-    "<save-message>+Trash<enter>" \
-    "mark message as Junk"
-
 macro index,pager S \
     "<save-message>+Spam<enter>" \
     "mark message as Spam"
@@ -140,7 +137,7 @@ macro index,pager I \
     "mark message as Important"
 
 # Unsure
-set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
+#set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
 tag-transforms "attachment" "@" \
                "encrypted"  "" \
                "important"  "!" \

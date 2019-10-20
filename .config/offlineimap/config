@@ -1,5 +1,6 @@
 [general]
 accounts = velox
+metadata = ~/.cache/offlineimap
 
 [Account velox]
 localrepository = velox-local

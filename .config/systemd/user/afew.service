@@ -7,7 +7,7 @@ After=notmuch.service
 [Service]
 Type=oneshot
 Environment=NOTMUCH_CONFIG="/home/fox/.config/notmuch/config"
-ExecStart=/usr/bin/afew --tag --new
+ExecStart=/usr/bin/afew --tag --new --verbose
 
 [Install]
 WantedBy=mail.target
