@@ -25,8 +25,8 @@
     noff = merge --no-ff
     fa = fetch --all
 
-    c = commit
-    amend = commit --amend
+    c = commit -s -S
+    amend = commit --amend -s -S
     fixup = !git c --fixup=HEAD && git rebase -i --autosquash HEAD~2
     message = commit -m
     ba = branch -a
@@ -57,7 +57,7 @@
 [init]
     template = ~/.config/git/templates
 [diff]
-    tool = vimdiff
+	tool = vimdiff
 [difftool]
     prompt = false
 [difftool "vimdiff"]
@@ -65,7 +65,7 @@
 [difftool.latex]
     cmd = latexdiff --flatten "$LOCAL" "$REMOTE"
 [merge]
-    tool = vimdiff 
+	tool = vimdiff
 [mergetool]
     prompt = false
 [push]
