@@ -4,7 +4,7 @@ metadata = ~/.cache/offlineimap
 
 [Account velox]
 localrepository = velox-local
-remoterepository = velox-remote
+remoterepository = linderud-remote
 synclabels = yes
 
 [Account glundandra]
@@ -12,10 +12,25 @@ localrepository = velox-local
 remoterepository = glundandra-remote
 synclabels = yes
 
+[Account linderud]
+localrepository = velox-local
+remoterepository = linderud-remote
+synclabels = yes
+
 [Repository velox-local]
 type = Maildir
 localfolders = ~/mail/velox
 status_backend = sqlite
+
+[Repository linderud-remote]
+type = IMAP
+remotehost = imap.linderud.pw
+remoteuser = morten@linderud.pw
+remotepassfile = ~/mail/velox-pass
+ssl = yes
+sslcacertfile = /etc/ssl/certs/ca-certificates.crt
+maxconnections = 8
+#readonly = True
 
 [Repository velox-remote]
 type = IMAP

@@ -12,7 +12,6 @@ tags = +github
 query = tag:spam
 tags = -unread;-INBOX;-archive;-replied
 
-
 [FolderNameFilter]
 folder_explicit_list = INBOX Drafts archlinux archweb AUR Important Archive
 folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Important:important Archive:archive

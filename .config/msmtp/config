@@ -7,26 +7,22 @@ logfile ~/.local/share/msmtp_log
 
 
 account         linderud 
-host            linderud.pw
+host            smtp.linderud.pw
 port            587
 user            morten@linderud.pw
+from            morten@linderud.pw
 passwordeval    pass mail/morten@linderud.pw
-tls_fingerprint "96:22:ED:16:00:F8:3C:16:EF:DA:B3:AD:0B:04:88:52:21:79:0C:AE"
+#tls_fingerprint "A5:E4:E6:0B:7E:0F:48:43:F0:56:EC:0E:32:1A:D0:07:5E:6F:A8:6E"
+tls_trust_file /etc/ssl/cert.pem
 
 
 account         archlinux
 user            foxboron 
 host            mail.archlinux.org
 port            587
+from            foxboron@archlinux.org
 passwordeval    pass service/archlinux-mail
-tls_fingerprint "47:AC:85:01:9B:AD:77:94:9D:63:BC:DC:9A:72:76:80:7F:61:24:89"
-
-
-account         uib
-user            yux004
-host            smtp.uib.no 
-port            465
-passwordeval    pass service/uib
-tls_fingerprint ""
+#tls_fingerprint "ED:6B:9A:16:13:86:5D:E8:AB:BE:64:B6:02:DD:6F:AA:AC:38:49:40"
+tls_trust_file /etc/ssl/cert.pem
 
 account default : linderud

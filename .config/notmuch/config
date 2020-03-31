@@ -8,7 +8,6 @@ other_email=foxboron@archlinux.org;mcfoxax@gmail.com;morten.linderud@student.uib
 
 [new]
 tags=new;inbox;github
-ignore=Sent
 
 [search]
 exclude_tags=deleted;spam;

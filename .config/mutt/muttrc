@@ -40,10 +40,10 @@ set sort=threads
 set sort_aux=last-date-received
 
 set crypt_replyencrypt = yes
-set crypt_use_gpgme 
+#set crypt_use_gpgme 
 set pgp_use_gpg_agent = yes
-set pgp_default_key = "C100346676634E80C940FB9E9C02FF419FECBE16!"
-set pgp_sign_as = "C100346676634E80C940FB9E9C02FF419FECBE16!"
+set pgp_default_key = "C100346676634E80C940FB9E9C02FF419FECBE16"
+set pgp_sign_as = "C100346676634E80C940FB9E9C02FF419FECBE16"
 set pgp_timeout = 20
 
 # Alias
@@ -64,8 +64,8 @@ set record=+Sent
 set trash=+Trash
 
 set nm_default_uri = "notmuch:///home/fox/mail/velox"
-set nm_record = no
-#set nm_record_tags = "unread,new,me,sent"
+# set nm_record = no
+# set nm_record_tags = "unread,me,sent"
 set nm_query_window_current_position = 1
 set nm_query_type = "threads"
 
@@ -89,7 +89,7 @@ bind index,pager u        sync-mailbox
 macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
 macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
 
-mailboxes `find ~/mail/ -type d -name cur -printf '%h '`
+# mailboxes `find ~/mail/ -type d -name cur -printf '%h '`
 
 virtual-mailboxes \
         "inbox"                       "notmuch://?query=folder:INBOX"\
@@ -97,7 +97,8 @@ virtual-mailboxes \
         "unread"                    "notmuch://?query=tag:unread"\
         "todo"                      "notmuch://?query=tag:todo"\
         "important"                      "notmuch://?query=tag:important"\
-        "sent"                       "notmuch://?query=tag:sent"\
+        "sent"                       "notmuch://?query=folder:Sent"\
+        "sent0"                       "notmuch://?query=tag:sent"\
         "draft"                       "notmuch://?query=tag:draft"\
         "github"                       "notmuch://?query=tag:github"\
         "lists/wireguard"          "notmuch://?query=tag:lists/wireguard"\
@@ -125,16 +126,31 @@ macro index,pager T \
     "Mark message 'todo' tag"
 
 macro index,pager S \
-    "<save-message>+Spam<enter>" \
+    "<enter-command>unset resolve<enter>\
+    <modify-labels>-INBOX -important +spam<enter>\
+    <save-message>+Spam<enter>\
+    <enter-command>set resolve<enter>"\
     "mark message as Spam"
 
 macro index,pager A \
-    "<save-message>+Archive<enter>" \
+    "<enter-command>unset resolve<enter>\
+    <modify-labels>-INBOX -important +archive<enter>\
+    <save-message>+Archive<enter>\
+    <enter-command>set resolve<enter>"\
     "mark message as Archive"
 
 macro index,pager I \
-    "<modify-labels>!INBOX !important<enter>"\
+    "<modify-labels>-INBOX !important<enter>"\
     "mark message as Important"
+
+macro index,pager d \
+    "<enter-command>unset resolve<enter>\
+    <modify-labels>-INBOX -important<enter>\
+    <save-message>+Trash<enter>\
+    <enter-command>set resolve<enter>"\
+    "Delete message"
+
+macro index K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive<return>"
 
 # Unsure
 #set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
