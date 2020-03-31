@@ -32,14 +32,14 @@ PROGRAM="${0##*/}"
 COMMAND="$1"
 
 case "$COMMAND" in
-	domains )
+	list)
 		curl "$API_URL/domains" | jq -r ".[].fqdn"
 		;;
-	records )
+	records)
 		shift
 		curl "$API_URL/domains/$1/records"
 		;;
-	snapshots )
+	snapshots)
 		shift
 		DOMAIN="$1"
 		ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
