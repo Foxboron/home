@@ -10,7 +10,10 @@ call plug#begin('~/.config/vim/bundle')
 "   Vim-plug - Plugin manager
     Plug 'junegunn/vim-plug'
 
+    Plug 'pearofducks/ansible-vim'
+
     Plug './archlinux-snippets'
+    Plug './rss-reader.vim'
 
 "   Vim-Go - for go stuff
     Plug 'fatih/vim-go', {'for': 'go'}
@@ -24,10 +27,11 @@ call plug#begin('~/.config/vim/bundle')
 "   Vim-Wiki - For notes and stuff
     Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
     Plug 'itchyny/calendar.vim', {'on' : 'Calendar', 'for': 'wiki' }
-    Plug 'tbabej/taskwiki', {'on': 'VimwikiIndex', 'for': 'wiki'}
+    " Plug 'tbabej/taskwiki', {'on': 'VimwikiIndex', 'for': 'wiki'}
 
 " Comletion and linting
     let g:ale_completion_enabled = 1
+    inoremap <silent> <C-@> <C-\><C-O>:ALEComplete<CR>
     Plug 'w0rp/ale'
     " Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
@@ -38,6 +42,7 @@ call plug#begin('~/.config/vim/bundle')
 " Misc
     Plug 'tpope/vim-unimpaired'
     Plug 'tpope/vim-obsession'
+    Plug  'tpope/vim-sleuth'
 
 "   Commenting
     Plug 'tpope/vim-commentary'
@@ -133,6 +138,7 @@ set nocompatible
 set shell=/bin/zsh
 set enc=utf-8
 set fenc=utf-8
+let $MYVIMRC="$XDG_CONFIG_HOME/vim/vimrc"
 
 " =========
 " Visual 
@@ -152,7 +158,9 @@ set listchars=tab:>-
 " =========
 " Behaviour
 " =========
+set autoread            " If we find changes
 set nobackup            " lol
+set backupskip=/tmp
 set noswapfile          " Yolo
 set magic               " Muh regex
 set mouse=""              " We don't want the mouse
@@ -161,7 +169,7 @@ set scrolloff=10 	    " 10 lines space between frame and cursor
 set splitright          " Splitting right feels more natrual
 " set splitbelow
 set ttyfast
-set diffopt+=vertical
+set diffopt=internal,algorithm:patience,indent-heuristic
 "set hidden              " So we can create new buffers and dont need to save them
 set noesckeys           " Remap esc!
 
@@ -175,7 +183,8 @@ set undofile
 set undolevels=1000
 set undoreload=10000
 " Completion menu
-set completeopt=menu,menuone,preview,noselect,noinsert
+set completeopt=menu,menuone,popup,noselect,noinsert
+set omnifunc=ale#completion#OmniFunc
 
 "Wildmenu
 set path=.                  " Include relative directory to the file
@@ -201,12 +210,12 @@ set incsearch
 " ===========
 " Indentation
 " ===========
-set smartindent " Clever indentation
-set autoindent 	" Indent automatically
 set expandtab " We want spaces!
 set tabstop=4
 set softtabstop=4
 set shiftwidth=4
+set autoindent 	" Indent automatically
+set smartindent " Clever indentation
 
 " =======
 " Folding 
@@ -271,10 +280,10 @@ let mapleader=" "
 let maplocalleader=","
 
 map <silent><leader>s :source ~/.vimrc<CR>
-map <leader>g :Ag 
+map <leader>g :Rg 
 map <leader>[ :ALEGoToDefinition<CR>
 map <leader>r :ALEFindReferences<CR>
-map <leader>h :ALEHover<CR>
+map <leader>h :ALEDocumentation<CR>
 map <leader>d :tabedit %<cr>:Gdiff<cr>
 map <leader>m :make<cr>
 
@@ -340,11 +349,13 @@ command! Source :source ~/.config/vim/vimrc
 "{{{1 Autocommand
 "{{{2 Default aucommands
 augroup filetypes
+    autocmd!
     au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
     au Filetype mail setlocal tw=80 
     au Filetype latex setlocal tw=80 
     au Filetype sh setlocal noexpandtab
     au Filetype gitcommit setlocal spell | setlocal tw=72
+    au Filetype git setlocal foldlevel=20
 augroup END
 
 augroup vimrc_autocommands
@@ -362,6 +373,7 @@ augroup END
 "}}}
 "{{{2 vimwiki
 augroup vimwiki_template
+    autocmd!
     function! InitTemplate()
         let f = system("date \"+%Y-%m-%d\" | tr -d '\n' | xargs -d '\n' -0 printf '= %s ='")
         let l = append(0, f)
@@ -375,6 +387,7 @@ augroup END
 " Because numbers can fuck off
 function! s:goyo_enter()
     augroup goyo_enter
+        autocmd !
         autocmd BufEnter    *   setlocal tw=80
         autocmd InsertEnter *   setlocal nonumber
         autocmd InsertLeave *   setlocal norelativenumber
@@ -443,6 +456,8 @@ imap <c-x><c-l> <plug>(fzf-complete-line)
 let g:UltiSnipsExpandTrigger="<c-j>"
 let g:UltiSnipsJumpForwardTrigger="<c-j>"
 let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsSnippetsDir="~/.config/vim/snippets/"
+let g:UltiSnipsSnippetDirectories=["UltiSnips", "user_snippets"]
 "}}}
 "{{{2 plugin: vim-go
 let g:go_info_mode = 'guru'
@@ -507,8 +522,8 @@ augroup END
 let g:taskwiki_disable_concealcursor = 'yes'
 "}}}
 "{{{2 plugin: ale
-
-let g:ale_linters = {'python': ['pyls', 'black'], 'rust': ['rls'], 'go': ['gopls', 'goimports', 'go vet', 'golint']}
+let g:ale_set_balloons = 1
+let g:ale_linters = {'python': ['pyls', 'black', 'flake'], 'rust': ['rls'], 'go': ['gopls', 'goimports', 'go vet', 'golint']}
 let g:ale_fixers = {'python': ['black']}
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_sign_column_always = 1
