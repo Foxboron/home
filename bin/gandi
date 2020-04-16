@@ -1,12 +1,17 @@
 #!/bin/bash
 set -eou pipefail
 
-readonly API_URL="https://dns.api.gandi.net/api/v5"
+readonly API_URL="https://api.gandi.net/v5"
 readonly APIKEY=$(pass api/gandi)
+
+function curl_plain(){ 
+	exec 3>&1
+	HTTP_STATUS=$(/usr/bin/curl -s -w "%{http_code}" -o >(cat >&3) -H 'Accept: text/plain' -H "Authorization: Apikey $APIKEY" "$@")
+}
 
 function curl(){ 
 	exec 3>&1
-	HTTP_STATUS=$(/usr/bin/curl -s -w "%{http_code}" -o >(cat >&3) -H 'Accept: text/plain' -H 'Content-Type: text/plain' -H "X-Api-Key: $APIKEY" "$@")
+	HTTP_STATUS=$(/usr/bin/curl -s -w "%{http_code}" -o >(cat >&3) -H "Authorization: Apikey $APIKEY" "$@")
 }
 
 tmpdir(){
@@ -33,24 +38,22 @@ COMMAND="$1"
 
 case "$COMMAND" in
 	list)
-		curl "$API_URL/domains" | jq -r ".[].fqdn"
+		curl "$API_URL/livedns/domains" | jq -r ".[].fqdn"
 		;;
 	records)
 		shift
-		curl "$API_URL/domains/$1/records"
+		curl_plain "$API_URL/livedns/domains/$1/records"
 		;;
 	snapshots)
 		shift
 		DOMAIN="$1"
-		ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
 		echo "UUID					Created"
-		curl "$ZONE_HREF/snapshots" | jq -r '.[] | [.uuid, .date_created] | @tsv'
+		curl "$API_URL/livedns/domains/$DOMAIN/snapshots" | jq -r '.[] | [.id, .created_at] | @tsv'
 		;;
 	show-snapshot)
 		shift; DOMAIN="$1"
-		ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
 		shift; UUID="$1"
-		curl "$ZONE_HREF/snapshots/$UUID"
+		curl "$API_URL/livedns/domains/$DOMAIN/snapshots/$UUID"
 		;;
 	edit)
 		shift; 
@@ -65,18 +68,19 @@ case "$COMMAND" in
 		tmpdir
 		tmp_file="$(mktemp -u "$SECURE_TMPDIR/XXXXXX")-${DOMAIN}.txt"
 		if [ -z "$session_id" ]; then
-			curl "$API_URL/domains/$DOMAIN/records" > "$tmp_file"
+			curl_plain "$API_URL/livedns/domains/$DOMAIN/records" > "$tmp_file"
 		else
-			ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
+			# Doesn't work
+			ZONE_HREF=$(curl "$API_URL/livedns/domains/$DOMAIN" | jq -r ".zone_href")
 			curl "$ZONE_HREF/snapshots/$session_id" > "$tmp_file"
 		fi
 		$EDITOR "$tmp_file"
-		curl -X PUT --data-binary "@$tmp_file" "$API_URL/domains/$DOMAIN/records"
-		if [ "$HTTP_STATUS" = "200" ]; then
-			if [ -z ${ZONE_HREF+x} ]; then
-				ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
-			fi
-			curl -X POST "$ZONE_HREF/snapshots" | jq -r ".message"
-		fi
+		curl -X PUT -H "Content-Type: text/plain" --data-binary "@$tmp_file" "$API_URL/livedns/domains/$DOMAIN/records"
+		# if [ "$HTTP_STATUS" = "200" ]; then
+			# if [ -z ${ZONE_HREF+x} ]; then
+			# 	ZONE_HREF=$(curl "$API_URL/domains/$DOMAIN" | jq -r ".zone_href")
+			# fi
+			# curl -X POST "$ZONE_HREF/snapshots" | jq -r ".message"
+		# fi
 		;;
 esac
