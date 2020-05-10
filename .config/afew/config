@@ -9,7 +9,7 @@ query = from:notifications@github.com
 tags = +github
 
 [Filter.2]
-query = tag:spam
+query = tag:spam or tag:trash
 tags = -unread;-INBOX;-archive;-replied
 
 [FolderNameFilter]
@@ -20,4 +20,8 @@ folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Im
 
 [MailMover]
 folders = INBOX
-INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam
+INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash
+
+[Filter.3]
+query = tag:lists
+tags = -INBOX
