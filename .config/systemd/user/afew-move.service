@@ -1,0 +1,12 @@
+[Unit]
+Description=Afew move service(oneshot)
+Documentation=man:afew(1)
+Requires=afew-tag.service
+After=afew-tag.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/afew --move --all --verbose
+
+[Install]
+WantedBy=mail.target
