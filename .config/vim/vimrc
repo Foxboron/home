@@ -150,7 +150,7 @@ set cursorline
 set noshowmode
 set laststatus=2    " always show statusbar  
 set ttimeoutlen=50
-set shortmess=Iat    "We dont care for the intro message
+set shortmess=IatO    "We dont care for the intro message
 set list
 set listchars=tab:>-
 
