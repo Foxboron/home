@@ -90,17 +90,18 @@ alias tmux="tmux -2 -f \"$XDG_CONFIG_HOME/tmux/tmux.conf\""
 alias tmuxconf="vim ~/.tmux.conf"
 alias zshrc="vim ~/.config/zsh/.zshrc && source ~/.config/zsh/.zshrc"
 alias i3conf="vim ~/.config/i3/config"
+alias muttrc="vim ~/.config/mutt/muttrc"
 alias psg="ps aux | grep "
 alias g="grep -oEi"
-alias ls="ls --color=tty"
-alias xselix="xsel | ix"
 alias ..="cd .."
+alias ls="ls --color=tty"
 alias ls="exa"
 alias l='ls -lF'
 alias la='ls -laF'
 alias ip='ip -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
 compdef _git home # So we get git complteions with the alias
+alias pacdiff="sudo -E pacdiff"
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 
