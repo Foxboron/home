@@ -1,10 +1,25 @@
-*/.cache
-*/.local/share
-*/Media
-*/Bilder
-*/Pictures
-*/Downloads
-*/.rustup
-*/.cargo
-*/mail
-*/.go
+P sh
+R /home/
+- /home/.snapshots/backup/info.xml
+! /home/.snapshots/backup/snapshot/.snapshots
+! /home/.snapshots/backup/snapshot/*/.cache
+! /home/.snapshots/backup/snapshot/*/.local/share
+! /home/.snapshots/backup/snapshot/*/Media
+! /home/.snapshots/backup/snapshot/*/Bilder
+! /home/.snapshots/backup/snapshot/*/Pictures
+! /home/.snapshots/backup/snapshot/*/Downloads
+! /home/.snapshots/backup/snapshot/*/mail
+! /home/.snapshots/backup/snapshot/*/tmp
+! /home/.snapshots/backup/snapshot/*/.cargo
+! /home/.snapshots/backup/snapshot/*/.rustup
+! /home/.snapshots/backup/snapshot/*/.npm
+! /home/.snapshots/backup/snapshot/*/.go
+! /home/.snapshots/backup/snapshot/*/.kube/cache
+! /home/.snapshots/backup/snapshot/*/.kube/http-cache
+! /home/.snapshots/backup/snapshot/*/Git/**/.venv
+! /home/.snapshots/backup/snapshot/*/jobb/**/.venv
+! /home/.snapshots/backup/snapshot/*/.config/borg/security
+
+# Fuck software providers adding caches to config.
+! /home/.snapshots/backup/snapshot/*/.config/discord
+! /home/.snapshots/backup/snapshot/*/.config/chromium
