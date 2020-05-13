@@ -1,6 +1,0 @@
-nvidia_off=$(optirun --status | grep -oEi 'Discrete video.*' | cut -d' ' -f5)
-echo "Nvidia card status: "$nvidia_off
-bbswitch_loaded=$(dmesg | grep -oEi 'bbswitch.*loaded.*' | cut -d' ' -f8 | tail -n 1)
-echo "Discrete card status: "$bbswitch_loaded
-
-
