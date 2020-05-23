@@ -29,7 +29,7 @@ for_window [title="float"] move position center
 
 # notes
 for_window [title="fox-notes"] floating enable
-for_window [title="fox-notes"] resize set 550 600
+for_window [title="fox-notes"] resize set 660 700
 for_window [title="fox-notes"] move position center
 for_window [title="fox-notes"] move to scratchpad
 
@@ -134,43 +134,44 @@ bindsym $mod+Control+Shift+r restart
 
 set $resize resize (h,j,k,l,v,q)
 mode "$resize"{
-	bindsym h resize shrink width 10 px or 10 ppt
-	bindsym j resize grow height 10 px or 10 ppt
-	bindsym k resize shrink height 10 px or 10 ppt
-	bindsym l resize grow width 10 px or 10 ppt
+    bindsym h resize shrink width 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
+    bindsym k resize shrink height 10 px or 10 ppt
+    bindsym l resize grow width 10 px or 10 ppt
 
-	bindsym v floating enable; sticky enable; resize set 530 300; move absolute position 1391 0
-	bindsym f for_window [title="stream"] fullscreen toggle
+    bindsym v floating enable; sticky enable; resize set 530 300; move absolute position 1391 0
+    bindsym f for_window [title="stream"] fullscreen toggle
 
-	bindsym Left resize shrink width 10 px or 10 ppt
-	bindsym Down resize grow height 10 px or 10 ppt
-	bindsym Up resize shrink height 10 px or 10 ppt
-	bindsym Right resize grow width 10 px or 10 ppt
+    bindsym Left resize shrink width 10 px or 10 ppt
+    bindsym Down resize grow height 10 px or 10 ppt
+    bindsym Up resize shrink height 10 px or 10 ppt
+    bindsym Right resize grow width 10 px or 10 ppt
 
-	bindsym Return mode "default"
-	bindsym Escape mode "default"
-	bindsym q mode "default"
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+    bindsym q mode "default"
 }
 bindsym $mod+Control+r mode "$resize"
 
 
 set $media Media Player (j,k,q,space)
 mode "$media"{
-	bindsym space exec playerctl play-pause, mode "default"
-	bindsym j exec playerctl previous
-	bindsym k exec playerctl next 
-	bindsym q mode "default"
-	bindsym m mode "$volume"
+    bindsym space exec playerctl play-pause, mode "default"
+    bindsym j exec playerctl previous
+    bindsym k exec playerctl next 
+    bindsym q mode "default"
+    bindsym m mode "$volume"
 }
 bindsym $mod+p mode "$media"
 
 set $volume Volume
 mode "$volume"{
-	bindsym space exec ~/bin/volume toggle, mode "default"
-	bindsym j exec ~/bin/volume dec
-	bindsym k exec ~/bin/volume inc 
-	bindsym q mode "default"
-	bindsym p mode "$media"
+    bindsym space exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle, mode "default"
+    bindsym j exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5\% && pkill -RTMIN+10 i3blocks
+    bindsym k exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5\% && pkill -RTMIN+10 i3blocks
+    bindsym q mode "default"
+    bindsym Escape mode "default"
+    bindsym p mode "$media"
 }
 bindsym $mod+m mode "$volume"
 
@@ -179,19 +180,19 @@ mode "$layout" {
     bindsym s layout stacking, mode "default"
     bindsym t layout tabbed, mode "default"
     bindsym d layout tabbed, mode "default"
-	bindsym q mode "default"
+    bindsym q mode "default"
 
 }
 bindsym $mod+x mode "$layout"
 
 
 bar {
-	tray_output primary
-	position top
-	mode dock
-	workspace_buttons yes
-	strip_workspace_numbers yes
-	status_command i3blocks -c ~/.config/i3/i3blocks.conf
+    tray_output primary
+    position top
+    mode dock
+    workspace_buttons yes
+    strip_workspace_numbers yes
+    status_command i3blocks -c ~/.config/i3/i3blocks.conf
     colors {
         background #101010
         statusline #605c5a
