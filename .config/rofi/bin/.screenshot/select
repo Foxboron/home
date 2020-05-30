@@ -1,1 +1,6 @@
-maim -s
+#!/bin/bash
+eval $(dbus-launch)
+flameshot gui -r
+killall flameshot &> /dev/null
+kill $DBUS_SESSION_BUS_PID &> /dev/null
+

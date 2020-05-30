@@ -1,0 +1,4 @@
+#!/bin/bash
+set -eou pipefail
+
+diff -Naur <(extract-conf "$1") "$1" | sed "s|/dev/fd/[[:digit:]]\+|$1|g"

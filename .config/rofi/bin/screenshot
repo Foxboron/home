@@ -1,1 +1,5 @@
-exec ~/.config/rofi/bin/.screenshot/$(ls ~/.config/rofi/bin/.screenshot | rofi -dmenu -p "") | ix | xsel
+#!/bin/bash
+eval $(dbus-launch)
+flameshot gui -r | fb | xsel
+killall flameshot &> /dev/null
+kill $DBUS_SESSION_BUS_PID &> /dev/null
