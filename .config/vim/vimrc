@@ -10,8 +10,6 @@ call plug#begin('~/.config/vim/bundle')
 "   Vim-plug - Plugin manager
     Plug 'junegunn/vim-plug'
 
-    Plug 'pearofducks/ansible-vim'
-
     Plug './archlinux-snippets'
     Plug './rss-reader.vim'
 
@@ -21,8 +19,6 @@ call plug#begin('~/.config/vim/bundle')
     Plug 'racer-rust/vim-racer', {'for': 'rust'}
     let g:racer_cmd = "/usr/bin/racer"
     let g:racer_experimental_completer = 1
-
-    Plug 'posva/vim-vue', {'for': 'vue'}
 
 "   Vim-Wiki - For notes and stuff
     Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
@@ -284,32 +280,17 @@ map <leader>g :Rg
 map <leader>[ :ALEGoToDefinition<CR>
 map <leader>r :ALEFindReferences<CR>
 map <leader>h :ALEDocumentation<CR>
-map <leader>d :tabedit %<cr>:Gdiff<cr>
+
+map <leader>d :Gdiffsplit!<cr>
 map <leader>m :make<cr>
 
-
 " Buffers
-nnoremap <leader>bj  :bprev<CR>
-nnoremap <leader>bk  :bnext<CR>
 nnoremap <leader>j  :bprev<CR>
 nnoremap <leader>k  :bnext<CR>
-nnoremap <leader>bc  :bd<CR>
-nnoremap <leader>bn  :enew<CR>
-
-" Tabs
-nnoremap <leader>th  :tabfirst<CR>
-nnoremap <leader>tj  :tabprev<CR>
-nnoremap <leader>tk  :tabnext<CR>
-nnoremap <leader>tl  :tablast<CR>
-nnoremap <leader>tm  :tabm<Space>
-nnoremap <leader>tn  :tabnew<CR>
-nmap <leader>tf :tab sb<CR>
-nmap <leader>tc :tabclose<CR>
 
 " Fugitive
 nnoremap gs :Gstatus<CR>
-nnoremap gd :Gdiff<CR>
-"nnoremap gc :Gcommit<CR>
+nnoremap gc :Gcommit<CR>
 nnoremap gm :Gmerge<CR>
 nnoremap gr :Grebase<CR>
 
@@ -319,7 +300,6 @@ nnoremap gr :Grebase<CR>
 " New Maps
 " ========
 map <silent><ESC> :set hlsearch!<CR>
-nnoremap <esc>^[ <esc>^[
 map <ScrollWheelUp> <nop>
 map <S-ScrollWheelUp> <nop>
 map <ScrollWheelDown> <nop>
@@ -350,7 +330,7 @@ command! Source :source ~/.config/vim/vimrc
 "{{{2 Default aucommands
 augroup filetypes
     autocmd!
-    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown
+    au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown | setlocal tw=80
     au Filetype mail setlocal tw=80 
     au Filetype latex setlocal tw=80 
     au Filetype sh setlocal noexpandtab
@@ -364,7 +344,7 @@ augroup vimrc_autocommands
   autocmd WinLeave,FocusLost    * setlocal nocursorline
   autocmd InsertEnter           * setlocal norelativenumber
   autocmd InsertLeave           * setlocal relativenumber
-  autocmd FilterWritePre        * if &diff | source ~/.config/vim/after/scripts/diff.vim
+
   autocmd BufReadPost *
         \ if line("'\"") > 0 && line("'\"") <= line('$') |
         \   execute 'normal! g`"' |
@@ -439,15 +419,17 @@ let g:fzf_colors =
   \ 'header':  ['fg', 'Comment'] }
 let g:fzf_tags_command = 'ctags -R --options=/home/fox/.config/ctags'
 map <leader>f :FZF<CR>
-map <leader>s :Tags<CR>
+map <leader>t :Tags<CR>
 nmap <Space><Space> :Buffers<CR>
 map <leader>v :BCommits<CR>
-map <c-l> <C-o>:Snippet<CR>
+map <silent><c-l> :Snippet<CR>
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
+
+
 
 "}}}
 "{{{2 plugin: ultisnips
@@ -488,7 +470,16 @@ let master_wiki.path_html = '~/.cache/vimwiki/master/html'
 let master_wiki.automatic_nested_syntaxes = 1
 let master_wiki.list_margin = 0
 "}}}
-let g:vimwiki_list = [main_wiki, master_wiki]
+"{{{3 vimwiki:blog
+let blog_wiki = {}
+let blog_wiki.path = '~/Notes/blog'
+let blog_wiki.path_html = '~/.cache/vimwiki/blog/html'
+let blog_wiki.automatic_nested_syntaxes = 1
+let blog_wiki.list_margin = 0
+let blog_wiki.syntax = 'markdown'
+let blog_wiki.ext = '.md'
+"}}}
+let g:vimwiki_list = [main_wiki, master_wiki, blog_wiki]
 hi VimwikiBold term=bold cterm=bold gui=bold ctermfg=178 guifg=#dfaf00
 hi VimwikiItalic term=italic cterm=italic gui=italic ctermfg=178 guifg=#dfaf00
 "}}}
@@ -523,7 +514,10 @@ let g:taskwiki_disable_concealcursor = 'yes'
 "}}}
 "{{{2 plugin: ale
 let g:ale_set_balloons = 1
-let g:ale_linters = {'python': ['pyls', 'black', 'flake'], 'rust': ['rls'], 'go': ['gopls', 'goimports', 'go vet', 'golint']}
+let g:ale_linters = {}
+let g:ale_linters.python = ['pyls', 'black', 'flake8']
+let g:ale_linters.rust = ['rls']
+let g:ale_linters.go = ['gopls', 'goimports', 'go vet', 'golint', 'staticcheck']
 let g:ale_fixers = {'python': ['black']}
 let g:ale_rust_rls_toolchain = 'stable'
 let g:ale_sign_column_always = 1
