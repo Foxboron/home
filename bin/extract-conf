@@ -1,0 +1,31 @@
+#!/bin/bash
+# This will extract the original (packaged) version of an installed file.
+# The file is directed to stdout.
+
+set -oue pipefail
+
+if [[ -z "$1" ]]; then
+  echo "usage: $0 [-h | <path to installed file>]" 1>&2
+  exit 1
+elif [[ "$1" == '-h' ]]; then
+  cat <<MSG
+usage: $0 [-h | <path to installed file>]
+
+extract the original version of a packaged file
+MSG
+  exit 0
+fi
+
+file_="$(readlink -f "$1")"
+pkgname_="$(pacman -Qoq "$file_")"
+url_="$(pacman -Sp "$pkgname_")"
+pkg_="${url_##*/}"
+# pkg_="$(basename -- "$url_")"
+cd /var/cache/pacman/pkg
+if [[ ! -f $pkg_ ]]
+then
+  echo "the package must be redownloaded"
+  echo sudo pacman -Sw "$pkgname_"
+  sudo pacman -Sw "$pkgname_"
+fi
+bsdtar -xf "$pkg_" --to-stdout "${file_#/}"
