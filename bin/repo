@@ -1,0 +1,125 @@
+#!/bin/bash
+readonly argv0=repo-new
+readonly XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
+readonly AURUTILS_REPO_DB=${AURUTILS_REPO_DB:-$XDG_CACHE_HOME/aurutils/$argv0.db}
+AURUTILS_REPOS="/var/repos"
+
+usage() {
+    plain 'usage: %s [-t]' "$argv0" >&2
+    exit 1
+}
+
+source /usr/share/makepkg/util/parseopts.sh
+
+if [ ! -d "$AURUTILS_REPOS" ]; then
+	sudo mkdir -p "$AURUTILS_REPOS"
+	sudo chown "$USER": "$AURUTILS_REPOS"
+fi
+
+opt_short='t'
+opt_long=('temp')
+
+if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
+    usage
+fi
+set -- "${OPTRET[@]}"
+
+unset temp_repo
+while true; do
+    case "$1" in
+	-t|--temp) echo "tmp" ;; #temp_repo="$(mktemp aur-repo.XXX)" ;;
+        --) shift; break ;;
+    esac
+    shift
+done
+
+
+cmd_new=0 cmd_list=0 cmd_show=0 cmd_build=0
+# Parse commands
+while true; do
+    case "$1" in
+	new) cmd_new=1 ;;
+	show) cmd_show=1 ;;
+	list) cmd_list=1 ;;
+	build) cmd_build=1 ;;
+        *) break ;;
+    esac
+    shift
+done
+
+if [ ! -e "$AURUTILS_REPO_DB"  ]; then
+	touch "$AURUTILS_REPO_DB"
+fi
+
+if ((cmd_new)); then
+	repo_name=$1
+	[ ! -n "$repo_name" ] && exit 1
+	repo_path="${2:-$AURUTILS_REPOS}/$repo_name"
+	if ! readlink -f "$repo_path"; then
+		printf "%s is not a valid path" "$repo_path"
+		exit 1
+	fi
+	repo_path=$(readlink -f "$repo_path")
+	mkdir -p "$repo_path"
+	if [ ! -e "$repo_path/$repo_name.db.tar"  ]; then
+		repo-add "$repo_path/$repo_name.db.tar"
+	fi
+	echo "$repo_name;$repo_path" >> "$AURUTILS_REPO_DB"
+fi
+
+if ((cmd_list)); then
+	while IFS=\; read -r repo path; do 
+		echo "$repo" "$path"
+	done < "$AURUTILS_REPO_DB"
+fi
+
+
+if ((cmd_show)); then
+	repo_name=$1
+	if [ ! -e "$AURUTILS_REPOS/$repo_name/$repo_name.db.tar"  ]; then
+		exit 1
+	fi
+cat << EOF > "/dev/stdout"
+[options]
+HoldPkg     = pacman glibc
+Architecture = auto
+
+IgnorePkg   = linux linux-headers
+
+CheckSpace
+
+SigLevel    = Required DatabaseOptional
+LocalFileSigLevel = Optional
+
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
+[options]
+CacheDir = /var/cache/pacman/pkg
+CacheDir = $AURUTILS_REPOS/$repo_name
+CleanMethod = KeepCurrent
+
+[$repo_name]
+SigLevel = Optional TrustAll
+Server = file://$AURUTILS_REPOS/$repo_name
+EOF
+fi
+
+
+if ((cmd_build)); then
+    repo_name="$1"
+    if ! repo show "$repo_name" > "/tmp/pacman.conf.$repo_name"; then
+	exit 1
+    fi
+    if [ -f ./PKGBUILD ]; then
+	aur build -fcsS --pacman-conf "/tmp/pacman.conf.$repo_name"
+    else
+	aur build -fcsS -a <(aur graph */.SRCINFO |tsort|tac) --pacman-conf "/tmp/pacman.conf.$repo_name"
+    fi
+fi
