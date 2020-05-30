@@ -290,7 +290,6 @@ nnoremap <leader>k  :bnext<CR>
 
 " Fugitive
 nnoremap gs :Gstatus<CR>
-nnoremap gc :Gcommit<CR>
 nnoremap gm :Gmerge<CR>
 nnoremap gr :Grebase<CR>
 
