@@ -28,7 +28,6 @@ set fast_reply=yes
 set use_envelope_from 
 set hidden_host
 set pager_index_lines=10
-# set sidebar_sort_method="unsorted"
 set sidebar_width = 20
 set sidebar_visible = yes
 
@@ -40,7 +39,6 @@ set sort=threads
 set sort_aux=last-date-received
 
 set crypt_replyencrypt = yes
-#set crypt_use_gpgme 
 set pgp_use_gpg_agent = yes
 set pgp_default_key = "C100346676634E80C940FB9E9C02FF419FECBE16"
 set pgp_sign_as = "C100346676634E80C940FB9E9C02FF419FECBE16"
@@ -63,8 +61,6 @@ set record=+Sent
 set trash=+Trash
 
 set nm_default_uri = "notmuch:///home/fox/mail/velox"
-# set nm_record = no
-# set nm_record_tags = "unread,me,sent"
 set nm_query_window_current_position = 1
 set nm_query_type = "threads"
 
@@ -81,8 +77,6 @@ bind index,pager R  group-reply
 bind index <space>  collapse-thread
 bind index -        collapse-all
 
-#bind index,pager   \t          next-unread
-#bind index,pager  ,\t      previous-unread
 bind index,pager u        sync-mailbox
 
 macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
@@ -120,12 +114,12 @@ virtual-mailboxes \
 
 
 macro index,pager T "<modify-labels-then-hide>!todo<enter>" "Mark message as Todo"
-macro index,pager I  "<modify-labels-then-hide>!important\n<sync-mailbox>" "mark message as Important"
+macro index,pager I  "<modify-labels-then-hide>!important<enter>" "mark message as Important"
 
-macro index,pager S "<modify-labels-then-hide>-INBOX -important +spam\n<sync-mailbox>" "mark message as Spam"
-macro index,pager A "<modify-labels-then-hide>-INBOX -important +archive<enter>" "mark message as Archive"
-macro index,pager d "<modify-labels-then-hide>-INBOX -important +trash<enter>" "Delete message"
-macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive\n<sync-mailbox>"
+macro index,pager S "<modify-labels-then-hide>-INBOX -important +spam<enter>" "mark message as Spam"
+macro index,pager A "<tag-thread><modify-labels-then-hide>-INBOX -important +archive<enter>" "mark message as Archive"
+macro index,pager d "<modify-labels-then-hide>-INBOX -important +trash\n" "Delete message"
+macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive<enter>"
 bind index,pager Y modify-labels
 
 # Unsure

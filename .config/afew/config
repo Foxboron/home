@@ -11,6 +11,12 @@ tags = +github
 [Filter.2]
 query = tag:spam or tag:trash
 tags = -unread;-INBOX;-archive;-replied
+message = Remove spam and trash from inbox
+
+[Filter.3]
+query = tag:lists
+tags = -INBOX
+message = Remove mailing lists from inbox
 
 [FolderNameFilter]
 folder_explicit_list = INBOX Drafts archlinux archweb AUR Important Archive
@@ -20,8 +26,5 @@ folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Im
 
 [MailMover]
 folders = INBOX
-INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash
+INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash 'tag:lists':Lists
 
-[Filter.3]
-query = tag:lists
-tags = -INBOX

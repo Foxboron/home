@@ -7,7 +7,7 @@ primary_email=morten@linderud.pw
 other_email=foxboron@archlinux.org;mcfoxax@gmail.com;morten.linderud@student.uib.no;
 
 [new]
-tags=new;inbox;github
+tags=unread;new;inbox
 
 ignore=
 
