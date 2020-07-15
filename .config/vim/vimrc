@@ -27,8 +27,11 @@ call plug#begin('~/.config/vim/bundle')
 
 " Comletion and linting
     let g:ale_completion_enabled = 1
+    let g:ale_set_balloons = 1
     inoremap <silent> <C-@> <C-\><C-O>:ALEComplete<CR>
-    Plug 'w0rp/ale'
+    Plug 'dense-analysis/ale', {'frozen': 1}
+    let g:ale_set_balloons = 1
+    let g:ale_hover_to_popup=0
     " Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
 
 "   GIT STUFF
@@ -260,6 +263,7 @@ noremap <silent> <C-K> :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 vnoremap <silent> <C-J> :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
 vnoremap <silent> <C-K> :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
 
+
 " Folds
 nnoremap          zf zMzvzz
 nnoremap          zz za
@@ -275,11 +279,14 @@ cnoremap <C-E> <End>
 let mapleader=" "
 let maplocalleader=","
 
-map <silent><leader>s :source ~/.vimrc<CR>
+" map <silent><leader>s :source ~/.vimrc<CR>
 map <leader>g :Rg 
 map <leader>[ :ALEGoToDefinition<CR>
 map <leader>r :ALEFindReferences<CR>
 map <leader>h :ALEDocumentation<CR>
+map <silent><leader>s :ALEHover<CR>
+
+vnoremap <leader>p :diffput<CR>
 
 map <leader>d :Gdiffsplit!<cr>
 map <leader>m :make<cr>
@@ -289,7 +296,7 @@ nnoremap <leader>j  :bprev<CR>
 nnoremap <leader>k  :bnext<CR>
 
 " Fugitive
-nnoremap gs :Gstatus<CR>
+nnoremap gs :Gtabedit :<CR>
 nnoremap gm :Gmerge<CR>
 nnoremap gr :Grebase<CR>
 
@@ -442,6 +449,7 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips", "user_snippets"]
 "}}}
 "{{{2 plugin: vim-go
 let g:go_info_mode = 'guru'
+let g:go_gopls_enabled = 0
 noremap <localleader>l :GoLint<cr>
 noremap <localleader>v :GoVet<cr>
 noremap <localleader>b :GoBuild<cr>
@@ -512,7 +520,8 @@ augroup END
 let g:taskwiki_disable_concealcursor = 'yes'
 "}}}
 "{{{2 plugin: ale
-let g:ale_set_balloons = 1
+let g:ale_set_popups=1
+let g:ale_hover_to_popup=1
 let g:ale_linters = {}
 let g:ale_linters.python = ['pyls', 'black', 'flake8']
 let g:ale_linters.rust = ['rls']
