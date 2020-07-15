@@ -13,16 +13,16 @@ query = tag:spam or tag:trash
 tags = -unread;-INBOX;-archive;-replied
 message = Remove spam and trash from inbox
 
-[Filter.3]
-query = tag:lists
-tags = -INBOX
-message = Remove mailing lists from inbox
-
 [FolderNameFilter]
 folder_explicit_list = INBOX Drafts archlinux archweb AUR Important Archive
 folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Important:important Archive:archive
 
 [InboxFilter]
+
+[Filter.3]
+query = tag:lists
+tags = -INBOX
+message = Remove mailing lists from inbox
 
 [MailMover]
 folders = INBOX
