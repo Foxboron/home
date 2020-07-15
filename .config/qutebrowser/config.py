@@ -44,8 +44,11 @@ c.fonts.messages.info = "8pt monospace"
 c.fonts.messages.warning = "8pt monospace"
 c.fonts.prompts = "8pt monospace"
 c.fonts.statusbar = "8pt monospace"
-c.fonts.tabs = "8pt monospace"
+c.fonts.tabs.selected = "8pt monospace"
+c.fonts.tabs.unselected = "8pt monospace"
 
+config.bind(',c', 'spawn --userscript stream')
+config.bind(',p', 'spawn --userscript open-portal')
 
 # Uncomment this to still load settings configured via autoconfig.yml
 # config.load_autoconfig()
