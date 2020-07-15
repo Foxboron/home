@@ -166,7 +166,7 @@ bindsym $mod+p mode "$media"
 
 set $volume Volume
 mode "$volume"{
-    bindsym space exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle, mode "default"
+    bindsym space exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ toggle && pkill -RTMIN+10 i3blocks, mode "default"
     bindsym j exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -5\% && pkill -RTMIN+10 i3blocks
     bindsym k exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +5\% && pkill -RTMIN+10 i3blocks
     bindsym q mode "default"
