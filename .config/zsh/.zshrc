@@ -39,7 +39,10 @@ autoload run-help-svk
 # Vars{{{
 HISTSIZE=1000000
 SAVEHIST=1000000
+PROMPT_COMMAND="history -a; history -n"
+HISTORY_IGNORE="(ls|ls -lah|cd|pwd|exit|cd ..|..)"
 HISTFILE=~/.local/share/zsh/history
+
 HELPDIR=~/.config/zsh/zsh_help
 export KEYTIMEOUT=1                     # For vim status line
 # }}}

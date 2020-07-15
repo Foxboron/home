@@ -1,1 +1,1 @@
-termite --title="mutt-rofi" --exec=mutt
+termite --title="mutt-rofi" --exec=neomutt
