@@ -73,11 +73,11 @@
 [rebase]
     autoStash = true
 [sendemail]
-    suppresscc = all
-    smtpuser =
+    from = "Morten Linderud <morten@linderud.pw>"
     smtpserver = "/usr/bin/msmtp"
-    smtpencryption = tls
-    chainreplyto = false
+    annotate = true
+    confirm = always
+    envelopesender = auto
 [includeIf "gitdir:~/jobb/"]
     path = ~/jobb/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
