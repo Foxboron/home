@@ -51,7 +51,7 @@ set reverse_alias=yes
 
 set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
 set status_format="$from: %f (%s/%S)"
-set sidebar_format= '%B%*  %N'
+set sidebar_format= '%D%*  %N'
 
 set mbox_type = Maildir
 set folder = ~/mail/velox
@@ -117,7 +117,7 @@ macro index,pager T "<modify-labels-then-hide>!todo<enter>" "Mark message as Tod
 macro index,pager I  "<modify-labels-then-hide>!important<enter>" "mark message as Important"
 
 macro index,pager S "<modify-labels-then-hide>-INBOX -important +spam<enter>" "mark message as Spam"
-macro index,pager A "<tag-thread><modify-labels-then-hide>-INBOX -important +archive<enter>" "mark message as Archive"
+macro index,pager A "<modify-labels-then-hide>-INBOX -important +archive<enter>" "mark message as Archive"
 macro index,pager d "<modify-labels-then-hide>-INBOX -important +trash\n" "Delete message"
 macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive<enter>"
 bind index,pager Y modify-labels
