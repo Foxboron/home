@@ -1,0 +1,3 @@
+#!/bin/bash
+
+printf "open -t %s\n" $(ip -json route show default | jq -r '.[].gateway') >> "$QUTE_FIFO"
