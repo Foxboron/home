@@ -98,7 +98,6 @@ alias psg="ps aux | grep "
 alias g="grep -oEi"
 alias ..="cd .."
 alias ls="ls --color=tty"
-alias ls="exa"
 alias l='ls -lF'
 alias la='ls -laF'
 alias ip='ip -c'
@@ -124,8 +123,8 @@ alias ab='auracle buildorder *'
 
 # pacman alias
 alias pacman='pacman --color auto'
-alias pacupg='sudo pacman -Syu'
-alias pacupg-linux='sudo pacman -Syu linux linux-headers'
+alias pacupg='sudo pacman -Syu --needed'
+alias pacupg-linux='sudo pacman -Syu --needed linux linux-headers'
 
 #Arch aliases
 alias db-update='ssh repos.archlinux.org "/community/db-update"'
