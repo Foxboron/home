@@ -13,6 +13,8 @@ Pictures
 !.config/systemd
 !.config/zsh
 !.config/i3
+!.config/rofi
+!.config/git
 !.config/systemd/*
 .config/systemd/user/*.target.wants
 .config/vim/bundle
