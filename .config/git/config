@@ -32,6 +32,8 @@
     ba = branch -a
 
     ap = add -p
+    rp = restore --staged --patch
+
     p = push
     l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     hd = show -p --pretty="tformat:"
