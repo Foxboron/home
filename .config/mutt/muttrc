@@ -9,7 +9,7 @@ set message_cachedir = $header_cache
 set realname = 'Morten Linderud'
 set from = morten@linderud.pw
 alternates ^foxboron@archlinux\.org$ ^mcfoxax@gmail\.com$ ^morten@linderud\.pw$
-set sendmail  = "/usr/bin/msmtp -a linderud"
+set sendmail  = "/usr/bin/msmtp"
 set charset          = "utf-8" # Terminal charset for display/input
 set send_charset     = "utf-8" # Charset for outgoing messages
 set config_charset   = "utf-8"
@@ -157,7 +157,6 @@ message-hook "~C morten@linderud.pw" "source ~/.config/mutt/account.d/linderud"
 message-hook "~C @archlinux.org" "source ~/.config/mutt/account.d/archlinux"
 macro pager,index ,a ":source ~/.config/mutt/account.d/archlinux\n"
 macro pager,index ,l ":source ~/.config/mutt/account.d/linderud\n"
-macro pager,index ,u ":source ~/.config/mutt/account.d/uib\n"
 
 # Source
 source /home/fox/.config/mutt/muttrc.d/aliases
