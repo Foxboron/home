@@ -131,6 +131,12 @@ bindsym $mod+Control+l focus output right
 
 bindsym $mod+Control+Shift+r restart
 
+# Media player controls
+bindsym XF86AudioPlay exec --no-startup-id playerctl play
+bindsym XF86AudioPause exec --no-startup-id playerctl pause
+bindsym XF86AudioNext exec --no-startup-id playerctl next
+bindsym XF86AudioPrev exec --no-startup-id playerctl previous
+
 set $resize resize (h,j,k,l,v,q)
 mode "$resize"{
     bindsym h resize shrink width 10 px or 10 ppt
