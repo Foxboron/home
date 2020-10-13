@@ -49,6 +49,13 @@ c.fonts.tabs.unselected = "8pt monospace"
 
 config.bind(',c', 'spawn --userscript stream')
 config.bind(',p', 'spawn --userscript open-portal')
+config.bind(',s', 'open https://rss.linderud.dev/bookmarklet?uri={url}')
+
+
+with config.pattern('https://rss.linderud.dev/*') as p:
+    print(p.bindings.commands)
+
+
 
 # Uncomment this to still load settings configured via autoconfig.yml
 # config.load_autoconfig()
