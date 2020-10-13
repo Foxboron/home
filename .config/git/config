@@ -41,6 +41,10 @@
     edit = "!vim `git ls-files -m` -p"
     edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
+    pull-pr = "!f() { git fetch ${1-origin} pull/\"${2}\"/head:pr-\"${2}\"; }; f"
+    pr = "!f() { gh pr list | fzf | awk '{print $1}' | xargs git pull-pr ${1-origin}; }; f"
+    sl = "!git shortlog $(git describe --tags --abbrev=0)..HEAD"
+
     difftex = difftool -y -t latex
 
     unstage = reset HEAD --
