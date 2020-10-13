@@ -1,30 +1,37 @@
+[global]
+
 [SpamFilter]
 [KillThreadsFilter]
 [ListMailsFilter]
 [ArchiveSentMailsFilter]
 sent_tag=sent
 
-[Filter.1]
-query = from:notifications@github.com
-tags = +github
-
-[Filter.2]
-query = tag:spam or tag:trash
-tags = -unread;-INBOX;-archive;-replied
-message = Remove spam and trash from inbox
-
 [FolderNameFilter]
 folder_explicit_list = INBOX Drafts archlinux archweb AUR Important Archive
 folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Important:important Archive:archive
-
-[InboxFilter]
-
-[Filter.3]
-query = tag:lists
-tags = -INBOX
-message = Remove mailing lists from inbox
 
 [MailMover]
 folders = INBOX
 INBOX = 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash 'tag:lists':Lists
 
+[Filter.1]
+message = "Github stuff shouldn't hit inbox"
+query = from:notifications@github.com
+tags = +github;-new;-INBOX
+
+[Filter.2]
+message = "Remove spam and trash from inbox"
+query = tag:spam or tag:trash
+tags = -unread;-new;-inbox;-INBOX;-archive;-replied
+
+[Filter.3]
+message = "Remove list from inbox"
+query = tag:lists
+tags = -new;-INBOX
+
+[InboxFilter]
+
+[Filter.4]
+message = "Rename inbox tag to INBOX"
+query = tag:inbox and tag:unread
+tags = -inbox;+INBOX

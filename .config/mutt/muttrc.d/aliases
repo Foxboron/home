@@ -1,4 +1,4 @@
-alias aur-general@archlinux.org
-alias arch-dev-public@archlinux.org
-alias arch-security@archlinux.org
-alias svenstaro@archlinux.org
+alias aur-general aur-general@archlinux.org
+alias arch-dev-public arch-dev-public@archlinux.org
+alias arch-security arch-security@archlinux.org
+alias sven svenstaro@archlinux.org

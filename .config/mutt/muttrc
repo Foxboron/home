@@ -16,8 +16,8 @@ set config_charset   = "utf-8"
 
 set timeout=5           # Time out 5 seconds after last keypress to check for mail
 set help=no	            # Disable the help header
-set read_inc=1000
-set write_inc=1000
+set read_inc=10000
+set write_inc=10000
 set beep_new=yes
 set quit=no
 set move=no
@@ -86,7 +86,7 @@ macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<r
 
 virtual-mailboxes \
         "inbox"                       "notmuch://?query=folder:INBOX"\
-        "inbox-t"                       "notmuch://?query=tag:INBOX"\
+        "inbox-t"                       "notmuch://?query=tag:INBOX or tag:inbox"\
         "unread"                    "notmuch://?query=tag:unread"\
         "todo"                      "notmuch://?query=tag:todo"\
         "important"                      "notmuch://?query=tag:important"\
@@ -116,11 +116,12 @@ virtual-mailboxes \
 macro index,pager T "<modify-labels-then-hide>!todo<enter>" "Mark message as Todo"
 macro index,pager I  "<modify-labels-then-hide>!important<enter>" "mark message as Important"
 
-macro index,pager S "<modify-labels-then-hide>-INBOX -important +spam<enter>" "mark message as Spam"
-macro index,pager A "<modify-labels-then-hide>-INBOX -important +archive<enter>" "mark message as Archive"
-macro index,pager d "<modify-labels-then-hide>-INBOX -important +trash\n" "Delete message"
+macro index,pager S "<modify-labels-then-hide>-INBOX -inbox -important +spam<enter>" "mark message as Spam"
+macro index,pager A "<modify-labels-then-hide>-INBOX -inbox -important +archive<enter>" "mark message as Archive"
+macro index,pager d "<modify-labels-then-hide>-INBOX -inbox -important +trash\n" "Delete message"
 macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive<enter>"
 bind index,pager Y modify-labels
+macro index,pager i  "<modify-labels-then-hide>-INBOX -inbox\n" "Inbox"
 
 # Unsure
 #set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
