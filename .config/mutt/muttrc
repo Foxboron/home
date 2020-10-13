@@ -164,3 +164,7 @@ source /home/fox/.config/mutt/muttrc.d/aliases
 source /home/fox/.config/mutt/muttrc.d/colors
 source /home/fox/.config/mutt/muttrc.d/ignores
 source /home/fox/.config/mutt/muttrc.d/gpg.rc
+
+bind index,pager <Space> noop
+macro index,pager <space> ":source ~/.config/mutt/scripts/changefolder|<enter>"
+# macro index,pager i "<vfolder-from-query>tag:lists/lxd\n" "Test"
