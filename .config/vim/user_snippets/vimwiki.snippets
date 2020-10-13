@@ -1,0 +1,48 @@
+snippet foss "FOSS Activity" b
+`#!/usr/bin/bash
+cat <<EOF
+---
+title: "FOSS Activities in $(date "+%B %G")"
+date: "$(date -d "$(date)+1 month" "+%Y-%m-01T00:00:00+02:00")"
+draft: true
+---
+
+// Placeholder Intro
+
+{{< figure src="/img/arch.png" >}}
+
+# Package Updates to [community]
+-
+
+# Bugfixes in Arch
+-
+
+
+# Other Arch Things
+-
+
+
+# Many other things....
+-
+
+Cheers!
+EOF
+`
+endsnippet
+
+snippet bug "bug"
+[FS#${1}](https://bugs.archlinux.org/task/$1)
+endsnippet
+
+snippet h "hugo header" b
+---
+title: "${1}"
+date: "`!v strftime("%Y-%m-01T00:00:00+02:00")`"
+draft: true
+tags:
+---
+
+${2}
+
+endsnippet
+
