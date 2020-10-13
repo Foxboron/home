@@ -124,7 +124,7 @@ alias ab='auracle buildorder *'
 # pacman alias
 alias pacman='pacman --color auto'
 alias pacupg='sudo pacman -Syu --needed'
-alias pacupg-linux='sudo pacman -Syu --needed linux linux-headers'
+alias pacupg-linux='sudo pacman -Syu --needed linux linux-headers linux-lts linux-lts-headers'
 
 #Arch aliases
 alias db-update='ssh repos.archlinux.org "/community/db-update"'

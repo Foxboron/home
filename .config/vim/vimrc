@@ -373,7 +373,6 @@ augroup END
 " Because numbers can fuck off
 function! s:goyo_enter()
     augroup goyo_enter
-        autocmd !
         autocmd BufEnter    *   setlocal tw=80
         autocmd InsertEnter *   setlocal nonumber
         autocmd InsertLeave *   setlocal norelativenumber
@@ -479,10 +478,11 @@ let master_wiki.list_margin = 0
 "}}}
 "{{{3 vimwiki:blog
 let blog_wiki = {}
-let blog_wiki.path = '~/Notes/blog'
-let blog_wiki.path_html = '~/.cache/vimwiki/blog/html'
+let blog_wiki.path = '/home/fox/Git/prosjekter/sites/Blog/content/'
+let blog_wiki.index = '_main'
 let blog_wiki.automatic_nested_syntaxes = 1
 let blog_wiki.list_margin = 0
+let blog_wiki.template_default = 'markdown'
 let blog_wiki.syntax = 'markdown'
 let blog_wiki.ext = '.md'
 "}}}

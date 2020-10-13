@@ -28,7 +28,6 @@ export LANG=en_US.utf8
 export TERM="xterm-256color"
 export EDITOR="vim"
 export TERMINAL=termite
-export BROWSER=/home/fox/bin/open.sh
 
 if [[ -z $DISPLAY && $(tty) == /dev/tty1 ]]; then
     exec startx "$XDG_CONFIG_HOME/X11/xinitrc" -- vt1
