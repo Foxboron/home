@@ -93,20 +93,6 @@ virtual-mailboxes \
         "sent"                       "notmuch://?query=folder:Sent"\
         "sent0"                       "notmuch://?query=tag:sent"\
         "draft"                       "notmuch://?query=tag:draft"\
-        "github"                       "notmuch://?query=tag:github"\
-        "lists/wireguard"          "notmuch://?query=tag:lists/wireguard"\
-        "lists/arch-general"          "notmuch://?query=tag:lists/arch-general"\
-        "lists/arch-dev-public"          "notmuch://?query=tag:lists/arch-dev-public"\
-        "lists/arch-staff"          "notmuch://?query=tag:lists/staff"\
-        "lists/arch-events"          "notmuch://?query=tag:lists/arch-events"\
-        "lists/arch-projects"          "notmuch://?query=tag:lists/arch-projects"\
-        "lists/arch-requests"             "notmuch://?query=tag:lists/arch-requests"\
-        "lists/aur-general"             "notmuch://?query=tag:lists/aur-general"\
-        "lists/arch-security"          "notmuch://?query=tag:lists/arch-security"\
-        "lists/pacman-dev"          "notmuch://?query=tag:lists/pacman-dev"\
-        "lists/rb-general"          "notmuch://?query=tag:lists/rb-general"\
-        "lists/oss-security"          "notmuch://?query=tag:lists/oss-security"\
-        "lists/efn"             "notmuch://?query=tag:lists/efn"\
         "new"                       "notmuch://?query=tag:new"\
         "replied"                   "notmuch://?query=tag:replied"\
         "archive"                       "notmuch://?query=tag:archive"\
@@ -116,10 +102,10 @@ virtual-mailboxes \
 macro index,pager T "<modify-labels-then-hide>!todo<enter>" "Mark message as Todo"
 macro index,pager I  "<modify-labels-then-hide>!important<enter>" "mark message as Important"
 
-macro index,pager S "<modify-labels-then-hide>-INBOX -inbox -important +spam<enter>" "mark message as Spam"
-macro index,pager A "<modify-labels-then-hide>-INBOX -inbox -important +archive<enter>" "mark message as Archive"
-macro index,pager d "<modify-labels-then-hide>-INBOX -inbox -important +trash\n" "Delete message"
-macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -important -todo +archive<enter>"
+macro index,pager S "<modify-labels-then-hide>-INBOX -inbox -important !spam<enter>" "mark message as Spam"
+macro index,pager A "<modify-labels-then-hide>-INBOX -inbox -important !archive<enter>" "mark message as Archive"
+macro index,pager d "<modify-labels-then-hide>-INBOX -inbox -important !trash\n" "Delete message"
+macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -inbox -important -todo +archive<enter>"
 bind index,pager Y modify-labels
 macro index,pager i  "<modify-labels-then-hide>-INBOX -inbox\n" "Inbox"
 
@@ -167,4 +153,3 @@ source /home/fox/.config/mutt/muttrc.d/gpg.rc
 
 bind index,pager <Space> noop
 macro index,pager <space> ":source ~/.config/mutt/scripts/changefolder|<enter>"
-# macro index,pager i "<vfolder-from-query>tag:lists/lxd\n" "Test"

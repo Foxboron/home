@@ -21,7 +21,7 @@ tags = +github;-new;-INBOX
 
 [Filter.2]
 message = "Remove spam and trash from inbox"
-query = tag:spam or tag:trash
+query = tag:spam
 tags = -unread;-new;-inbox;-INBOX;-archive;-replied
 
 [Filter.3]
