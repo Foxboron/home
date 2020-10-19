@@ -1,0 +1,3 @@
+#!/usr/bin/bash 
+
+{ notmuch search --output=tags '*'; echo unread; } | fzf | xargs printf "push '<vfolder-from-query>tag:%s<enter>'"
