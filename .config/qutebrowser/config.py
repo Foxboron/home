@@ -51,10 +51,7 @@ config.bind(',c', 'spawn --userscript stream')
 config.bind(',p', 'spawn --userscript open-portal')
 config.bind(',s', 'open https://rss.linderud.dev/bookmarklet?uri={url}')
 
-
-with config.pattern('https://rss.linderud.dev/*') as p:
-    print(p.bindings.commands)
-
+c.editor.command = ['termite', '-e', 'vim {}']
 
 
 # Uncomment this to still load settings configured via autoconfig.yml
