@@ -15,6 +15,7 @@ Pictures
 !.config/i3
 !.config/rofi
 !.config/git
+!.config/mutt
 !.config/systemd/*
 .config/systemd/user/*.target.wants
 .config/vim/bundle
