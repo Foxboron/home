@@ -1,3 +1,6 @@
 #!/usr/bin/bash 
+set	-eo pipefail
 
-{ notmuch search --output=tags '*'; echo unread; } | fzf | xargs printf "push '<vfolder-from-query>tag:%s<enter>'"
+FOLDER="$({ notmuch search --output=tags '*'; echo unread; } | fzf)"
+
+printf "push '<vfolder-from-query>tag:%s<enter>'" $FOLDER
