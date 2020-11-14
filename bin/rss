@@ -1,10 +1,19 @@
 #!/usr/bin/bash
 
-set -euo pipefail
+set -eo pipefail
 
 readonly rssdir=${XDG_DATA_HOME:-$HOME/.local/share}/rss
 readonly xslt=$rssdir/feed.xslt
 
+refresh=0
+
+while true; do
+    case "$1" in
+        -r) refresh=1;;
+        "") break;;
+    esac
+    shift
+done
 
 pullfeed() {
     if ! curl -sSfL "$1" | xsltproc "$xslt" -; then
@@ -45,6 +54,6 @@ for db in "$rssdir"/db/*; do
     # current file exists, however all the information gets to the right place
     # in the end.  This avoids needing to use an additional if statement.
     cat "$db"/current "$db"/new 2> /dev/null | sponge "$db"/current
-    rm "$db"/new
+    # rm "$db"/new
 done
 

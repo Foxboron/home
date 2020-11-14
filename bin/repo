@@ -1,91 +1,188 @@
 #!/bin/bash
-readonly argv0=repo-new
+
+# SPDX-License-Identifier: GPL-2.0
+
+set -o errexit
+shopt -s extglob
+
+readonly argv0="${BASH_SOURCE[0]}"
 readonly XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
-readonly AURUTILS_REPO_DB=${AURUTILS_REPO_DB:-$XDG_CACHE_HOME/aurutils/$argv0.db}
-AURUTILS_REPOS="/var/repos"
+readonly CONTRIB_REPO_DB=${CONTRIB_REPO_DB:-$XDG_CACHE_HOME/archlinux-contrib/repo.db}
+CONTRIB_REPOS="/var/repos"
+CHROOTS='/var/lib/contrib-repos'
+STARTDIR=$PWD
+ 
+trap 'rm -rf "$TMPFILE"' EXIT
+TMPFILE=$(mktemp -d /var/tmp/repo.XXXX) || exit 1
+
+makepkg_config="/usr/share/devtools/makepkg-x86_64.conf"
 
 usage() {
-    plain 'usage: %s [-t]' "$argv0" >&2
+cat << EOF > "/dev/stdout"
+Usage: $argv0 [commands] <flags>
+
+$argv0 builds isolated package graphs into a seperate repository. This allows
+testing new package cycles without having to depend on adding them with
+makechrootpkg -I pkg.tar.zst or to the repositories.
+
+One can also create test environments in containers or virtual-machines for
+testing new packages by utilizing LXD.
+
+Flags:
+    --force,-f         Overwrite built packages (build only)
+    --offload,-o       Build using offload-build (build only)
+    --name,-n          Show repository name (show only)
+    --container,-c     Create as container (default to a VM) (test only)
+    --keep,-k          Omit ephemeral tag on test environments (test only)
+
+Commands:
+        new                     Create a new repository
+        show                    Show a pacman.conf with repository
+        list                    Lists all repositories
+        sync                    Sync the repository to pkgbuild.com
+        build [repostiroy]      Builds a package towards a repository. If no PKGBUILD is present it looks for
+                                **/.SRCINFO and resolves a dependency chain to build.
+        test [repository]       Create a test environment,
+        test-clean              Cleans all ephemeral test environments
+        test-list               List all test environments
+
+Examples:
+
+    Create a new repository
+    $ $argv0 new papis
+
+    Build a dependency chain
+    $ ls
+    papis  python-arxiv2bib  python-bibtexparser  python-doi  python-habanero  python-isbnlib
+
+    $ srcinfo-graph **/.SRCINFO | tsort | tac
+    python-arxiv2bib
+    python-bibtexparser
+    python-habanero
+    python-isbnlib
+    python-doi
+    papis
+
+    $ $argv0 build papis
+    // Builds all the packages in order to /var/repos/papis
+
+    Test packages in a container
+    $ $argv0 test --container papis
+
+    Remove test environments
+    $ $argv0 test-clean
+
+    Inititalize a testing environment for an external repository
+        Note: -k is used so '$argv0 test-clean' does not remove the environment
+    $ $argv0 test -k "https://pkgbuild.com/~dvzrv/repos/kubernetes/x86_64/kubernetes.db"
+
+EOF
     exit 1
 }
 
+source /usr/share/makepkg/util/util.sh
+source /usr/share/makepkg/util/message.sh
 source /usr/share/makepkg/util/parseopts.sh
 
-if [ ! -d "$AURUTILS_REPOS" ]; then
-	sudo mkdir -p "$AURUTILS_REPOS"
-	sudo chown "$USER": "$AURUTILS_REPOS"
+if [ ! -d "$CONTRIB_REPOS" ]; then
+        sudo mkdir -p "$CONTRIB_REPOS"
+        sudo chown "$USER": "$CONTRIB_REPOS"
 fi
 
-opt_short='t'
-opt_long=('temp')
+opt_short='cfkno'
+opt_long=('container' 'force' 'keep' 'name' 'offload')
+
+orig_args="$*"
 
 if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
     usage
 fi
 set -- "${OPTRET[@]}"
 
-unset temp_repo
+offload_build=0 overwrite=0 env_container=1 show_repo_name=0
+unset keep
 while true; do
     case "$1" in
-	-t|--temp) echo "tmp" ;; #temp_repo="$(mktemp aur-repo.XXX)" ;;
+        -f|--force) overwrite=1 ;;
+        -c|--container) env_container=1 ;;
+        -k|--keep) keep="" ;;
+        -n|--name) show_repo_name=1 ;;
+        -o|--offload) offload_build=1 ;;
         --) shift; break ;;
     esac
     shift
 done
 
-
-cmd_new=0 cmd_list=0 cmd_show=0 cmd_build=0
+cmd_new=0 cmd_list=0 cmd_show=0 cmd_build=0 cmd_test=0 cmd_test_clean=0
+cmd_test_list=0 help=0 cmd_remove=0
 # Parse commands
 while true; do
     case "$1" in
-	new) cmd_new=1 ;;
-	show) cmd_show=1 ;;
-	list) cmd_list=1 ;;
-	build) cmd_build=1 ;;
-        *) break ;;
+        new) cmd_new=1 ;;
+        remove) cmd_remove=1 ;;
+        show) cmd_show=1 ;;
+        list) cmd_list=1 ;;
+        build) cmd_build=1 ;;
+        test) cmd_test=1 ;;
+        test-clean) cmd_test_clean=1 ;;
+        test-list) cmd_test_list=1 ;;
+        *) usage; exit 0 ;;
     esac
     shift
+    break
 done
 
-if [ ! -e "$AURUTILS_REPO_DB"  ]; then
-	touch "$AURUTILS_REPO_DB"
+if [ ! -e "$CONTRIB_REPO_DB" ]; then
+        mkdir -p "$XDG_CACHE_HOME/archlinux-contrib/"
+        touch "$CONTRIB_REPO_DB"
 fi
 
 if ((cmd_new)); then
-	repo_name=$1
-	[ ! -n "$repo_name" ] && exit 1
-	repo_path="${2:-$AURUTILS_REPOS}/$repo_name"
-	if ! readlink -f "$repo_path"; then
-		printf "%s is not a valid path" "$repo_path"
-		exit 1
-	fi
-	repo_path=$(readlink -f "$repo_path")
-	mkdir -p "$repo_path"
-	if [ ! -e "$repo_path/$repo_name.db.tar"  ]; then
-		repo-add "$repo_path/$repo_name.db.tar"
-	fi
-	echo "$repo_name;$repo_path" >> "$AURUTILS_REPO_DB"
+        repo_name=$1
+        [ -z "$repo_name" ] && exit 1
+        repo_path="${2:-$CONTRIB_REPOS}/$repo_name"
+        if ! readlink -f "$repo_path"; then
+                printf "%s is not a valid path" "$repo_path"
+                exit 1
+        fi
+        repo_path=$(readlink -f "$repo_path")
+        mkdir -p "$repo_path"
+        if [ ! -e "$repo_path/$repo_name.db.tar"  ]; then
+                repo-add "$repo_path/$repo_name.db.tar"
+        fi
+        echo "$repo_name;$repo_path" >> "$CONTRIB_REPO_DB"
 fi
 
 if ((cmd_list)); then
-	while IFS=\; read -r repo path; do 
-		echo "$repo" "$path"
-	done < "$AURUTILS_REPO_DB"
+        while IFS=\; read -r repo path; do 
+                echo "$repo" "$path"
+        done < "$CONTRIB_REPO_DB"
 fi
 
 
 if ((cmd_show)); then
-	repo_name=$1
-	if [ ! -e "$AURUTILS_REPOS/$repo_name/$repo_name.db.tar"  ]; then
-		exit 1
-	fi
+        repo_name=$1
+        if [ -e "$CONTRIB_REPOS/$repo_name/$repo_name.db.tar"  ]; then
+            local_repo=1
+            repo_cache_path="$CONTRIB_REPOS/$repo_name"
+            repo_path="file://${repo_cache_path}"
+        elif [[ "${repo_name}" == https://* ]] && [[ "${repo_name}" == *.db* ]] ; then
+            repo_path="${repo_name%/*}"
+            repo_name="${repo_name##*/}"
+            repo_name="${repo_name%.db*}"
+            export repo_name
+        else
+            exit 1
+        fi
+        if ((show_repo_name)); then
+            echo "$repo_name"
+            exit 0
+        fi
 cat << EOF > "/dev/stdout"
 [options]
 HoldPkg     = pacman glibc
 Architecture = auto
-
 IgnorePkg   = linux linux-headers
-
 CheckSpace
 
 SigLevel    = Required DatabaseOptional
@@ -102,24 +199,150 @@ Include = /etc/pacman.d/mirrorlist
 
 [options]
 CacheDir = /var/cache/pacman/pkg
-CacheDir = $AURUTILS_REPOS/$repo_name
 CleanMethod = KeepCurrent
+${local_repo:+CacheDir = $repo_cache_path}
 
 [$repo_name]
 SigLevel = Optional TrustAll
-Server = file://$AURUTILS_REPOS/$repo_name
+Server = ${repo_path}
 EOF
 fi
 
 
 if ((cmd_build)); then
     repo_name="$1"
-    if ! repo show "$repo_name" > "/tmp/pacman.conf.$repo_name"; then
-	exit 1
+    export PKGDEST="$TMPFILE/pkgdest" && mkdir -p "$PKGDEST"
+    export LOGDEST="$TMPFILE"
+    if ! "$argv0" show "$repo_name" > "$TMPFILE/pacman.conf.$repo_name"; then
+        printf "The repo %s doesn't exist\n" "$repo_name"
+        exit 1
+    fi
+    if (( !offload_build )); then
+        if  [[ ! -d "${CHROOTS}" ]]; then
+            sudo install -d "${CHROOTS}" -m 755 -v
+            mkarchroot \
+                -C "$TMPFILE/pacman.conf.$repo_name" \
+                -M "${makepkg_config}" \
+                "${CHROOTS}/root" \
+                base-devel || exit 1
+        else
+            arch-nspawn \
+                    -C "$TMPFILE/pacman.conf.$repo_name" \
+                    -M "${makepkg_config}" \
+                    "${CHROOTS}/root" \
+                    pacman -Syuu --noconfirm || abort
+        fi
     fi
     if [ -f ./PKGBUILD ]; then
-	aur build -fcsS --pacman-conf "/tmp/pacman.conf.$repo_name"
+        exec {fd}< <(printf '\n')
     else
-	aur build -fcsS -a <(aur graph */.SRCINFO |tsort|tac) --pacman-conf "/tmp/pacman.conf.$repo_name"
+        exec {fd}< <(srcinfo-pkg-graph **/.SRCINFO |tsort|tac)
+    fi
+
+
+    if (( offload_build )); then
+        offload_tmp=$(ssh dragon.archlinux.org mktemp -d '$HOME/.cache/repoctl.XXXX')
+    fi
+
+    while IFS= read -ru "$fd" path; do
+        cd_safe "$STARTDIR/$path"
+        if (( ! overwrite )); then
+            unset mark
+            while IFS= read -r; do
+                [[ -f $REPLY ]] && mark+=("$REPLY")
+            done < <(PKGDEST="$CONTRIB_REPOS/$repo_name" makepkg --packagelist)
+
+            if [[ ${mark[*]} ]]; then
+                warning '%s: skipping built package (use -f to overwrite)' "$argv0"
+                printf '%q\n' >&2 "${mark[@]}"
+                continue
+            fi
+        fi
+        if (( offload_build )); then
+            mapfile -t packagelist < <( PKGDEST="$CONTRIB_REPOS/$repo_name" makepkg --packagelist)
+            pkglist=("$CONTRIB_REPOS/$repo_name/"!(*.sig|*.db*|*.files*))
+            if [[ "${pkglist[*]}" == *"!(*."* ]]; then
+                pkglist=()
+            fi
+            for i in "${packagelist[@]}"; do
+                     pkglist=(${pkglist[@]//*$i*})
+            done
+            rsync -a "${pkglist[@]}" "dragon.archlinux.org:$offload_tmp"
+            pkglist=("${pkglist[@]/#/-I }")
+            pkglist=("${pkglist[@]/"$CONTRIB_REPOS/$repo_name"/"$offload_tmp"}")
+            offload-build -- -- ${pkglist[@]}
+        else
+            makechrootpkg -r "$CHROOTS" -D "$CONTRIB_REPOS/$repo_name" -u -c
+        fi
+        cd_safe "$PKGDEST"
+        pkglist=(!(*.sig))
+        siglist=()
+        for p in "${pkglist[@]}"; do
+            gpg --detach-sign --no-armor --batch --output "$p".sig "$p"
+            siglist+=("$p".sig)
+        done
+        mv -f "${pkglist[@]}" "${siglist[@]}" "$CONTRIB_REPOS/$repo_name"
+        cd_safe "$CONTRIB_REPOS/$repo_name"
+        LANG=C repo-add "$CONTRIB_REPOS/$repo_name/$repo_name.db.tar" "${pkglist[@]}"
+    done
+
+    if (( offload_build )); then
+        ssh dragon.archlinux.org rm -rf "$offload_build"
     fi
 fi
+
+if ! command -v lxc jq &>/dev/null; then
+    error "Missing lxd to create test environments or"
+    error "missing jq to to parse lxd."
+fi
+
+if ((cmd_test)); then
+    if ! "$argv0" show "$1" > "$TMPFILE/pacman.conf"; then
+        exit 1 
+    fi
+    repo_name="$($argv0 show --name "$1")"
+    repo="$CONTRIB_REPOS/$repo_name"
+    container_name="arch-vm-$repo_name"
+    if ! lxc info "$container_name" &>/dev/null; then
+        lxc init images:archlinux/current ${env_container:+--vm} -c "user.archlinux.repo_name=${repo_name}" ${keep--c "user.archlinux.contrib=1"} "$container_name"
+        if [ -d "$repo" ]; then
+            lxc config device add "$container_name" pkgs disk source="$repo" path="$repo" &> /dev/null
+        fi
+        lxc start "$container_name"
+        ask "Waiting for environment to start..."
+        while true; do
+            if lxc file push "$TMPFILE/pacman.conf" "$container_name"/etc/pacman.conf &>/dev/null; then
+                break
+            fi
+            sleep 1s
+        done
+        echo "done"
+    fi
+    lxc exec "$container_name" -- bash
+fi
+
+if ((cmd_test_list)); then
+    lxc list arch-vm --format json | jq -r '.[] | select(.config."user.archlinux.contrib" == "1") | .name'
+fi
+
+if ((cmd_test_clean)); then
+    vms="$(lxc list arch-vm --format json | jq -r '.[] | select(.config."user.archlinux.contrib" == "1") | .name')"
+    if [ -n "$vms" ]; then
+        ask "Cleaning up environments $vms..."
+        lxc delete --force $vms
+        echo "done"
+    fi
+fi
+
+if ((cmd_remove)); then
+    vms="$(lxc list arch-vm --format json | jq -r --argjson NAME "$repo_name" '.[] | select(.config."user.archlinux.repo_name" == "$NAME") | .name')"
+    if [ -n "$vms" ]; then
+        ask "Cleaning up environments $vms..."
+        lxc delete --force $vms
+        echo "done"
+    fi
+    repo="$CONTRIB_REPOS/$repo_name"
+    rm -rf "$repo"
+fi
+
+
