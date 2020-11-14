@@ -100,7 +100,7 @@ alias ..="cd .."
 alias ls="ls --color=tty"
 alias l='ls -lF'
 alias la='ls -laF'
-alias ip='ip -c'
+alias ip='ip -br -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
 compdef _git home # So we get git complteions with the alias
 alias pacdiff="sudo -E pacdiff"
