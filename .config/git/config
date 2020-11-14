@@ -26,8 +26,9 @@
     fa = fetch --all
 
     c = commit -s -S
-    amend = commit --amend -s -S
-    fixup = !git c --fixup=HEAD && git rebase -i --autosquash HEAD~2
+    amend = c --amend
+    fixup = !git c --fixup=$(git rev-parse HEAD)
+    autosquash = !git rebase -i --autosquash $(git branch --show-current)
     message = commit -m
     ba = branch -a
 
@@ -63,7 +64,7 @@
 [init]
     template = ~/.config/git/templates
 [diff]
-	tool = vimdiff
+    tool = vimdiff
 [difftool]
     prompt = false
 [difftool "vimdiff"]
@@ -99,3 +100,5 @@
 [tig "bind"]
     status = C !git c
 
+[pull]
+	rebase = false
