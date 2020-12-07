@@ -395,6 +395,10 @@ autocmd User GoyoLeave nested call <SID>goyo_leave()
 "{{{2 internal: matchit
 packadd! matchit
 "}}}
+"{{{2 internal: termdebug
+packadd! termdebug
+let g:termdebug_wide=1
+"}}}
 "{{{2 plugin: vimtex
 let g:vimtex_compiler_callback_hooks = ['CleanFiles']
 let g:vimtex_complete_enabled = 1
