@@ -17,7 +17,7 @@ R /home/
 ! /home/.snapshots/backup/snapshot/*/.kube/cache
 ! /home/.snapshots/backup/snapshot/*/.kube/http-cache
 ! /home/.snapshots/backup/snapshot/*/Git/**/.venv
-! /home/.snapshots/backup/snapshot/*/jobb/**/.venv
+! /home/.snapshots/backup/snapshot/*/jobb/
 ! /home/.snapshots/backup/snapshot/*/.config/borg/security
 
 # Fuck software providers adding caches to config.
