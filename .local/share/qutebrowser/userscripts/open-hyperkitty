@@ -1,0 +1,28 @@
+#!/usr/bin/bash
+set -e
+
+msg() {
+    local cmd="$1"
+    shift
+    local msg="$*"
+    if [ -z "$QUTE_FIFO" ] ; then
+        echo "$cmd: $msg" >&2
+    else
+        echo "message-$cmd '${msg//\'/\\\'}'" >> "$QUTE_FIFO"
+    fi
+}
+
+while read -r url thread; do
+    thread=${thread%/}
+    if [[ -f /tmp/$thread.mbox ]]; then
+        break
+    fi
+    list="${url##*/}"
+    MBOX=$(printf "$url/export/$list-$thread.mbox.gz?thread=$thread")
+    echo $MBOX
+    curl -o /tmp/$thread.mbox.gz "$MBOX"
+    gzip -d /tmp/$thread.mbox.gz 
+done <<< $(echo "$QUTE_URL" | awk -F"/thread/" '{print $1,$2}')
+
+termite --title mbox -e "neomutt -f /tmp/$thread.mbox"
+
