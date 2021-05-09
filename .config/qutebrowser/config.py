@@ -55,4 +55,5 @@ c.editor.command = ['termite', '-e', 'vim {}']
 
 
 # Uncomment this to still load settings configured via autoconfig.yml
-# config.load_autoconfig()
+config.load_autoconfig(False)
+
