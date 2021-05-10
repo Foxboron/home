@@ -1,1 +1,1 @@
-termite --title="irc-rofi" --exec="mosh velox -- tmux attach -d"
+$TERMINAL --title="irc-rofi" -e mosh linderud.dev -- tmux attach-session -d -t 0 &

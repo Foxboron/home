@@ -1,2 +1,2 @@
 #!/bin/bash
-termite --title="fox-notes" --exec="vim --servername notes +VimwikiUISelect +Goyo" &
+$TERMINAL --title="fox-notes" -e vim --servername notes +VimwikiUISelect +Goyo

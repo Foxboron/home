@@ -1,0 +1,2 @@
+url=$(rofi -dmenu -matching fuzzy -p "video: ")
+mpv --title=stream "${url}"

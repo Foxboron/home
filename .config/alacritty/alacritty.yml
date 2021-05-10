@@ -1,0 +1,39 @@
+font:
+    size: 9
+env:
+  TERM: xterm-256color
+  XMODIFIERS: "@im=ibus"
+  WINIT_X11_SCALE_FACTOR: "1"
+key_bindings:
+  - { key: Home,      mods: Shift,   mode: ~Alt,        action: ScrollToTop,   }
+  - { key: End,       mods: Shift,   mode: ~Alt,        action: ScrollToBottom }
+  - { key: N,         mods: Control|Shift, action: SpawnNewInstance   }
+# Colors (Base16 Default Dark)
+colors:
+  # Default colors
+  primary:
+    background: '#000000'
+    foreground: '#66d9ef'
+
+  # Normal colors
+  normal:
+    black: '#262729'
+    red: '#F92671'
+    green: '#A6E22E'
+    yellow: '#FD971F'
+    blue: '#7493d2'
+    magenta: '#9E6FFE'
+    cyan: '#80d9d8'
+    white: '#F8F8F2'
+
+  # Bright colors
+  bright:
+    black: '#554444'
+    red: '#F92671'
+    green: '#A6E22E'
+    yellow: '#FD971F'
+    blue: '#7493d2'
+    magenta: '#9E6FFE'
+    cyan: '#80d9d8'
+    white: '#F8F8F2'
+

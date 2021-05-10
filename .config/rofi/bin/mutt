@@ -1,1 +1,3 @@
-termite --title="mutt-rofi" --exec=neomutt
+$TERMINAL --title="neomutt" -e neomutt &
+$TERMINAL --title="calcurse" -e calcurse &
+

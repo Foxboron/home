@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 export SYSTEMD_COLORS=0
-term="termite --title=float -e"
+term="$TERMINAL --title=float -e"
 default_action=${ROFI_SYSTEMD_DEFAULT_ACTION-"list_actions"}
 
 function user_units {

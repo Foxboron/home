@@ -1,0 +1,4 @@
+#!/bin/bash
+
+device="$(bluetoothctl paired-devices | cut -d\  -f2- | rofi -dmenu -matching fuzzy | awk '{print $1}')"
+bluetoothctl connect "$device" | while read OUTPUT; do notify-send "$OUTPUT"; done
