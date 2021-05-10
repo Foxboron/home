@@ -27,7 +27,12 @@ export LC_ALL=en_US.utf8
 export LANG=en_US.utf8
 export TERM="xterm-256color"
 export EDITOR="vim"
-export TERMINAL=termite
+
+# Terminal stuff
+export TERMINAL=alacritty
+export XMODIFIERS=@im=ibus
+export WINIT_X11_SCALE_FACTOR=1
+
 
 if [[ -z $DISPLAY && $(tty) == /dev/tty1 ]]; then
     exec startx "$XDG_CONFIG_HOME/X11/xinitrc" -- vt1

@@ -107,6 +107,9 @@ alias pacdiff="sudo -E pacdiff"
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 
+alias yubikey-refresh='gpg-connect-agent "scd serialno" "learn --force" /bye'
+
+
 alias -g G='| grep'
 alias -g L='| less'
 alias -g T='| tail'
@@ -134,7 +137,7 @@ alias db-move='ssh repos.archlinux.org "/community/db-move"'
 #Misc arch aliases
 # alias build="aurbuild -cs -d aur"
 build(){
-    aur build -fcs -d aur
+    aur build -fcsS -d aur
 }
 alias nspawn="sudo systemd-nspawn -D / -x"
 # }}}
@@ -143,10 +146,10 @@ alias nspawn="sudo systemd-nspawn -D / -x"
 tm(){
     tmux new-session -A -s "$(basename "$PWD")"
 }
-function vimrc(){
+vimrc(){
     vim ~/.config/vim/vimrc -c "cd ~/.config/vim"
 }
-function git_prompt_info() {
+git_prompt_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
   echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
