@@ -1,0 +1,30 @@
+#!/bin/bash
+
+fetch(){
+    pkgs=$(curl -s "https://aur.archlinux.org/rpc/?v=5&type=search&search_by=maintainer&arg=$1" | jq -r '.results[].PackageBase' | sort -u)
+    for pkg in $pkgs; do
+        printf "===> Downloading %s...\n" $pkg
+        curl -s https://aur.archlinux.org/cgit/aur.git/snapshot/$pkg.tar.gz | tar xzm
+    done
+}
+
+review(){
+    for pkgbuild in $(ls */PKGBUILD | sort); do
+        printf "Review %s?" ${pkgbuild%/*}
+        read
+        pushd ${pkgbuild%/*} > /dev/null
+        if [ ! -f NOTE.md ]; then
+            printf "# %s\n-\n\n" ${pkgbuild%/*} > NOTE.md
+        fi
+        vim -O PKGBUILD NOTE.md
+        popd > /dev/null
+    done
+    cat */NOTE.md > REVIEW
+}
+
+case "$@" in
+    fetch) shift; fetch "$@" ;;
+    review) shift; review "$@" ;;
+    compile) shift; cat */NOTE.md > REVIEW;;
+    *) fetch "$@"; review "$@" ;;
+esac

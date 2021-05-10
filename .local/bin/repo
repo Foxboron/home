@@ -12,8 +12,8 @@ CONTRIB_REPOS="/var/repos"
 CHROOTS='/var/lib/contrib-repos'
 STARTDIR=$PWD
  
-trap 'rm -rf "$TMPFILE"' EXIT
 TMPFILE=$(mktemp -d /var/tmp/repo.XXXX) || exit 1
+trap 'rm -rf "$TMPFILE"' EXIT
 
 makepkg_config="/usr/share/devtools/makepkg-x86_64.conf"
 
@@ -28,21 +28,24 @@ makechrootpkg -I pkg.tar.zst or to the repositories.
 One can also create test environments in containers or virtual-machines for
 testing new packages by utilizing LXD.
 
-Flags:
-    --force,-f         Overwrite built packages (build only)
-    --offload,-o       Build using offload-build (build only)
-    --name,-n          Show repository name (show only)
-    --container,-c     Create as container (default to a VM) (test only)
-    --keep,-k          Omit ephemeral tag on test environments (test only)
-
 Commands:
         new                     Create a new repository
         show                    Show a pacman.conf with repository
+            --name,-n               Show repository name (show only)
+            --staging
+            --testing
+            --extra                 (default)
+            --multilib
         list                    Lists all repositories
         sync                    Sync the repository to pkgbuild.com
         build [repostiroy]      Builds a package towards a repository. If no PKGBUILD is present it looks for
                                 **/.SRCINFO and resolves a dependency chain to build.
+            --force,-f              Overwrite built packages
+            --offload,-o            Build using offload-build
         test [repository]       Create a test environment,
+            --container,-c          Create as container (default to a VM) (test only)
+            --keep,-k               Omit ephemeral tag on test environments (test only)
+            --name,-n
         test-clean              Cleans all ephemeral test environments
         test-list               List all test environments
 
@@ -100,6 +103,7 @@ fi
 set -- "${OPTRET[@]}"
 
 offload_build=0 overwrite=0 env_container=1 show_repo_name=0
+repo_config="extra";
 unset keep
 while true; do
     case "$1" in
@@ -108,6 +112,9 @@ while true; do
         -k|--keep) keep="" ;;
         -n|--name) show_repo_name=1 ;;
         -o|--offload) offload_build=1 ;;
+        --extra) repo_config="extra";;
+        --testing) repo_config="testing";;
+        --staging) repo_config="staging";;
         --) shift; break ;;
     esac
     shift
@@ -188,6 +195,10 @@ CheckSpace
 SigLevel    = Required DatabaseOptional
 LocalFileSigLevel = Optional
 
+[$repo_name]
+SigLevel = Optional TrustAll
+Server = ${repo_path}
+
 [core]
 Include = /etc/pacman.d/mirrorlist
 
@@ -201,10 +212,6 @@ Include = /etc/pacman.d/mirrorlist
 CacheDir = /var/cache/pacman/pkg
 CleanMethod = KeepCurrent
 ${local_repo:+CacheDir = $repo_cache_path}
-
-[$repo_name]
-SigLevel = Optional TrustAll
-Server = ${repo_path}
 EOF
 fi
 
@@ -302,7 +309,7 @@ if ((cmd_test)); then
     fi
     repo_name="$($argv0 show --name "$1")"
     repo="$CONTRIB_REPOS/$repo_name"
-    container_name="arch-vm-$repo_name"
+    container_name="${REPO_NAME:-arch-vm-$repo_name}"
     if ! lxc info "$container_name" &>/dev/null; then
         lxc init images:archlinux/current ${env_container:+--vm} -c "user.archlinux.repo_name=${repo_name}" ${keep--c "user.archlinux.contrib=1"} "$container_name"
         if [ -d "$repo" ]; then
@@ -312,6 +319,7 @@ if ((cmd_test)); then
         ask "Waiting for environment to start..."
         while true; do
             if lxc file push "$TMPFILE/pacman.conf" "$container_name"/etc/pacman.conf &>/dev/null; then
+                lxc file push /etc/pacman.d/mirrorlist "$container_name"/etc/pacman.d/mirrorlist
                 break
             fi
             sleep 1s

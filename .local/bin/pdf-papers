@@ -1,0 +1,12 @@
+#!/bin/bash
+set -euo pipefail
+
+readonly PAPIS_LIBRARY="/home/fox/Documents/papers"
+
+result=$(pdfgrep --color always --cache -FrnH "$*" ${PAPIS_LIBRARY} | fzf --ansi)
+
+echo "$result" | awk -F: '{print $1}' | xargs -I '{}' zathura {} &
+sleep 1
+echo "$result" | awk -F: '{printf "/%s", $3 }' | xdotool type --clearmodifiers --file -
+sleep 1
+xdotool key KP_Enter

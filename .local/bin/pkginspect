@@ -1,0 +1,7 @@
+#!/bin/bash
+
+pacman -Fl "$1" | awk '{print $2}' | \
+    fzf -e -m +s --reverse --prompt='> ' \
+    --preview 'cat /{}' \
+    --bind "ctrl-l:toggle-preview"
+    

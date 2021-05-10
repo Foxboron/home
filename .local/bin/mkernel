@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -x
+
+ROOTFS_DIR="${XDG_CACHE_HOME}/kernel-build-initramfs"
+mkdir -p "$ROOTFS_DIR"
+ROOTFS_RAW="$ROOTFS_DIR/rootfs.raw"
+ROOTFS_COW="$ROOTFS_DIR/rootfs.cow"
+
+rebuild_initramfs=0 build=0 vm=0
+case $1 in
+  rebuild ) rebuild_initramfs=1;;
+  vm ) vm=1;;
+  *) build=1;;
+esac
+
+if ((rebuild_initramfs)); then
+  WORKINGDIR=$(mktemp -d /var/tmp/kernel-build.XXXX)
+  trap 'rm -rf "$WORKINGDIR"' EXIT
+  dd if=/dev/zero of="${ROOTFS_RAW}" bs=1G count=1
+  mkfs.ext4 "${ROOTFS_RAW}"
+  sudo losetup -fP "${ROOTFS_RAW}"
+  sudo mount /dev/loop0 "${WORKINGDIR}"
+  sudo pacstrap "${WORKINGDIR}" base openssh
+
+  echo "[Match]
+  Name=enp0s3
+
+  [Network]
+  DHCP=yes" | sudo tee "${WORKINGDIR}/etc/systemd/network/20-wired.network"
+
+  sudo sed -i '/^root/ { s/:x:/::/ }' "${WORKINGDIR}/etc/passwd"
+  sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' "${WORKINGDIR}/etc/ssh/sshd_config"
+  sudo sed -i 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/' "${WORKINGDIR}/etc/ssh/sshd_config"
+
+  sudo arch-chroot "${WORKINGDIR}" systemctl enable sshd systemd-networkd
+  sudo rm "${WORKINGDIR}"/var/cache/pacman/pkg/*
+  sudo umount "${WORKINGDIR}"
+  sudo losetup -d /dev/loop0
+  qemu-img create -o backing_file="${ROOTFS_RAW}",backing_fmt=raw -f qcow2 "${ROOTFS_COW}"
+fi
+
+
+if ((build)); then
+  export DISTCC_HOSTS="@dragon-distcc/8:/home/foxboron/bin/distccd,cpp,lzo"
+  pump make -j8 CC='distcc' LD=ld.lld HOSTLDFLAGS=-fuse-ld=lld
+  # mkernel vm
+fi
+
+if ((vm)); then
+  qemu-system-x86_64 \
+    -drive file="${ROOTFS_COW}",index=0 \
+    -net user,hostfwd=tcp::10022-:22 -net nic \
+    -nographic \
+    -kernel arch/x86/boot/bzImage \
+    -append "console=ttyS0 root=/dev/sda rw debug earlyprintk=serial"\
+    -enable-kvm -cpu host -m 2G 
+fi

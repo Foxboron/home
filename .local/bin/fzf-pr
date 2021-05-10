@@ -1,0 +1,4 @@
+#!/bin/bash
+
+
+gh pr list | fzf --preview='gh pr view {1}' --bind='enter:execute(gh pr diff -c always {1})'

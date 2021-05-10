@@ -1,0 +1,70 @@
+#!/bin/bash
+
+#########################################################
+#
+# PAMUTE
+#
+# Mute/Unmute individual Pulseaudio's streams using Rofi.
+#
+# Requires:
+#  - pactl
+#  - gawk
+#  - rofi
+#
+# Configure your rofi options here:
+#
+
+ROFI_OPTIONS="-p 'Audio Streams: ' -width 600"
+
+#
+#########################################################
+
+
+pactl list sinks | awk -v rofi_cmd="rofi -dmenu -format i $ROFI_OPTIONS" '
+	BEGIN {	item = 1 }
+
+	/^Sink / {
+		if (item in sinks)
+			item++
+		split($0, result, "#")
+		sinks[item]["sink"] = result[2]
+		next
+	}
+
+	/Description/ {
+		split($0, result, ": ")
+		sinks[item]["name"] = result[2]
+		next
+	}
+
+	/Name/ {
+		split($0, result, ": ")
+		sinks[item]["real_name"] = result[2]
+		next
+	}
+
+	END {
+
+		for (item in sinks) {
+			print(sinks[item]["name"])
+		}
+
+		if (length(sinks) == 0) {
+			print("NO STREAMS FOUND") | rofi_cmd
+			exit
+		}
+
+		for (item in sinks) {
+			print(sinks[item]["name"]) |& rofi_cmd
+		}
+		
+		close(rofi_cmd, "to")
+		rofi_cmd |& getline selected
+		for (item in sinks) {
+			print(item)
+		}
+		print("selected: " selected+1)
+		print(sinks[selected+1]["name"])	
+		system("pactl set-default-sink " sinks[selected+1]["sink"])
+	}
+'

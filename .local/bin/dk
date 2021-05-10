@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+set -x
+
+DARKTABLE_CONF="/home/fox/.config/darktable"
+
+conf=(
+    "--conf plugins/imageio/storage/disk/file_directory=/home/fox/Pictures/darktable_exported/\$(EXIF_YEAR)/\$(ROLL_NAME)/\$(FILE_NAME)"
+
+)
+
+local=(
+    "--library $DARKTABLE_CONF/library-local.db"
+    '--conf ui_last/import_last_directory=/home/fox/Pictures'
+    '--conf session/base_directory_pattern=/home/fox/Pictures/albums'
+)
+
+remote=(
+    '--conf ui_last/import_last_directory=/var/raid/Bilder'
+    '--conf session/base_directory_pattern=/var/raid/Bilder'
+)
+
+conf_profiles=(
+	remote
+	local
+)
+
+
+test -z "$1" && exit 1
+
+if [[ " ${conf_profiles[*]} " == *"$1"* ]]; then
+	c="$1[@]"
+	/usr/bin/darktable ${conf[*]} ${!c}
+else
+	exit 1
+fi
+
+
+

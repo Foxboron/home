@@ -1,0 +1,17 @@
+#!/bin/bash
+set -x
+
+unset set delete reset list
+while getopts "gdrls:" OPTION; do
+    case $OPTION in 
+        s) set=1; shift;;
+        d) delete=1;;
+        l) list=1 ;;
+        r) reset=1;;
+    esac
+done
+
+while IFS=\; read mail name sign; do 
+    ((list)) && printf "Mail: %s Username: %s Keyid: %s\n" "$mail" "$name" "$sign"
+    ((set)) && printf "%s;%s;%s\n" "$mail" "$name" "$sign" | grep "$1" | xargs 
+done <<< "$(git config --get-regexp user | cut -d\  -f2- | tr '\n' ';')"

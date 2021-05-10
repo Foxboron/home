@@ -1,0 +1,3 @@
+#!/bin/bash
+
+dot -Tsvg -Nstyle=rounded -Efontname=monospace -Nfontname=monospace -Efontsize=14 -Nshape=circle -Gbgcolor=black -Ecolor=cyan -Ncolor=cyan -Nfontcolor=cyan | rsvg-convert -a -f svg | kitty icat --align=left

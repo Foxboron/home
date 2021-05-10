@@ -1,0 +1,47 @@
+#!/bin/bash
+
+AUR_REPO=papis
+AUR_DBROOT="/var/cache/pacman/$AUR_REPO"
+mkdir -p "$AUR_DBROOT"
+repo-add "$AUR_DBROOT/$AUR_REPO.db.tar"
+
+for dir in $(find . -maxdepth 1 -type d); do
+    pushd "$dir"
+    test -f PKGBUILD && makepkg --printsrcinfo > .SRCINFO
+    popd
+done
+
+cat << EOF > "/tmp/pacman.conf"
+[options]
+HoldPkg     = pacman glibc
+Architecture = auto
+
+IgnorePkg   = linux linux-headers
+
+CheckSpace
+
+SigLevel    = Required DatabaseOptional
+LocalFileSigLevel = Optional
+
+[core]
+Include = /etc/pacman.d/mirrorlist
+
+[extra]
+Include = /etc/pacman.d/mirrorlist
+
+[community]
+Include = /etc/pacman.d/mirrorlist
+
+[options]
+CacheDir = /var/cache/pacman/pkg
+CacheDir = $AUR_DBROOT
+CleanMethod = KeepCurrent
+
+[$AUR_REPO]
+SigLevel = Optional TrustAll
+Server = file://$AUR_DBROOT
+
+EOF
+
+
+bash /usr/lib/aurutils/aur-build -fcs -a <(aur graph */.SRCINFO |tsort|tac) --pacman-conf "/tmp/pacman.conf"

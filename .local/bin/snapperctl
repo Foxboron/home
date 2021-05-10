@@ -1,0 +1,23 @@
+#!/usr/bin/bash
+
+
+
+rm_cmd (){
+    return
+}
+
+find_cmd (){
+    echo $@
+}
+
+
+
+case "$1" in
+    rm)
+        shift; rm_cmd "$@"
+        ;;
+    find)
+        shift; find_cmd "$@"
+        ;;
+esac
+

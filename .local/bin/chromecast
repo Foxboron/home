@@ -1,0 +1,4 @@
+#!/bin/bash
+
+IP=$(/home/fox/Git/prosjekter/Go/mdns/mdns | jq -r '.Addr')
+youtube-dl "$1" -o - | cvlc --sout "#chromecast" --sout-chromecast-ip=$IP -

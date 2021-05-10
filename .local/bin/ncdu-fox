@@ -1,0 +1,3 @@
+#!/bin/bash
+
+sudo /usr/bin/ncdu --exclude "*\.snapshot*" --exclude "/var/btrfs*" --exclude "/var/raid/*" --exclude "/var/lib/lxd/storage-pools/*" $1

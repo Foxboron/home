@@ -1,0 +1,3 @@
+#!/bin/bash
+
+~/Git/prosjekter/Go/wally-cli/wally-cli "$(ls -t Downloads/moonlander* | head -1)"
