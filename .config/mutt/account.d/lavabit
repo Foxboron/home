@@ -1,9 +1,0 @@
-set folder 		    = imaps://imap.lavabit.com:993	# Choose either POP or IMAP.
-set imap_user 		= foxboron
-set spoolfile 		= +INBOX
-set postponed		= +Drafts
-set record		    = +Sent
-mailboxes		    = +INBOX
-set smtp_url		= smtp://smtp.lavabit.com:587
-set smtp_pass		= `pass service/lavabit
-					
