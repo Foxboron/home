@@ -42,17 +42,15 @@ force_focus_wrapping no
 hide_edge_borders both
 
 exec --no-startup-id feh --no-fehbg --bg-scale ~/.config/i3/bckg/mountain.png
-exec --no-startup-id dunst -config ~/.config/dunst/dunstrc
-exec --no-startup-id ~/bin/lock 
-exec --no-startup-id redshift 
+exec --no-startup-id ~/.local/bin/lock 
 exec --no-startup-id ~/.config/rofi/bin/notes
 
 bindsym $mod+Shift+c kill
 
 bindsym $mod+d exec rofi -show run 
-bindsym $mod+Tab exec ~/bin/rofi-run 
+bindsym $mod+Tab exec ~/.local/bin/rofi-run 
 
-set $Locker i3lock -n -c 000000 -i /home/fox/.config/i3/wallpaper.png && sleep 1
+set $Locker i3lock -t -n -c 000000 -i /home/fox/.config/i3/wallpaper.png && sleep 1
 
 bindsym $mod+Shift+Control+l exec $Locker
 
