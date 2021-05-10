@@ -13,6 +13,7 @@ set sendmail  = "/usr/bin/msmtp"
 set charset          = "utf-8" # Terminal charset for display/input
 set send_charset     = "utf-8" # Charset for outgoing messages
 set config_charset   = "utf-8"
+set use_envelope_from 
 
 set timeout=5           # Time out 5 seconds after last keypress to check for mail
 set help=no	            # Disable the help header
@@ -25,11 +26,13 @@ set confirmappend=no
 set collapse_unread=no
 set uncollapse_jump=yes
 set fast_reply=yes
-set use_envelope_from 
 set hidden_host
 set pager_index_lines=10
 set sidebar_width = 20
 set sidebar_visible = yes
+
+set mime_forward
+set mime_forward_rest=yes
 
 alternative_order text/plain text/html text/enriched
 auto_view text/html
@@ -51,7 +54,7 @@ set reverse_alias=yes
 
 set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
 set status_format="$from: %f (%s/%S)"
-set sidebar_format= '%D%*  %N'
+set sidebar_format= '%D%*  %N/%S'
 
 set mbox_type = Maildir
 set folder = ~/mail/velox
@@ -59,10 +62,6 @@ set spoolfile="+INBOX"
 set postponed=+Drafts
 set record=+Sent
 set trash=+Trash
-
-set nm_default_uri = "notmuch:///home/fox/mail/velox"
-set nm_query_window_current_position = 1
-set nm_query_type = "threads"
 
 bind attach <return> view-mailcap
 
@@ -82,21 +81,34 @@ bind index,pager u        sync-mailbox
 macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
 macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
 
+bind index,pager X change-vfolder
+bind index,pager B sidebar-toggle-virtual
+bind index,pager + entire-thread
+bind index,pager / vfolder-from-query
+bind index < vfolder-window-backward
+bind index > vfolder-window-forward
+bind index,pager <Space> noop
+macro index,pager <space> ":source ~/.config/mutt/scripts/changefolder|<enter>"
+
+
+
 # mailboxes `find ~/mail/ -type d -name cur -printf '%h '`
+set nm_default_uri = "notmuch:///home/fox/mail/velox"
+set nm_query_window_current_position = 1
+set nm_query_type = "threads"
 
 virtual-mailboxes \
-        "inbox"                       "notmuch://?query=folder:INBOX"\
-        "inbox-t"                       "notmuch://?query=tag:INBOX or tag:inbox"\
-        "unread"                    "notmuch://?query=tag:unread"\
-        "todo"                      "notmuch://?query=tag:todo"\
-        "important"                      "notmuch://?query=tag:important"\
-        "sent"                       "notmuch://?query=folder:Sent"\
-        "sent0"                       "notmuch://?query=tag:sent"\
-        "draft"                       "notmuch://?query=tag:draft"\
-        "new"                       "notmuch://?query=tag:new"\
-        "replied"                   "notmuch://?query=tag:replied"\
-        "archive"                       "notmuch://?query=tag:archive"\
-        "spam"                      "notmuch://?query=tag:spam"\
+        "inbox"           "notmuch://?query=folder:INBOX"\
+        "inbox-t"         "notmuch://?query=tag:INBOX or tag:inbox"\
+        "unread"          "notmuch://?query=tag:unread"\
+        "todo"            "notmuch://?query=tag:todo"\
+        "important"       "notmuch://?query=tag:important"\
+        "sent"            "notmuch://?query=tag:sent"\
+        "draft"           "notmuch://?query=tag:draft"\
+        "new"             "notmuch://?query=tag:new"\
+        "replied"         "notmuch://?query=tag:replied"\
+        "archive"         "notmuch://?query=tag:archive"\
+        "spam"            "notmuch://?query=tag:spam"\
 
 
 macro index,pager T "<modify-labels-then-hide>!todo<enter>" "Mark message as Todo"
@@ -106,8 +118,8 @@ macro index,pager S "<modify-labels-then-hide>-INBOX -inbox -important !spam<ent
 macro index,pager A "<modify-labels-then-hide>-INBOX -inbox -important !archive<enter>" "mark message as Archive"
 macro index,pager d "<modify-labels-then-hide>-INBOX -inbox -important !trash\n" "Delete message"
 macro index,pager K "<tag-thread><tag-prefix-cond><modify-labels-then-hide>-INBOX -inbox -important -todo +archive<enter>"
+macro index,pager i  "<modify-labels-then-hide>!INBOX !inbox\n" "Inbox"
 bind index,pager Y modify-labels
-macro index,pager i  "<modify-labels-then-hide>-INBOX -inbox\n" "Inbox"
 
 # Unsure
 #set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
@@ -115,8 +127,8 @@ tag-transforms "attachment" "@" \
                "encrypted"  "" \
                "important"  "!" \
                "signed"     "✎" \
-               "replied"	"↻" \
-               "sent"		"➥" \
+               "replied"    "↻" \
+               "sent"       "➥" \
                "todo"       "🗹"
 
 tag-formats "attachment"    "GA" \
@@ -129,19 +141,12 @@ tag-formats "attachment"    "GA" \
 
 set index_format="%?GI?%GI& ? %?GT?%GT& ? %?GR?%GR& ? %?GS?%GS& ? %?GE?%GE& ? %<[y?%<[m?%<[d?%[ %H:%M]&%[%a %d]>&%[%b %d]>&%[%m/%y ]> │ %-15.15L │ %s"
 
-bind index,pager X change-vfolder
-bind index,pager B sidebar-toggle-virtual
-bind index,pager + entire-thread
-bind index,pager / vfolder-from-query
-bind index < vfolder-window-backward
-bind index > vfolder-window-forward
-
-
 # Account managament
 folder-hook . "exec collapse-all"
 message-hook . "source ~/.config/mutt/account.d/linderud"
-message-hook "~C morten@linderud.pw" "source ~/.config/mutt/account.d/linderud"
-message-hook "~C @archlinux.org" "source ~/.config/mutt/account.d/archlinux"
+message-hook "~C morten@linderud\.pw" "source ~/.config/mutt/account.d/linderud"
+message-hook "~C @archlinux\.org" "source ~/.config/mutt/account.d/archlinux"
+message-hook "~h 'Delivered-To: foxboron@archlinux\.org'" "source ~/.config/mutt/account.d/archlinux"
 macro pager,index ,a ":source ~/.config/mutt/account.d/archlinux\n"
 macro pager,index ,l ":source ~/.config/mutt/account.d/linderud\n"
 
@@ -151,5 +156,3 @@ source /home/fox/.config/mutt/muttrc.d/colors
 source /home/fox/.config/mutt/muttrc.d/ignores
 source /home/fox/.config/mutt/muttrc.d/gpg.rc
 
-bind index,pager <Space> noop
-macro index,pager <space> ":source ~/.config/mutt/scripts/changefolder|<enter>"

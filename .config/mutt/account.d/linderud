@@ -1,7 +1,7 @@
 set ssl_verify_host=no
 set realname = 'Morten Linderud'
 set from = morten@linderud.pw
-set sendmail  = "/usr/bin/msmtp -a linderud"
+set sendmail  = "/usr/bin/msmtp"
 set crypt_autosign=no
 set pager_format="$from: -%Z- %C/%m: %-20.20n   %s%*  -- (%P)"
 set status_format="$from: %f (%s/%S)"

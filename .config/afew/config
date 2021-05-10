@@ -12,7 +12,7 @@ folder_transforms = Drafts:drafts archlinux:archlinux archweb:archweb AUR:aur Im
 
 [MailMover]
 folders = INBOX
-INBOX = 'tag:sent':Sent 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash 'tag:lists':Lists 'tag:archweb':archweb 'tag:bugs':archlinux
+INBOX = 'tag:sent':Sent 'tag:drafts':Drafts 'tag:important':Important 'tag:todo':Todo 'tag:spam':Spam 'tag:archive':Archive 'tag:trash':Trash 'tag:lists':Lists 'tag:archweb':archweb 'tag:bugs':archlinux
 
 [Filter.1]
 message = "Github stuff shouldn't hit inbox"
@@ -22,13 +22,12 @@ tags = +github;-new;-INBOX
 [Filter.2]
 message = "Remove spam and trash from inbox"
 query = tag:spam
-tags = -unread;-new;-inbox;-INBOX;-archive;-replied
+tags = +spam;-unread;-new;-inbox;-INBOX;-archive;-replied
 
 [Filter.3]
 message = "Remove list from inbox"
 query = tag:lists
 tags = -new;-INBOX
-
 
 [Filter.4]
 message = "Rename inbox tag to INBOX"

@@ -9,8 +9,6 @@ other_email=foxboron@archlinux.org;mcfoxax@gmail.com;morten.linderud@student.uib
 [new]
 tags=new
 
-ignore=
-
 [search]
 exclude_tags=deleted;spam;
 
@@ -21,4 +19,4 @@ synchronize_flags=true
 gpg_path=gpg
 
 [index]
-headers.XMailer=X-Mailer
+header.XMailer=X-Mailer
