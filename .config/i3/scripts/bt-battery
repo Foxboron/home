@@ -1,0 +1,9 @@
+#!/usr/bin/bash
+
+is_connected=$(busctl get-property org.bluez /org/bluez/hci0/dev_94_DB_56_4F_4D_D9 org.bluez.Device1 Connected | awk '{print $2}')
+if [ $is_connected = false ]; then
+	exit 1
+fi
+
+percentage=$(busctl get-property org.bluez /org/bluez/hci0/dev_94_DB_56_4F_4D_D9 org.bluez.Battery1 Percentage  | awk '{print $2}')
+printf "🎧%s%%\n" $percentage
