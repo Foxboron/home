@@ -100,9 +100,5 @@ printjs() {
     js | sed 's,//.*$,,' | tr '\n' ' '
 }
 echo "jseval -q $(printjs)" >> "$QUTE_FIFO"
-
-IP=$(/home/fox/Git/prosjekter/Go/mdns/mdns | jq -r '.Addr')
-
-msg info "Opening $QUTE_URL with with chromecast: $IP"
-
-youtube-dl "$QUTE_URL" -o - | cvlc --sout "#chromecast" --sout-chromecast-ip=$IP -
+/home/fox/.local/bin/chromecast "$QUTE_URL"
+msg info "Opening $QUTE_URL with with chromecast"

@@ -1,4 +1,5 @@
-#!/bin/bash
-
-IP=$(/home/fox/Git/prosjekter/Go/mdns/mdns | jq -r '.Addr')
+#!/bin/bash -x
+IP=$(~/.local/bin/dns-sd _googlecast._tcp.local)
+echo "Using $IP"
+# cvlc --sout "#chromecast" --sout-chromecast-ip=$IP "$1"
 youtube-dl "$1" -o - | cvlc --sout "#chromecast" --sout-chromecast-ip=$IP -
