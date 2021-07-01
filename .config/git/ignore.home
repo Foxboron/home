@@ -1,4 +1,5 @@
-.*
+*
+!.*
 Git
 jobb
 Documents
@@ -9,7 +10,9 @@ Pictures
 .config/*
 !.config
 !bin
+!.local
 !.config/vim
+!.config/vim/*
 !.config/systemd
 !.config/zsh
 !.config/i3

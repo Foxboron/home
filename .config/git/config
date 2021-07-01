@@ -28,9 +28,10 @@
     c = commit -s -S
     amend = c --amend
     fixup = !git c --fixup=$(git rev-parse HEAD)
-    autosquash = !git rebase -i --autosquash $(git branch --show-current)
+    autosquash = !git rebase -i --autosquash $(git branch --show-current)~3
     message = commit -m
-    ba = branch -a
+    ba = branch -avv
+    frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
 
     ap = add -p
     rp = restore --staged --patch
@@ -44,7 +45,7 @@
 
     pull-pr = "!f() { git fetch ${1-origin} pull/\"${2}\"/head:pr-\"${2}\"; }; f"
     pr = "!f() { gh pr list | fzf | awk '{print $1}' | xargs git pull-pr ${1-origin}; }; f"
-    sl = "!git shortlog $(git describe --tags --abbrev=0)..HEAD"
+    sl = "!git shortlog --no-merges $(git describe --tags --abbrev=0)..HEAD"
 
     difftex = difftool -y -t latex
 
@@ -59,10 +60,18 @@
     graph = log --oneline --graph --all --decorate --date=iso
     ignored = status --ignored
 
+# Worktree
+    wt = "!f() { git worktree add -b morten/$1 ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
+    wl = "!f() { git worktree list | fzf --height 40% --reverse; }; f"
+    
+
 [core]
     excludesfile = ~/.config/git/ignore
+[remote "origin"]
+    fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
 [init]
     template = ~/.config/git/templates
+    defaultBranch = master
 [diff]
     tool = vimdiff
 [difftool]
@@ -72,11 +81,14 @@
 [difftool.latex]
     cmd = latexdiff --flatten "$LOCAL" "$REMOTE"
 [merge]
-	tool = vimdiff
+    tool = vimdiff
 [mergetool]
     prompt = false
+    keepBackup = false
 [push]
     default = current
+[pull]
+    rebase = false
 [rebase]
     autoStash = true
 [sendemail]
@@ -99,6 +111,3 @@
     refresh-interval = 5
 [tig "bind"]
     status = C !git c
-
-[pull]
-	rebase = false

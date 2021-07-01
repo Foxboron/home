@@ -1,2 +1,4 @@
 [core]
 	excludesfile = ~/.config/git/ignore.home
+[advice]
+    addIgnoredFile = false
