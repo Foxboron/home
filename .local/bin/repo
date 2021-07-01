@@ -1,5 +1,4 @@
 #!/bin/bash
-
 # SPDX-License-Identifier: GPL-2.0
 
 set -o errexit
@@ -10,6 +9,7 @@ readonly XDG_CACHE_HOME=${XDG_CACHE_HOME:-$HOME/.cache}
 readonly CONTRIB_REPO_DB=${CONTRIB_REPO_DB:-$XDG_CACHE_HOME/archlinux-contrib/repo.db}
 CONTRIB_REPOS="/var/repos"
 CHROOTS='/var/lib/contrib-repos'
+BUILDHOST='build.archlinux.org'
 STARTDIR=$PWD
  
 TMPFILE=$(mktemp -d /var/tmp/repo.XXXX) || exit 1
@@ -102,13 +102,13 @@ if ! parseopts "$opt_short" "${opt_long[@]}" -- "$@"; then
 fi
 set -- "${OPTRET[@]}"
 
-offload_build=0 overwrite=0 env_container=1 show_repo_name=0
+offload_build=0 overwrite=0 iscontainer=0 show_repo_name=0
 repo_config="extra";
 unset keep
 while true; do
     case "$1" in
         -f|--force) overwrite=1 ;;
-        -c|--container) env_container=1 ;;
+        -c|--container) iscontainer=1 ;;
         -k|--keep) keep="" ;;
         -n|--name) show_repo_name=1 ;;
         -o|--offload) offload_build=1 ;;
@@ -120,8 +120,13 @@ while true; do
     shift
 done
 
+lxd_args=()
+if ((!iscontainer)); then
+    lxd_args+=(--vm)
+fi
+
 cmd_new=0 cmd_list=0 cmd_show=0 cmd_build=0 cmd_test=0 cmd_test_clean=0
-cmd_test_list=0 help=0 cmd_remove=0
+cmd_test_list=0 help=0 cmd_remove=0 cmd_order=0
 # Parse commands
 while true; do
     case "$1" in
@@ -129,6 +134,7 @@ while true; do
         remove) cmd_remove=1 ;;
         show) cmd_show=1 ;;
         list) cmd_list=1 ;;
+        order) cmd_order=1 ;;
         build) cmd_build=1 ;;
         test) cmd_test=1 ;;
         test-clean) cmd_test_clean=1 ;;
@@ -142,6 +148,10 @@ done
 if [ ! -e "$CONTRIB_REPO_DB" ]; then
         mkdir -p "$XDG_CACHE_HOME/archlinux-contrib/"
         touch "$CONTRIB_REPO_DB"
+fi
+
+if ((cmd_order)); then
+    srcinfo-pkg-graph **/.SRCINFO  | tsort |tac
 fi
 
 if ((cmd_new)); then
@@ -248,7 +258,7 @@ if ((cmd_build)); then
 
 
     if (( offload_build )); then
-        offload_tmp=$(ssh dragon.archlinux.org mktemp -d '$HOME/.cache/repoctl.XXXX')
+        offload_tmp=$(ssh "$BUILDHOST" mktemp -d '$HOME/.cache/repoctl.XXXX')
     fi
 
     while IFS= read -ru "$fd" path; do
@@ -274,7 +284,7 @@ if ((cmd_build)); then
             for i in "${packagelist[@]}"; do
                      pkglist=(${pkglist[@]//*$i*})
             done
-            rsync -a "${pkglist[@]}" "dragon.archlinux.org:$offload_tmp"
+            rsync -a "${pkglist[@]}" "$BUILDHOST:$offload_tmp"
             pkglist=("${pkglist[@]/#/-I }")
             pkglist=("${pkglist[@]/"$CONTRIB_REPOS/$repo_name"/"$offload_tmp"}")
             offload-build -- -- ${pkglist[@]}
@@ -294,7 +304,7 @@ if ((cmd_build)); then
     done
 
     if (( offload_build )); then
-        ssh dragon.archlinux.org rm -rf "$offload_build"
+        ssh "$BUILDHOST" rm -rf "$offload_build"
     fi
 fi
 
@@ -311,7 +321,7 @@ if ((cmd_test)); then
     repo="$CONTRIB_REPOS/$repo_name"
     container_name="${REPO_NAME:-arch-vm-$repo_name}"
     if ! lxc info "$container_name" &>/dev/null; then
-        lxc init images:archlinux/current ${env_container:+--vm} -c "user.archlinux.repo_name=${repo_name}" ${keep--c "user.archlinux.contrib=1"} "$container_name"
+        lxc init images:archlinux/current -c "user.archlinux.repo_name=${repo_name}" ${keep--c "user.archlinux.contrib=1"} "$container_name"
         if [ -d "$repo" ]; then
             lxc config device add "$container_name" pkgs disk source="$repo" path="$repo" &> /dev/null
         fi
@@ -343,14 +353,16 @@ if ((cmd_test_clean)); then
 fi
 
 if ((cmd_remove)); then
-    vms="$(lxc list arch-vm --format json | jq -r --argjson NAME "$repo_name" '.[] | select(.config."user.archlinux.repo_name" == "$NAME") | .name')"
+    repo_name=$1
+    if ! "$argv0" show "$1" > /dev/null; then
+        exit 1 
+    fi
+    vms="$(lxc list arch-vm --format json | jq -r --arg NAME "$repo_name" '.[] | select(.config."user.archlinux.repo_name" == $NAME) | .name')"
     if [ -n "$vms" ]; then
         ask "Cleaning up environments $vms..."
         lxc delete --force $vms
         echo "done"
     fi
-    repo="$CONTRIB_REPOS/$repo_name"
-    rm -rf "$repo"
+    rm -rf "$CONTRIB_REPOS/$repo_name"
+    sed "/$repo_name.*/d" "$CONTRIB_REPO_DB"
 fi
-
-
