@@ -87,6 +87,9 @@ zle -N zle-keymap-select
 ZSH_THEME_GIT_PROMPT_DIRTY="*"
 
 PROMPT='%{$fg_bold[red]%}λ %{$fg[green]%}%c %{$fg_bold[red]%}$(git_prompt_info)» %{$reset_color%}'
+if [[ -f /run/.containerenv && -f /run/.toolboxenv ]]; then
+  PROMPT=$(printf "\033[35m⬢\033[0m %s" $PROMPT)
+fi
 # }}}
 #Alias{{{
 alias tmux="tmux -2 -f \"$XDG_CONFIG_HOME/tmux/tmux.conf\""
@@ -102,12 +105,15 @@ alias l='ls -lF'
 alias la='ls -laF'
 alias ip='ip -br -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
-compdef _git home # So we get git complteions with the alias
+compdef _git home # So we get git completion with the alias
 alias pacdiff="sudo -E pacdiff"
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 
 alias yubikey-refresh='gpg-connect-agent "scd serialno" "learn --force" /bye'
+
+
+alias nvim='VIMINIT="" nvim'
 
 
 alias -g G='| grep'
