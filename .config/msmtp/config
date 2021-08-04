@@ -1,9 +1,10 @@
 defaults
 auth            on
 tls             on
-tls_starttls    on
 tls_certcheck   on
+tls_trust_file /etc/ssl/cert.pem
 logfile ~/.local/share/msmtp_log
+timeout         20
 
 
 account         linderud 
@@ -12,17 +13,14 @@ port            587
 user            morten@linderud.pw
 from            morten@linderud.pw
 passwordeval    pass mail/morten@linderud.pw
-#tls_fingerprint "A5:E4:E6:0B:7E:0F:48:43:F0:56:EC:0E:32:1A:D0:07:5E:6F:A8:6E"
-tls_trust_file /etc/ssl/cert.pem
 
 
 account         archlinux
 user            foxboron 
 host            mail.archlinux.org
-port            587
+port            465
 from            foxboron@archlinux.org
 passwordeval    pass service/archlinux-mail
-#tls_fingerprint "ED:6B:9A:16:13:86:5D:E8:AB:BE:64:B6:02:DD:6F:AA:AC:38:49:40"
-tls_trust_file /etc/ssl/cert.pem
+tls_starttls    off
 
 account default : linderud
