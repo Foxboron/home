@@ -1,5 +1,7 @@
 *
 !.*
+.netrc
+.password-store
 Git
 jobb
 Documents
@@ -9,10 +11,8 @@ Notes
 Pictures
 .config/*
 !.config
-!bin
-!.local
-!.config/vim
-!.config/vim/*
+!.local/bin**
+!.config/vim**
 !.config/systemd
 !.config/zsh
 !.config/i3
