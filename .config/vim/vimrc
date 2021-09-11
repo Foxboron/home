@@ -11,28 +11,24 @@ call plug#begin('~/.config/vim/bundle')
     Plug 'junegunn/vim-plug'
 
     Plug './archlinux-snippets'
-    Plug './rss-reader.vim'
+    " Plug './rss-reader.vim'
 
 "   Vim-Go - for go stuff
     Plug 'fatih/vim-go', {'for': 'go'}
-    Plug 'rust-lang/rust.vim', {'for': 'rust'}
-    Plug 'racer-rust/vim-racer', {'for': 'rust'}
-    let g:racer_cmd = "/usr/bin/racer"
-    let g:racer_experimental_completer = 1
+    " Plug 'rust-lang/rust.vim', {'for': 'rust'}
+    " Plug 'racer-rust/vim-racer', {'for': 'rust'}
+    " let g:racer_cmd = "/usr/bin/racer"
+    " let g:racer_experimental_completer = 1
 
 "   Vim-Wiki - For notes and stuff
     Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
-    Plug 'itchyny/calendar.vim', {'on' : 'Calendar', 'for': 'wiki' }
+    " Plug 'itchyny/calendar.vim', {'on' : 'Calendar', 'for': 'wiki' }
     " Plug 'tbabej/taskwiki', {'on': 'VimwikiIndex', 'for': 'wiki'}
 
 " Comletion and linting
-    let g:ale_completion_enabled = 1
-    let g:ale_set_balloons = 1
-    inoremap <silent> <C-@> <C-\><C-O>:ALEComplete<CR>
-    Plug 'dense-analysis/ale', {'frozen': 1}
-    let g:ale_set_balloons = 1
-    let g:ale_hover_to_popup=0
-    " Plug 'neoclide/coc.nvim', {'do': 'yarn install --frozen-lockfile'}
+    Plug 'dense-analysis/ale'
+
+    Plug 'prabirshrestha/vim-lsp'
 
 "   GIT STUFF
 "   Because its great
@@ -47,18 +43,16 @@ call plug#begin('~/.config/vim/bundle')
     Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
 
-
-"   Latex sanity
-    Plug 'lervag/vimtex', {'for': 'tex'}
-    let g:latex_view_general_viewer = 'zathura'
-    let g:vimtex_view_method = "zathura"
-    Plug '907th/vim-auto-save', { 'for': 'tex' }
-
 "   Trying out snippets
     Plug 'sirver/ultisnips'
     Plug 'honza/vim-snippets'
 
     Plug 'junegunn/fzf.vim'
+
+    Plug 'vim-test/vim-test'
+
+    let g:vimspector_base_dir=expand('$XDG_CONFIG_HOME/vim/vimspector')
+    Plug 'puremourning/vimspector'
 
 " Style
     Plug 'vim-airline/vim-airline'
@@ -68,13 +62,15 @@ call plug#begin('~/.config/vim/bundle')
 " goyo for editing
     Plug 'junegunn/goyo.vim'
 
+
+  Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+
 call plug#end()
 " }}}1
 " {{{1 Description
 
 " 2. Hotkeys
 "   2.1 Leader Hotkeys (SPACE)
-"       s: search ctags
 "       f: find
 "       g: grep
 "       t: tab things
@@ -88,6 +84,23 @@ call plug#end()
 "       k: next buffer 
 "       <Tab>: Cycle tabs
 "       /: Open last text match innside a quickfix window 
+"   2.1.1 LSP Stuff
+"       gn: Next Reference
+"       gp: Previous Reference
+"       gI: Implementation
+"       ga: Code Action
+"       gd: Definition
+"       gk: Peek Definition
+"       gt: Type Definition
+"       gm: Signature Help
+"       go: Document Symbol
+"       gr: Rename
+"       gw: Workspace Symbol
+"   2.1.2 Tests / Debugger
+"       F5: continue
+"       Shift+F5: quit
+"       F6: Pause
+"       F9: Toggle Breakpoint
 "   2.2 Maps
 "      2.1 - Normal
 "           ^A: start of line
@@ -105,16 +118,6 @@ call plug#end()
 "           ^K: Up in history
 "           ^A: start of line
 "           ^E: end of line
-"      2.5 - Terminal
-"       
-"   2.3 Nice To Know 
-"       2.4 ins-complete 
-"           ^X^N: Just this file
-"           ^X^F: For filenames
-"           ^X^]: From ctags only 
-"           ^X^O: Omnicomplete
-"           ^N: Anything from complete
-"       2.4 VimWiki
 " }}}1
 " {{{1 Base config
 
@@ -129,7 +132,7 @@ let &t_EI = "\<Esc>[2 q"
 set t_ut=
 syntax enable
 filetype plugin indent on
-colorscheme gotham
+colorscheme gotham256
 
 " Sane defaults
 set ff=unix
@@ -157,7 +160,6 @@ set listchars=tab:>-
 " =========
 " Behaviour
 " =========
-set autoread            " If we find changes
 set nobackup            " lol
 set backupskip=/tmp
 set noswapfile          " Yolo
@@ -168,8 +170,8 @@ set scrolloff=10 	    " 10 lines space between frame and cursor
 set splitright          " Splitting right feels more natrual
 " set splitbelow
 set ttyfast
-set diffopt=internal,algorithm:patience,indent-heuristic
-"set hidden              " So we can create new buffers and dont need to save them
+set diffopt=filler,vertical,foldcolumn:0,context:4,indent-heuristic,algorithm:patience,hiddenoff
+set hidden              " So we can create new buffers and dont need to save them
 set noesckeys           " Remap esc!
 
 set wrap
@@ -198,6 +200,14 @@ set wildignore+=.git
 set wildignore+=*.pyc
 set wildignore+=node_modules
 set wildignore+=.tags
+set wildignore+=*.git*
+set wildignore+=*cache*
+set wildignore+=*logs*
+set wildignore+=*node_modules/**
+set wildignore+=*.gem
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.png,*.jpg,*.gif
 
 " =========
 " Searching
@@ -236,12 +246,10 @@ endfunction
 " }}}}2
 " {{{1 Mapping
 "{{{2 Remappings
-"
-"FUCK YOU HASH KEY
 inoremap # X<BS>#
 
 " Dont move on *
-nnoremap * *<c-o>
+nnoremap <silent> * *<c-o>
 
 map ø :
 map ; :
@@ -281,31 +289,31 @@ let maplocalleader=","
 
 " map <silent><leader>s :source ~/.vimrc<CR>
 map <leader>g :Rg 
-map <leader>[ :ALEGoToDefinition<CR>
-map <leader>r :ALEFindReferences<CR>
-map <leader>h :ALEDocumentation<CR>
-map <silent><leader>s :ALEHover<CR>
+map <leader>[ :LspDefinition<CR>
+map <leader>r :LspReferences<CR>
+map <leader>s :LspSignatureHelp<CR>
 
 vnoremap <leader>p :diffput<CR>
 
-map <leader>d :Gdiffsplit!<cr>
 map <leader>m :make<cr>
 
 " Buffers
 nnoremap <leader>j  :bprev<CR>
 nnoremap <leader>k  :bnext<CR>
+nnoremap <leader>c  :bw<CR>
 
 " Fugitive
-nnoremap gs :Gtabedit :<CR>
+nnoremap gd :Gdiffsplit!<cr>
+nnoremap gs :G<CR>
 nnoremap gm :Gmerge<CR>
 nnoremap gr :Grebase<CR>
 
 "}}}
-"{{{2 New mappings
-" ========
-" New Maps
-" ========
-map <silent><ESC> :set hlsearch!<CR>
+""{{{2 New mappings
+"" ========
+"" New Maps
+"" ========
+" map <silent><ESC> :set hlsearch!<CR>
 map <ScrollWheelUp> <nop>
 map <S-ScrollWheelUp> <nop>
 map <ScrollWheelDown> <nop>
@@ -357,23 +365,11 @@ augroup vimrc_autocommands
         \ endif
 augroup END
 "}}}
-"{{{2 vimwiki
-augroup vimwiki_template
-    autocmd!
-    function! InitTemplate()
-        let f = system("date \"+%Y-%m-%d\" | tr -d '\n' | xargs -d '\n' -0 printf '= %s ='")
-        let l = append(0, f)
-        normal G
-    endfunction
-    autocmd BufEnter    *   setlocal nowrap
-    autocmd BufNewFile */diary/*.wiki call InitTemplate()
-augroup END
-"}}}
 "{{{2 Goyo
 " Because numbers can fuck off
 function! s:goyo_enter()
     augroup goyo_enter
-        autocmd BufEnter    *   setlocal tw=80
+        autocmd BufEnter    *   setlocal tw=95
         autocmd InsertEnter *   setlocal nonumber
         autocmd InsertLeave *   setlocal norelativenumber
     augroup END
@@ -386,6 +382,7 @@ function! s:goyo_leave()
   augroup! goyo_enter 
 endfunction
 
+let g:goyo_width = 95
 
 autocmd User GoyoEnter nested call <SID>goyo_enter()
 autocmd User GoyoLeave nested call <SID>goyo_leave()
@@ -395,17 +392,9 @@ autocmd User GoyoLeave nested call <SID>goyo_leave()
 "{{{2 internal: matchit
 packadd! matchit
 "}}}
-"{{{2 internal: termdebug
-packadd! termdebug
-let g:termdebug_wide=1
-"}}}
 "{{{2 plugin: vimtex
-let g:vimtex_compiler_callback_hooks = ['CleanFiles']
 let g:vimtex_complete_enabled = 1
 let g:vimtex_complete_bib = {"recursive": 1, "simple": 1}
-function! CleanFiles(status)
-    call system('latexmk -c')
-endfunction
 "}}}
 "{{{2 plugin: airline
 let g:airline_theme='gotham'
@@ -437,9 +426,6 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
-
-
-
 "}}}
 "{{{2 plugin: ultisnips
 " We dont really want expand trigger over tab.
@@ -453,88 +439,15 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips", "user_snippets"]
 "{{{2 plugin: vim-go
 let g:go_info_mode = 'guru'
 let g:go_gopls_enabled = 0
-noremap <localleader>l :GoLint<cr>
-noremap <localleader>v :GoVet<cr>
-noremap <localleader>b :GoBuild<cr>
-noremap <localleader>i :GoInfo<cr>
-noremap <localleader>r :GoRun<cr>
-noremap <localleader>n :GoRename<cr>
-"}}}
-"{{{2 plugin: vimwiki
-let g:vimwiki_hl_headers = 1
-let g:vimwiki_hl_cb_checked = 1
-let g:vimwiki_use_calendar=1
-let g:vimwiki_listsyms = '✗○◐●✓'
-let g:vimwiki_folding = ''
-"{{{3 vimwiki:main
-let main_wiki = {}
-let main_wiki.path = '~/Notes/main'
-let main_wiki.path_html = '~/.cache/vimwiki/main/html'
-let main_wiki.automatic_nested_syntaxes = 1
-let main_wiki.list_margin = 0
-"}}}
-"{{{3 vimwiki:master
-let master_wiki = {}
-let master_wiki.path = '~/Notes/master'
-let master_wiki.path_html = '~/.cache/vimwiki/master/html'
-let master_wiki.automatic_nested_syntaxes = 1
-let master_wiki.list_margin = 0
-"}}}
-"{{{3 vimwiki:blog
-let blog_wiki = {}
-let blog_wiki.path = '/home/fox/Git/prosjekter/sites/Blog/content/'
-let blog_wiki.index = '_main'
-let blog_wiki.automatic_nested_syntaxes = 1
-let blog_wiki.list_margin = 0
-let blog_wiki.template_default = 'markdown'
-let blog_wiki.syntax = 'markdown'
-let blog_wiki.ext = '.md'
-"}}}
-let g:vimwiki_list = [main_wiki, master_wiki, blog_wiki]
-hi VimwikiBold term=bold cterm=bold gui=bold ctermfg=178 guifg=#dfaf00
-hi VimwikiItalic term=italic cterm=italic gui=italic ctermfg=178 guifg=#dfaf00
-"}}}
-"{{{2 plugin: calendar.vim
-let g:calendar_date_full_month_name=1
-let g:calendar_frame = "unicode"
-let g:calendar_first_day = 'monday'
-let g:calendar_date_endian = 'big'
-let g:calendar_week_number = 1
-let g:calendar_google_calendar = 1
-nnoremap <silent> <leader>c :Calendar -position=here<cr>
-" Connect to diary
-function! Open_diary() abort " {{{3
-  let l:date = printf('%d-%0.2d-%0.2d',
-        \ b:calendar.day().get_year(),
-        \ b:calendar.day().get_month(),
-        \ b:calendar.day().get_day())
-
-  call vimwiki#diary#make_note(1, l:date)
-endfunction
-"}}}
-augroup vimrc_calendar
-  autocmd!
-  autocmd FileType calendar
-        \ nnoremap <silent><buffer> <cr>
-        \ :<c-u>call Open_diary()<cr>
- autocmd FileType calendar nmap <buffer> q :bprev<cr>
-augroup END
-"}}}
-"{{{2 plugin: taskwiki
-let g:taskwiki_disable_concealcursor = 'yes'
-"}}}
-"{{{2 plugin: ale
-let g:ale_set_popups=1
-let g:ale_hover_to_popup=1
-let g:ale_linters = {}
-let g:ale_linters.python = ['pyls', 'black', 'flake8']
-let g:ale_linters.rust = ['rls']
-let g:ale_linters.go = ['gopls', 'goimports', 'go vet', 'golint', 'staticcheck']
-let g:ale_fixers = {'python': ['black']}
-let g:ale_rust_rls_toolchain = 'stable'
-let g:ale_sign_column_always = 1
+let g:go_doc_keywordprg_enabled = 0
 "}}}
 "}}}
-
 set viminfo+=n~/.cache/vim/viminfo
+highlight DiffAdd    cterm=BOLD guifg=NONE guibg=DarkGreen
+highlight DiffDelete cterm=BOLD guifg=NONE guibg=DarkRed
+highlight DiffChange guifg=NONE guibg=#195466
+highlight DiffText   guifg=NONE guibg=#195466
+
+" hi link diffLine String
+" hi link diffSubname Normal
 " vim: fdm=marker

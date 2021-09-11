@@ -1,0 +1,11 @@
+priority -50
+
+snippet for "for loop (for)"
+for (${2:i} = 0; $2 < ${1:count}; ${3:++$2}) {
+	${VISUAL}$0
+}
+endsnippet
+
+snippet iso "ISO format datetime" w
+`!v strftime("%Y-%m-%dT%H:%M:%S%z")`
+endsnippet

@@ -62,7 +62,18 @@ augroup LSC
                 \ 'cmd': {_->['gopls']},
                 \ 'allowlist': ['go']
                 \})
+    autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'pyls',
+                \ 'cmd': {_->['pyls']},
+                \ 'allowlist': ['python']
+                \})
 
     autocmd User lsp_server_init call <SID>setup_ls()
     autocmd BufEnter * call <SID>setup_ls()
 augroup END
+
+let g:lsp_diagnostics_enabled                = 0
+let g:lsp_diagnostics_signs_enabled          = 0
+let g:lsp_diagnostics_virtual_text_enabled   = 0
+let g:lsp_diagnostics_highlights_enabled     = 0
+let g:lsp_document_code_action_signs_enabled = 0

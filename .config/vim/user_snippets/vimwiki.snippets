@@ -5,6 +5,11 @@ cat <<EOF
 title: "FOSS Activities in $(date "+%B %G")"
 date: "$(date -d "$(date)+1 month" "+%Y-%m-01T00:00:00+02:00")"
 draft: true
+tags:
+  - foss
+  - monthly
+  - archlinux
+  - english
 ---
 
 // Placeholder Intro
@@ -14,16 +19,21 @@ draft: true
 # Package Updates to [community]
 -
 
-# Bugfixes in Arch
+## Package additions to [community]
 -
 
-
-# Other Arch Things
+### Potential new packages for \`[community]\`
 -
 
-
-# Many other things....
+# Bugfixes
 -
+
+## Security Team
+
+
+# Other things...
+-
+
 
 Cheers!
 EOF
@@ -46,3 +56,8 @@ ${2}
 
 endsnippet
 
+
+snippet highlight "highlight"
+{{< highlight >}}
+{{< /highlight >}}
+endsnippet
