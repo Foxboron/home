@@ -28,7 +28,7 @@ setopt prompt_subst
 autoload -U promptinit && promptinit
 autoload -U colors && colors
 autoload -U compinit
-ZSH_COMPDUMP="${ZDOTDIR:-${HOME}}/.zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
+ZSH_COMPDUMP="${XDG_CACHE_HOME:-~/.cache}/zsh/zcompdump-${SHORT_HOST}-${ZSH_VERSION}"
 compinit -i -d "${ZSH_COMPDUMP}"
 
 autoload -U run-help
