@@ -1,0 +1,36 @@
+{
+  "configurations": {
+    "go-build": {
+      "adapter": "vscode-go",
+      "autoselect": false,
+      "configuration": {
+        "request": "launch",
+        "program": "${fileDirname}",
+        "mode": "debug",
+        "showLog": "true",
+        "trace": "log",
+        "dlvToolPath": "/usr/bin/dlv",
+        "args": [
+          "${TestArgs}"
+        ]
+      }
+    },
+    "go-test": {
+      "adapter": "vscode-go",
+      "autoselect": false,
+      "configuration": {
+        "request": "launch",
+        "program": "${file}",
+        "args": [
+          "-test.v",
+          "-test.run",
+          "${TestName}"
+        ],
+        "mode": "test",
+        "showLog": "true",
+        "trace": "log",
+        "dlvToolPath": "/usr/bin/dlv"
+      }
+    }
+  }
+}

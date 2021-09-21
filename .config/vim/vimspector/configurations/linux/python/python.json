@@ -1,0 +1,19 @@
+{
+  "configurations": {
+    "python: Launch": {
+      "adapter": "debugpy",
+      "configuration": {
+        "program": "${file}",
+        "name": "python: Launch",
+        "type": "python",
+        "request": "launch",
+        "stopOnEntry": true,
+        "linux": {
+            "pythonPath": "${workspaceFolder}/.venv/bin/python",
+            "args": ["-r", "/home/florian/gitlab/package_name/data/Test_MRM.d"]
+        },
+        "console": "externalTerminal"
+      }
+    }
+  }
+}

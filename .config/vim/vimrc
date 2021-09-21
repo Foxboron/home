@@ -420,7 +420,7 @@ map <leader>f :FZF<CR>
 map <leader>t :Tags<CR>
 nmap <Space><Space> :Buffers<CR>
 map <leader>v :BCommits<CR>
-map <silent><c-l> :Snippet<CR>
+imap <silent><c-l> <C-O>:Snippet<CR>
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
