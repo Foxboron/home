@@ -43,8 +43,14 @@
     edit = "!vim `git ls-files -m` -p"
     edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
-    pull-pr = "!f() { git fetch ${1-origin} pull/\"${2}\"/head:pr-\"${2}\"; }; f"
-    pr = "!f() { gh pr list | fzf | awk '{print $1}' | xargs git pull-pr ${1-origin}; }; f"
+    pull-pr = "!f() { \
+        if git rev-parse --verify remotes/${2-origin}/pull/${1} &> /dev/null; then \
+            git fetch ${2-origin} pull/\"${1}\"/head:pr-\"${1}\"; \
+        elif git rev-parse --verify remotes/${2-origin}/merge-requests/${1} &> /dev/null; then \
+            git fetch ${2-origin} merge-requests/${1}/head:pr-${1}; \
+        fi; \
+        }; f"
+    pr = "!f() { gh pr list | fzf | awk '{print $1}' | xargs -I '{}' git pull-pr '{}' ${1-origin}; }; f"
     sl = "!git shortlog --no-merges $(git describe --tags --abbrev=0)..HEAD"
 
     difftex = difftool -y -t latex
@@ -69,6 +75,7 @@
     excludesfile = ~/.config/git/ignore
 [remote "origin"]
     fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
+    fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
 [init]
     template = ~/.config/git/templates
     defaultBranch = master
