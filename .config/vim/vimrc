@@ -293,8 +293,6 @@ map <leader>[ :LspDefinition<CR>
 map <leader>r :LspReferences<CR>
 map <leader>s :LspSignatureHelp<CR>
 
-vnoremap <leader>p :diffput<CR>
-
 map <leader>m :make<cr>
 
 " Buffers
@@ -305,8 +303,6 @@ nnoremap <leader>c  :bw<CR>
 " Fugitive
 nnoremap gd :Gdiffsplit!<cr>
 nnoremap gs :G<CR>
-nnoremap gm :Gmerge<CR>
-nnoremap gr :Grebase<CR>
 
 "}}}
 ""{{{2 New mappings
@@ -440,14 +436,8 @@ let g:UltiSnipsSnippetDirectories=["UltiSnips", "user_snippets"]
 let g:go_info_mode = 'guru'
 let g:go_gopls_enabled = 0
 let g:go_doc_keywordprg_enabled = 0
+let g:go_def_mapping_enabled = 0
 "}}}
 "}}}
 set viminfo+=n~/.cache/vim/viminfo
-highlight DiffAdd    cterm=BOLD guifg=NONE guibg=DarkGreen
-highlight DiffDelete cterm=BOLD guifg=NONE guibg=DarkRed
-highlight DiffChange guifg=NONE guibg=#195466
-highlight DiffText   guifg=NONE guibg=#195466
-
-" hi link diffLine String
-" hi link diffSubname Normal
 " vim: fdm=marker
