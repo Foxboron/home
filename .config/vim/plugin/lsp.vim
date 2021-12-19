@@ -28,7 +28,6 @@ func! s:setup_ls(...) abort
         endif
 
         if has_key(l:cap, 'definitionProvider')
-            nmap <silent><buffer>gd <plug>(lsp-definition)
             nmap <silent><buffer>gk <plug>(lsp-peek-definition)
         endif
 
@@ -63,8 +62,8 @@ augroup LSC
                 \ 'allowlist': ['go']
                 \})
     autocmd User lsp_setup call lsp#register_server({
-                \ 'name': 'pyls',
-                \ 'cmd': {_->['pyls']},
+                \ 'name': 'pylsp',
+                \ 'cmd': {_->['pylsp']},
                 \ 'allowlist': ['python']
                 \})
     autocmd User lsp_setup call lsp#register_server({
