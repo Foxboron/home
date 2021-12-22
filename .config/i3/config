@@ -148,6 +148,8 @@ bindsym XF86AudioPause exec --no-startup-id playerctl pause
 bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
+bindsym XF86Display exec --no-startup-id grobi update
+
 set $resize resize (h,j,k,l,v,q)
 mode "$resize"{
     bindsym h resize shrink width 10 px or 10 ppt
