@@ -67,6 +67,11 @@ augroup LSC
                 \ 'allowlist': ['python']
                 \})
     autocmd User lsp_setup call lsp#register_server({
+                \ 'name': 'rls',
+                \ 'cmd': {_->['rls']},
+                \ 'allowlist': ['rust']
+                \})
+    autocmd User lsp_setup call lsp#register_server({
                 \ 'name': 'clangd',
                 \ 'cmd': {_->['clangd', '-background-index']},
                 \ 'allowlist': ['c', 'cpp']
