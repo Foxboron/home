@@ -33,6 +33,7 @@ call plug#begin('~/.config/vim/bundle')
 "   GIT STUFF
 "   Because its great
     Plug 'tpope/vim-fugitive'
+    Plug 'tpope/vim-git'
 
 " Misc
     Plug 'tpope/vim-unimpaired'
