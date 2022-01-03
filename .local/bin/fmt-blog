@@ -4,8 +4,8 @@ import subprocess
 from collections import defaultdict
 
 
-cmd = "git log --reverse --before=\"$(date +'%Y-%m-01')\" --after=\"$(date --date '-1 month' +'%Y-%m-01')\" --format=format:'%s' --author='morten@linderud.pw'"
-#cmd = "git log --reverse --before=\"$(date --date='+1 month' +'%Y-%m-01')\" --after=\"$(date +'%Y-%m-01')\" --format=format:'%s' --author='morten@linderud.pw'"
+#cmd = "git log --reverse --before=\"$(date +'%Y-%m-01')\" --after=\"$(date --date '-1 month' +'%Y-%m-01')\" --format=format:'%s' --author='morten@linderud.pw'"
+cmd = "git log --reverse --before=\"$(date --date='+1 month' +'%Y-%m-01')\" --after=\"$(date +'%Y-%m-01')\" --format=format:'%s' --author='morten@linderud.pw'"
 out = subprocess.run(cmd, shell=True, cwd="/home/fox/Git/PKGBUILD/community", stdout=subprocess.PIPE).stdout.decode('utf-8')
 pkg_updates = defaultdict(list)
 

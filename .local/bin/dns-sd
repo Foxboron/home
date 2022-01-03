@@ -1,5 +1,8 @@
 #!/usr/bin/bash -e
 read -r _ _ _ ptr _ < <(resolvectl --type=PTR query "$1")
+# resolvectl --type=PTR query "$1"
 read -r _ _ _ _ _ _ srv _ < <(resolvectl --type=SRV query "$ptr")
+# resolvectl --type=SRV query "$ptr"
 read -r _ IP _ < <(resolvectl query "$srv")
+# resolvectl query "$srv"
 printf $IP

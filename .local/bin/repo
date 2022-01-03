@@ -253,7 +253,7 @@ if ((cmd_build)); then
     if [ -f ./PKGBUILD ]; then
         exec {fd}< <(printf '\n')
     else
-        exec {fd}< <(srcinfo-pkg-graph **/.SRCINFO |tsort|tac)
+        exec {fd}< <("$argv0" order)
     fi
 
 
