@@ -24,3 +24,4 @@ R /home/
 ! /home/.snapshots/backup/snapshot/*/.config/discord
 ! /home/.snapshots/backup/snapshot/*/.config/chromium
 ! /home/.snapshots/backup/snapshot/**/*.mkv
+! /home/.snapshots/backup/snapshot/*/.pyenv

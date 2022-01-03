@@ -41,7 +41,7 @@ HISTSIZE=1000000
 SAVEHIST=1000000
 PROMPT_COMMAND="history -a; history -n"
 HISTORY_IGNORE="(ls|ls -lah|cd|pwd|exit|cd ..|..)"
-HISTFILE=~/.local/share/zsh/history
+HISTFILE="$XDG_DATA_HOME/zsh/history"
 
 HELPDIR=~/.config/zsh/zsh_help
 export KEYTIMEOUT=1                     # For vim status line
@@ -144,6 +144,7 @@ alias db-move='ssh repos.archlinux.org "/community/db-move"'
 # alias build="aurbuild -cs -d aur"
 build(){
     aur build -fcsS -d aur
+    sudo pacsync aur
 }
 alias nspawn="sudo systemd-nspawn -D / -x"
 # }}}
