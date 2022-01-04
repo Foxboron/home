@@ -20,3 +20,8 @@ gpg_path=gpg
 
 [index]
 header.XMailer=X-Mailer
+
+[query]
+personal = from:foxboron@archlinux.org or from:morten@linderud.pw
+patch = XMailer:git-send-email*
+mypatches = query:patch and query:personal

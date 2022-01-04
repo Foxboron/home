@@ -31,6 +31,8 @@ set pager_index_lines=10
 set sidebar_width = 20
 set sidebar_visible = yes
 
+set mail_check_stats
+
 set mime_forward
 set mime_forward_rest=yes
 
@@ -103,6 +105,7 @@ virtual-mailboxes \
         "unread"          "notmuch://?query=tag:unread"\
         "todo"            "notmuch://?query=tag:todo"\
         "important"       "notmuch://?query=tag:important"\
+        "patches"         "notmuch://?query=query:mypatches"\
         "sent"            "notmuch://?query=tag:sent"\
         "draft"           "notmuch://?query=tag:draft"\
         "new"             "notmuch://?query=tag:new"\
