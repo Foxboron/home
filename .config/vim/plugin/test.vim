@@ -85,18 +85,18 @@ function! VimspectorGoTest(cmd)
     let position['file'] = path
     let position['line'] = path == expand('%') ? line('.') : 1
     let position['col']  = path == expand('%') ? col('.') : 1
-    let name = test#base#nearest_test(position, g:test#go#patterns)
+    let name = test#base#nearest_test(position, g:test#{&filetype}#patterns)
     call vimspector#LaunchWithSettings( #{ configuration: 'test', TestName: name["test"][0]} )
 endfunction
 
 let g:test#custom_strategies = {
-  \ 'go-test': function('VimspectorGoTest'),
+  \ 'custom-test': function('VimspectorGoTest'),
   \ }
 
 let test#vim#term_position = "below 10"
 let test#strategy = 'vimterminal'
 
-nmap <silent> t<C-d> :TestNearest -strategy=go-test<CR>
+nmap <silent> t<C-d> :TestNearest -strategy=custom-test<CR>
 nmap <silent> t<C-r> :TestNearest -v<CR>
 nmap <silent> t<C-f> :TestFile<CR>
 nmap <silent> tt :call vimspector#Launch()<CR>
