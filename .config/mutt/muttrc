@@ -150,6 +150,7 @@ message-hook . "source ~/.config/mutt/account.d/linderud"
 message-hook "~C morten@linderud\.pw" "source ~/.config/mutt/account.d/linderud"
 message-hook "~C @archlinux\.org" "source ~/.config/mutt/account.d/archlinux"
 message-hook "~h 'Delivered-To: foxboron@archlinux\.org'" "source ~/.config/mutt/account.d/archlinux"
+# message-hook "=h 'X-Mailer: git-send-email'" "source ~/.config/mutt/muttrc.d/colors.diff"
 macro pager,index ,a ":source ~/.config/mutt/account.d/archlinux\n"
 macro pager,index ,l ":source ~/.config/mutt/account.d/linderud\n"
 

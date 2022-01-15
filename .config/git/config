@@ -27,20 +27,18 @@
 
     c = commit -s -S
     amend = c --amend
-    fixup = !git c --fixup=$(git rev-parse HEAD)
-    autosquash = !git rebase -i --autosquash $(git branch --show-current)~3
-    message = commit -m
+    fixup = "!git c --fixup=$(git rev-parse HEAD)"
+    autosquash = "!git rebase -i --autosquash $(git rev-parse --abbrev-ref origin/HEAD)"
     ba = branch -avv
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
+    rr = "!git rebase -i $(git rev-parse --abbrev-ref origin/HEAD)"
 
     ap = add -p
-    rp = restore --staged --patch
 
-    p = push
     l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     hd = show -p --pretty="tformat:"
     files = diff-tree --no-commit-id --name-only -r
-    edit = "!vim `git ls-files -m` -p"
+    edit = "!vim $(git ls-files -m) -p"
     edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
     pull-pr = "!f() { \
@@ -76,6 +74,9 @@
 [remote "origin"]
     fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
     fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
+[remote "upstream"]
+    fetch = +refs/merge-requests/*/head:refs/remotes/upstream/merge-requests/*
+    fetch = +refs/pull/*/head:refs/remotes/upstream/pull/*
 [init]
     template = ~/.config/git/templates
     defaultBranch = master
@@ -110,6 +111,8 @@
     path = ~/.config/git/config.home
 [includeIf "gitdir:~/Git/PKGBUILD/community-checkout"]
     path = ~/.config/git/config.community
+[includeIf "gitdir:~/tmp/blug/alice/"]
+    path = ~/.config/git/config.blug
 [tig]
     line-graphics = utf-8
     main-view-date = relative-compact

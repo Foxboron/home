@@ -51,17 +51,3 @@ color quoted6    color108 color232
 color quoted7    color116 color232
 color quoted8    color247 color232
 color quoted9    color108 color232
-
-
-# diff
-#color   normal  white          default
-color   body    brightwhite     color232         ^[[:space:]].*
-color   body    brightwhite     color232         ^(diff).*
-color   body    white           color232         ^[\-\-\-].*
-color   body    white           color232         ^[\+\+\+].*
-color   body    green           color232         ^[\+].*
-color   body    red             color232         ^[\-].*
-color   body    brightblue      color232         [@@].*
-color   body    brightwhite     color232         ^(\s).*
-color   body    color174        color232         ^(Signed-off-by).*
-color   body    color174        color232         ^(Cc)

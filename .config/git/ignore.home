@@ -15,12 +15,12 @@ Media
 Notes
 Pictures
 .config/*
+!.config
+!.config/vim**
 .config/vim/bundle
 .config/vim/spell
 .config/vim/autoload/plug.vim.old
 .config/vim/.netrwhist
-!.config
-!.config/vim**
 !.config/systemd**
 !.config/systemd
 !.config/zsh
