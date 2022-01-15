@@ -22,6 +22,9 @@ gpg_path=gpg
 header.XMailer=X-Mailer
 
 [query]
-personal = from:foxboron@archlinux.org or from:morten@linderud.pw
+from-personal = from:foxboron@archlinux.org or from:morten@linderud.pw
+to-personal = to:foxboron@archlinux.org or to:morten@linderud.pw
+cc-personal = cc:foxboron@archlinux.org or cc:morten@linderud.pw
 patch = XMailer:git-send-email*
-mypatches = query:patch and query:personal
+mypatches = query:patch and query:from-personal
+patchqueue = query:patch and (query:to-personal or query:cc-personal)
