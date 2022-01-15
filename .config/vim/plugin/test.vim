@@ -32,7 +32,7 @@ function! s:OnJumpToFrame() abort
   nmap <silent> <buffer> ti <Plug>VimspectorStepInto
   nmap <silent> <buffer> to <Plug>VimspectorStepOut
   nmap <silent> <buffer> tg <Plug>VimspectorRunToCursor
-  nmap <silent> <buffer> tq <Plug>VimspectorReset
+  nmap <silent> <buffer> tq :call vimspector#Reset( { 'interactive': v:true } )<CR>
   nmap <silent> <buffer> <LocalLeader>k <Plug>VimspectorUpFrame
   nmap <silent> <buffer> <LocalLeader>j <Plug>VimspectorDownFrame
 
@@ -86,7 +86,7 @@ function! VimspectorGoTest(cmd)
     let position['line'] = path == expand('%') ? line('.') : 1
     let position['col']  = path == expand('%') ? col('.') : 1
     let name = test#base#nearest_test(position, g:test#go#patterns)
-    call vimspector#LaunchWithSettings( #{ configuration: 'go-test', TestName: name["test"][0]} )
+    call vimspector#LaunchWithSettings( #{ configuration: 'test', TestName: name["test"][0]} )
 endfunction
 
 let g:test#custom_strategies = {
@@ -99,3 +99,4 @@ let test#strategy = 'vimterminal'
 nmap <silent> t<C-d> :TestNearest -strategy=go-test<CR>
 nmap <silent> t<C-r> :TestNearest -v<CR>
 nmap <silent> t<C-f> :TestFile<CR>
+nmap <silent> tt :call vimspector#Launch()<CR>

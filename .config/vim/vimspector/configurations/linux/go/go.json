@@ -1,35 +1,25 @@
 {
   "configurations": {
-    "go-build": {
-      "adapter": "vscode-go",
+    "run": {
+      "adapter": "delve",
       "autoselect": false,
+      "filetypes": ["go"],
       "configuration": {
         "request": "launch",
         "program": "${fileDirname}",
         "mode": "debug",
-        "showLog": "true",
-        "trace": "log",
-        "dlvToolPath": "/usr/bin/dlv",
-        "args": [
-          "${TestArgs}"
-        ]
+        "args": ["*${Args}"]
       }
     },
-    "go-test": {
-      "adapter": "vscode-go",
+    "test": {
+      "adapter": "delve",
       "autoselect": false,
+      "filetypes": ["go"],
       "configuration": {
         "request": "launch",
-        "program": "${file}",
-        "args": [
-          "-test.v",
-          "-test.run",
-          "${TestName}"
-        ],
+        "program": "${fileDirname}",
         "mode": "test",
-        "showLog": "true",
-        "trace": "log",
-        "dlvToolPath": "/usr/bin/dlv"
+        "args": ["-test.v", "-test.run", "${TestName}"]
       }
     }
   }
