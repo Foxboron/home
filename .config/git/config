@@ -14,10 +14,15 @@
     co = checkout
 
     dt = difftool
-    d = diff
     dc = diff --cached
 
+    mt = mergetool
+
     aa = add --all
+    ap = add -p
+
+    b = branch -vv
+    ba = branch -avv
     rem = remote -v
 
     ff = merge --ff-only
@@ -29,11 +34,9 @@
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
     autosquash = "!git rebase -i --autosquash $(git rev-parse --abbrev-ref origin/HEAD)"
-    ba = branch -avv
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
-    rr = "!git rebase -i $(git rev-parse --abbrev-ref origin/HEAD)"
+    rr = "!git rebase --autosquash -i $(git rev-parse --abbrev-ref origin/HEAD)"
 
-    ap = add -p
 
     l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     hd = show -p --pretty="tformat:"
@@ -90,6 +93,7 @@
     cmd = latexdiff --flatten "$LOCAL" "$REMOTE"
 [merge]
     tool = vimdiff
+    conflictStyle = zdiff3
 [mergetool]
     prompt = false
     keepBackup = false
