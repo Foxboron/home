@@ -1,18 +1,37 @@
 {
+  "adapters": {
+      "delve-local": {
+        "variables": {
+          "port": "${unusedLocalPort}",
+          "dlvFlags": "",
+          "listenOn": "127.0.0.1"
+        },
+        "command": [
+          "/usr/bin/dlv",
+          "dap",
+          "--listen",
+          "${listenOn}:${port}",
+          "*${dlvFlags}"
+        ],
+        "tty": true,
+        "port": "${port}"
+      }
+  },
   "configurations": {
     "run": {
-      "adapter": "delve",
+      "adapter": "delve-local",
       "autoselect": false,
       "filetypes": ["go"],
       "configuration": {
         "request": "launch",
         "program": "${fileDirname}",
         "mode": "debug",
-        "args": ["*${Args}"]
+        "args": ["*${Args}"],
+        "dlvFlags": [ "--check-go-version=false" ]
       }
     },
     "test": {
-      "adapter": "delve",
+      "adapter": "delve-local",
       "autoselect": false,
       "filetypes": ["go"],
       "configuration": {
