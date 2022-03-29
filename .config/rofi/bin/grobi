@@ -1,0 +1,5 @@
+#!/bin/bash -e
+
+if profile=$(grobi rules | rofi -i -dmenu -matching fuzzy); then
+	grobi apply $profile
+fi
