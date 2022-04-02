@@ -1,4 +1,6 @@
 #!/bin/bash
 set -eou pipefail
-
-diff -Naur <(extract-conf "$1") "$1" | sed "s|/dev/fd/[[:digit:]]\+|$1|g"
+if ! (($#)); then
+    exit
+fi
+diff --label "$1" --label "$1" -Naur <(extract-conf "$1") "$1" | sed "s|/dev/fd/[[:digit:]]\+|$1|g"
