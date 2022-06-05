@@ -27,11 +27,11 @@ function! s:OnJumpToFrame() abort
   endif
 
   nmap <silent> <buffer> K <Plug>VimspectorBalloonEval
+  xmap <silent> <buffer> K <Plug>VimspectorBalloonEval
   nmap <silent> <buffer> tt <Plug>VimspectorContinue
   nmap <silent> <buffer> tj <Plug>VimspectorStepOver
   nmap <silent> <buffer> ti <Plug>VimspectorStepInto
   nmap <silent> <buffer> to <Plug>VimspectorStepOut
-  nmap <silent> <buffer> tg <Plug>VimspectorRunToCursor
   nmap <silent> <buffer> tq :call vimspector#Reset( { 'interactive': v:true } )<CR>
   nmap <silent> <buffer> <LocalLeader>k <Plug>VimspectorUpFrame
   nmap <silent> <buffer> <LocalLeader>j <Plug>VimspectorDownFrame
@@ -57,7 +57,6 @@ function! s:OnDebugEnd() abort
         silent! nunmap <buffer> tj
         silent! nunmap <buffer> ti
         silent! nunmap <buffer> to
-        silent! nunmap <buffer> tg
         silent! nunmap <buffer> tq
         silent! nunmap <buffer> <LocalLeader>k
         silent! nunmap <buffer> <LocalLeader>j
@@ -100,3 +99,4 @@ nmap <silent> t<C-d> :TestNearest -strategy=custom-test<CR>
 nmap <silent> t<C-r> :TestNearest -v<CR>
 nmap <silent> t<C-f> :TestFile<CR>
 nmap <silent> tt :call vimspector#Launch()<CR>
+nmap <silent> tg <Plug>VimspectorRunToCursor

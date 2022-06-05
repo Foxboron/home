@@ -7,17 +7,13 @@ let g:vimwiki_folding = ''
 let g:vimwiki_auto_chdir = 1
 "{{{3 vimwiki:main
 let main_wiki = {}
-let main_wiki.path = '~/Notes/main'
+let main_wiki.path = '~/Documents/Notes/main'
 let main_wiki.path_html = '~/.cache/vimwiki/main/html'
 let main_wiki.automatic_nested_syntaxes = 1
 let main_wiki.list_margin = 0
-"}}}
-"{{{3 vimwiki:master
-let master_wiki = {}
-let master_wiki.path = '~/Notes/master'
-let master_wiki.path_html = '~/.cache/vimwiki/master/html'
-let master_wiki.automatic_nested_syntaxes = 1
-let master_wiki.list_margin = 0
+let main_wiki.template_default = 'markdown'
+let main_wiki.syntax = 'markdown'
+let main_wiki.ext = '.md'
 "}}}
 "{{{3 vimwiki:blog
 let blog_wiki = {}
@@ -50,7 +46,9 @@ let pubdir_wiki.template_default = 'markdown'
 let pubdir_wiki.syntax = 'markdown'
 let pubdir_wiki.ext = '.md'
 "}}}
-let g:vimwiki_list = [pubdir_wiki, main_wiki, master_wiki, blog_wiki, secureboot_wiki]
+let g:vimwiki_list = [pubdir_wiki, main_wiki, blog_wiki, secureboot_wiki]
 hi VimwikiBold term=bold cterm=bold gui=bold ctermfg=178 guifg=#dfaf00
 hi VimwikiItalic term=italic cterm=italic gui=italic ctermfg=178 guifg=#dfaf00
 "}}}
+imap <C-t> <Plug>VimwikiIncreaseLvlSingleItem
+imap <C-d> <Plug>VimwikiDecreaseLvlSingleItem

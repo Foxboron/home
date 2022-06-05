@@ -30,6 +30,18 @@
         "dlvFlags": [ "--check-go-version=false" ]
       }
     },
+    "run - file": {
+      "adapter": "delve-local",
+      "autoselect": false,
+      "filetypes": ["go"],
+      "configuration": {
+        "request": "launch",
+        "program": "${file}",
+        "mode": "debug",
+        "args": ["*${Args}"],
+        "dlvFlags": [ "--check-go-version=false" ]
+      }
+    },
     "test": {
       "adapter": "delve-local",
       "autoselect": false,

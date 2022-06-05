@@ -10,7 +10,7 @@ call plug#begin('~/.config/vim/bundle')
 "   Vim-plug - Plugin manager
     Plug 'junegunn/vim-plug'
 
-    Plug './archlinux-snippets'
+    Plug 'Foxboron/archlinux-snippets'
     " Plug './rss-reader.vim'
 
 "   Vim-Go - for go stuff
@@ -57,7 +57,8 @@ call plug#begin('~/.config/vim/bundle')
 
 " Style
     Plug 'vim-airline/vim-airline'
-    Plug 'whatyouhide/vim-gotham'
+    "Plug 'whatyouhide/vim-gotham'
+    Plug 'arcticicestudio/nord-vim'
     Plug 'airblade/vim-gitgutter'
 
 " goyo for editing
@@ -133,7 +134,7 @@ let &t_EI = "\<Esc>[2 q"
 set t_ut=
 syntax enable
 filetype plugin indent on
-colorscheme gotham256
+colorscheme nord
 
 " Sane defaults
 set ff=unix
@@ -186,7 +187,7 @@ set undolevels=1000
 set undoreload=10000
 " Completion menu
 set completeopt=menu,menuone,popup,noselect,noinsert
-set omnifunc=ale#completion#OmniFunc
+set omnifunc=lsp#complete
 
 "Wildmenu
 set path=.                  " Include relative directory to the file
@@ -265,6 +266,8 @@ nnoremap gk 5k
 noremap <C-A> ^
 noremap <C-E> $
 noremap <C-Q> %
+
+nnoremap <Tab><Tab> <C-^>
 
 "Faster up and down
 noremap <silent> <C-J> :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
@@ -394,7 +397,7 @@ let g:vimtex_complete_enabled = 1
 let g:vimtex_complete_bib = {"recursive": 1, "simple": 1}
 "}}}
 "{{{2 plugin: airline
-let g:airline_theme='gotham'
+let g:airline_theme='nord'
 let g:airline_extensions = ['branch', 'tabline', 'ale']
 "}}}
 "{{{2 plugin: fzf 
@@ -418,6 +421,7 @@ map <leader>t :Tags<CR>
 nmap <Space><Space> :Buffers<CR>
 map <leader>v :BCommits<CR>
 imap <silent><c-l> <C-O>:Snippet<CR>
+nmap <silent><c-l> <C-O>:Snippet<CR>
 
 imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
@@ -441,4 +445,20 @@ let g:go_def_mapping_enabled = 0
 "}}}
 "}}}
 set viminfo+=n~/.cache/vim/viminfo
+
+command! -bang -nargs=* Vgrep
+  \ call fzf#vim#grep(
+  \   'vgrep --no-header -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
+function! VgrepFzf(query, fullscreen)
+  let command = 'vgrep --no-header'
+  if len(a:query) != 0
+     let command = printf('%s -- %s', command, shellescape(a:query))
+  endif
+  call fzf#vim#grep(command, 1, fzf#vim#with_preview(), a:fullscreen)
+endfunction
+
+command! -nargs=* -bang Vgrep call VgrepFzf(<q-args>, <bang>0)
+
 " vim: fdm=marker
