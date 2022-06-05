@@ -56,6 +56,8 @@
 
     difftex = difftool -y -t latex
 
+    jump = "!/usr/share/git/git-jump/git-jump"
+
     unstage = reset HEAD --
     recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
     overview = log --all --oneline --no-merges
@@ -77,9 +79,9 @@
 [remote "origin"]
     fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
     fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
-[remote "upstream"]
-    fetch = +refs/merge-requests/*/head:refs/remotes/upstream/merge-requests/*
-    fetch = +refs/pull/*/head:refs/remotes/upstream/pull/*
+; [remote "upstream"]
+;     fetch = +refs/merge-requests/*/head:refs/remotes/upstream/merge-requests/*
+;     fetch = +refs/pull/*/head:refs/remotes/upstream/pull/*
 [init]
     template = ~/.config/git/templates
     defaultBranch = master
@@ -94,6 +96,8 @@
 [merge]
     tool = vimdiff
     conflictStyle = zdiff3
+[mergetool "fugitive3"]
+    cmd = vim -f -c \"Gdiffsplit :1 | Gvdiffsplit!\" \"$MERGED\"
 [mergetool]
     prompt = false
     keepBackup = false
