@@ -39,12 +39,15 @@ autoload run-help-svk
 # Vars{{{
 HISTSIZE=1000000
 SAVEHIST=1000000
-PROMPT_COMMAND="history -a; history -n"
 HISTORY_IGNORE="(ls|ls -lah|cd|pwd|exit|cd ..|..)"
+HISTCONTROL=ignoredups:erasedups
 HISTFILE="$XDG_DATA_HOME/zsh/history"
+
+PROMPT_COMMAND="history -a; history -c; history -r; $PROMPT_COMMAND"
 
 HELPDIR=~/.config/zsh/zsh_help
 export KEYTIMEOUT=1                     # For vim status line
+
 # }}}
 # {{{ stty
 stty ixany 
@@ -136,7 +139,14 @@ alias pacupg='sudo pacman -Syu --needed'
 alias pacupg-linux='sudo pacman -Syu --needed linux linux-headers linux-lts linux-lts-headers'
 
 #Arch aliases
-alias db-update='ssh repos.archlinux.org "/community/db-update"'
+_db-cmd(){
+    ssh repos.archlinux.org "/community/$1"
+    ssh repos.archlinux.org "/packages/$1"
+}
+
+db-update(){
+    _db-cmd "db-update"
+}
 alias db-remove='ssh repos.archlinux.org "/community/db-remove"'
 alias db-move='ssh repos.archlinux.org "/community/db-move"'
 

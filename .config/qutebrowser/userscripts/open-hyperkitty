@@ -24,5 +24,5 @@ while read -r url thread; do
     gzip -d /tmp/$thread.mbox.gz 
 done <<< $(echo "$QUTE_URL" | awk -F"/thread/" '{print $1,$2}')
 
-termite --title mbox -e "neomutt -f /tmp/$thread.mbox"
+alacritty --title mbox -e "neomutt -f /tmp/$thread.mbox"
 
