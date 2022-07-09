@@ -179,6 +179,7 @@ set noesckeys           " Remap esc!
 set wrap
 set wrapmargin=80
 set textwidth=120
+
 "History and undo
 set history=1000
 set undofile
@@ -193,9 +194,9 @@ set omnifunc=lsp#complete
 set path=.                  " Include relative directory to the file
 set path+=,,                " Include current directory
 set path+=**                " Include recurisve directories
-set wildmenu            	" visual autocomplete for command menu
-set wildignorecase      " Make wildmenu ignore our case
-set wildmode=longest,full	" Show vim completion menu
+set wildmenu                " visual autocomplete for command menu
+set wildignorecase          " Make wildmenu ignore our case
+set wildmode=longest,full   " Show vim completion menu
 
 " File ignores for wildmenu
 set wildignore+=.git
@@ -350,6 +351,7 @@ augroup filetypes
     au Filetype sh setlocal noexpandtab
     au Filetype gitcommit setlocal spell | setlocal tw=72
     au Filetype git setlocal foldlevel=20
+    au Filetype vimwiki setlocal spell | setlocal tw=80
 augroup END
 
 augroup vimrc_autocommands

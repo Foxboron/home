@@ -1,4 +1,3 @@
-let g:vimspector_install_gadgets = [ 'vscode-go' ]
 let g:vimspector_sign_priority = {
   \    'vimspectorBP':         999,
   \    'vimspectorBPCond':     999,
@@ -8,15 +7,15 @@ let g:vimspector_sign_priority = {
 let g:vimspector_enable_mappings = 'HUMAN'
 
 
-" function! s:SetUpUI() abort
-"   call win_gotoid( g:vimspector_session_windows.output )
-"   q
-" endfunction
+function! s:SetUpUI() abort
+  call win_gotoid( g:vimspector_session_windows.output )
+  q
+endfunction
 
-" augroup VimspectorCustom
-"   au!
-"   autocmd User VimspectorUICreated call s:SetUpUI()
-" augroup END
+augroup VimspectorCustom
+  au!
+  autocmd User VimspectorUICreated call s:SetUpUI()
+augroup END
 
 " Custom mappings while debuggins {{{
 let s:mapped = {}
@@ -74,6 +73,7 @@ endfunction
 
 augroup VimspectorCustomMappings
   au!
+  autocmd SessionLoadPost * silent! VimspectorLoadSession
   autocmd User VimspectorJumpedToFrame call s:OnJumpToFrame()
   autocmd User VimspectorDebugEnded call s:OnDebugEnd()
 augroup END
