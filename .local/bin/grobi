@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+
+/usr/bin/grobi -C "/home/fox/.config/grobi/$(uname -n).conf" $@

@@ -28,4 +28,6 @@ Pictures
 !.config/rofi
 !.config/git
 !.config/mutt
+!.config/grobi
+!.local/bin**
 !.local/bin**
