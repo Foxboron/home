@@ -22,7 +22,7 @@ tags = +github;-new;-INBOX
 [Filter.2]
 message = "Remove spam and trash from inbox"
 query = tag:spam
-tags = +spam;-new;-INBOX
+tags = -unread;-INBOX
 
 [Filter.3]
 message = "Remove list from inbox"
@@ -43,5 +43,10 @@ tags = +bugs;-new;-INBOX
 message = "archweb shouldn't hit inbox"
 query = from:nobody@archlinux.org
 tags = +archweb;-new;-INBOX
+
+[Filter.7]
+message = "ignore aur-requests"
+query = tag:lists/aur-requests
+tags = -unread
 
 [InboxFilter]

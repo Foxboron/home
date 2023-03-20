@@ -30,58 +30,55 @@
     noff = merge --no-ff
     fa = fetch --all
 
-    c = commit -s -S
+
+    mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
+
+    c = commit
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
     autosquash = "!git rebase -i --autosquash $(git rev-parse --abbrev-ref origin/HEAD)"
-    rr = "!git rebase -i $(git rev-parse --abbrev-ref origin/HEAD)"
+    rr = "!git rebase --autosquash -i $(git rev-parse --abbrev-ref origin/HEAD)"
 
 
-    l = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
     hd = show -p --pretty="tformat:"
     files = diff-tree --no-commit-id --name-only -r
     edit = "!vim $(git ls-files -m) -p"
     edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
+    fetch-pr = "!f() { \
+        remote=${1:-origin}; \
+        git fetch ${1:-origin} \"+refs/pull/*/head:refs/remotes/${remote}/pull/*\" \"+refs/merge-requests/*/head:refs/remotes/${remote}/merge-requests/*\"; \
+        }; f"
     pull-pr = "!f() { \
-        if git rev-parse --verify remotes/${2-origin}/pull/${1} &> /dev/null; then \
+        if git rev-parse --verify remotes/${2:-origin}/pull/${1} &> /dev/null; then \
             git fetch ${2:-origin} pull/\"${1}\"/head:pr-\"${1}\"; \
-        elif git rev-parse --verify remotes/${2-origin}/merge-requests/${1} &> /dev/null; then \
+        elif git rev-parse --verify remotes/${2:-origin}/merge-requests/${1} &> /dev/null; then \
             git fetch ${2:-origin} merge-requests/${1}/head:pr-${1}; \
         fi; \
         }; f"
     pr = "! f() { gh pr list | fzf | awk '{print $1}' | xargs -I '{}' git pull-pr '{}' ${1:-origin}; }; f"
+
     sl = "!git shortlog --no-merges $(git describe --tags --abbrev=0)..HEAD"
 
     difftex = difftool -y -t latex
 
     jump = "!/usr/share/git/git-jump/git-jump"
 
-    unstage = reset HEAD --
-    recent = for-each-ref --count=10 --sort=-committerdate refs/heads/ --format="%(refname:short)"
-    overview = log --all --oneline --no-merges
-    recap = !git log --all --oneline --no-merges --author=${1-$(git config user.email)}
-    today = !git log --all --since=00:00:00 --oneline --no-merges --author=${1-$(git config user.email)}
-    changelog = !git log --oneline --no-merges ${1-$(git describe --abbrev=0)}..HEAD
-    upstream = !git log --oneline --no-merges HEAD..${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}
-    local = !git log --oneline --no-merges ${1-$(git branch -lvv | perl -ne '/^\\*.*\\[(.*?)\\]/ and print "$1\n"')}..HEAD
-    graph = log --oneline --graph --all --decorate --date=iso
+    unstage = restore --staged --patch
+    
     ignored = status --ignored
+
+    l = "!f() { git log $@ @{1}..; }; f"
+    ll = "!f() { git l -p --no-merges $@; }; f"
+    graph = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
 
 # Worktree
     wt = "!f() { git worktree add -b morten/$1 ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
     wl = "!f() { git worktree list | fzf --height 40% --reverse; }; f"
+    wa = "!f() { git worktree add --force ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
     
 
-[core]
-    excludesfile = ~/.config/git/ignore
-[remote "origin"]
-    fetch = +refs/merge-requests/*/head:refs/remotes/origin/merge-requests/*
-    fetch = +refs/pull/*/head:refs/remotes/origin/pull/*
-; [remote "upstream"]
-;     fetch = +refs/merge-requests/*/head:refs/remotes/upstream/merge-requests/*
-;     fetch = +refs/pull/*/head:refs/remotes/upstream/pull/*
 [init]
     template = ~/.config/git/templates
     defaultBranch = master
@@ -96,6 +93,7 @@
 [merge]
     tool = vimdiff
     conflictStyle = zdiff3
+    log = true
 [mergetool "fugitive3"]
     cmd = vim -f -c \"Gdiffsplit :1 | Gvdiffsplit!\" \"$MERGED\"
 [mergetool]
@@ -115,17 +113,25 @@
     envelopesender = auto
 [includeIf "gitdir:~/jobb/"]
     path = ~/jobb/.gitconfig
+[includeIf "gitdir:~/work/"]
+    path = ~/work/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
     path = ~/.config/git/config.home
 [includeIf "gitdir:~/Git/PKGBUILD/community-checkout"]
     path = ~/.config/git/config.community
 [includeIf "gitdir:~/tmp/blug/alice/"]
     path = ~/.config/git/config.blug
-[tig]
-    line-graphics = utf-8
-    main-view-date = relative-compact
-    main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,graph=no,refs,overflow=no
-    refresh-mode = periodic
-    refresh-interval = 5
+; [tig]
+;     line-graphics = utf-8
+;     main-view-date = relative-compact
+;     main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,graph=no,refs,overflow=no
+;     refresh-mode = periodic
+;     refresh-interval = 5
 [tig "bind"]
     status = C !git c
+[credential "https://github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
+[credential "https://gist.github.com"]
+	helper = 
+	helper = !/usr/bin/gh auth git-credential
