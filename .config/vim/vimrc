@@ -209,6 +209,7 @@ set wildignore+=*logs*
 set wildignore+=*node_modules/**
 set wildignore+=*.gem
 set wildignore+=log/**
+set wildignore+=vendor/**
 set wildignore+=tmp/**
 set wildignore+=*.png,*.jpg,*.gif
 
@@ -343,6 +344,10 @@ command! Source :source ~/.config/vim/vimrc
 " }}}2
 "{{{1 Autocommand
 "{{{2 Default aucommands
+
+autocmd VimResized * wincmd =
+autocmd TerminalWinOpen * setlocal nohidden
+
 augroup filetypes
     autocmd!
     au BufNewFile,BufRead *.md,*.markdown setlocal filetype=ghmarkdown | setlocal tw=80

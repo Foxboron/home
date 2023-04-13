@@ -35,6 +35,7 @@ export TERMINAL=alacritty
 export XMODIFIERS=@im=ibus
 export WINIT_X11_SCALE_FACTOR=1
 
+mkdir -p "$XDG_DATA_HOME/zsh"
 
 if [[ -z $DISPLAY && $(tty) == /dev/tty1 ]]; then
     exec startx "$XDG_CONFIG_HOME/X11/xinitrc" -- vt1

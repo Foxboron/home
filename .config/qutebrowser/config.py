@@ -53,6 +53,7 @@ config.bind(',s', 'open https://rss.linderud.dev/bookmarklet?uri={url}')
 
 c.editor.command = ['termite', '-e', 'vim {}']
 
+c.qt.workarounds.remove_service_workers = True
 
 # Uncomment this to still load settings configured via autoconfig.yml
 config.load_autoconfig(False)

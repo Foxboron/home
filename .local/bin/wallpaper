@@ -5,5 +5,4 @@ if [ ! -f $background ]; then
     background=~/.config/i3/bckg/mountain.png
 fi
 
-xss-lock -- i3lock -n -c 000000 -i ${background} &
-
+feh --no-fehbg --bg-scale ${background}

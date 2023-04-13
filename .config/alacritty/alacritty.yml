@@ -3,7 +3,7 @@ font:
 env:
   TERM: xterm-256color
   XMODIFIERS: "@im=ibus"
-  WINIT_X11_SCALE_FACTOR: "1"
+  WINIT_X11_SCALE_FACTOR: "1.5"
 key_bindings:
   - { key: Home,      mods: Shift,   mode: ~Alt,        action: ScrollToTop,   }
   - { key: End,       mods: Shift,   mode: ~Alt,        action: ScrollToBottom }

@@ -125,7 +125,7 @@ macro index,pager i  "<modify-labels-then-hide>!INBOX !inbox\n" "Inbox"
 bind index,pager Y modify-labels
 
 # Unsure
-#set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
+# set hidden_tags = "unread,draft,flagged,passed,replied,attachment,signed,encrypted,important"
 tag-transforms "attachment" "@" \
                "encrypted"  "" \
                "important"  "!" \

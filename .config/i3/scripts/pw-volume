@@ -1,9 +1,16 @@
-#!/bin/bash
-while read -r sink; do
-    volume=$(pw-dump -N | jq -r --arg sink "$sink" '.[] | .info | select(.props["node.name"] == $ARGS.named.sink) | .params.Props[0] | if .mute then "MUTED" else .channelVolumes[0] end')
-    if [[ "$volume" == "MUTED" ]]; then
-        printf "MUTED\n"
-    else
-        printf "%.0f%%\n" $(bc -l <<<"(e(l($volume)/3) * 100)")
-    fi
-done <<< "$(pw-dump -N | jq -r '.[] | .metadata[]? | select(.key == "default.audio.sink") | .value | @text' | jq -r '.name')"
+#!/bin/bash -x
+
+# while read -r sink; do
+#     volume=$(pw-dump -N | jq -r --arg sink "$sink" '.[] | .info | select(.props["node.name"] == $ARGS.named.sink) | .params.Props[0] | if .mute then "MUTED" else .channelVolumes[0] end')
+#     if [[ "$volume" == "MUTED" ]]; then
+#         printf "MUTED\n"
+#     else
+#         printf "%.0f%%\n" $(bc -l <<<"(e(l($volume)/3) * 100)")
+#     fi
+# done <<< "$(pw-dump -N | jq -r '.[] | .metadata[]? | select(.key == "default.audio.sink") | .value | @text' | jq -r '.name')"
+mute_status=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf $3}')
+if [[ $mute_status != "" ]]; then
+    printf "%s\n" $mute_status
+    exit 0
+fi
+wpctl get-volume @DEFAULT_AUDIO_SINK@ | awk '{printf "%s%\n", $2*100}'

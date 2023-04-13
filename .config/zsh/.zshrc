@@ -2,6 +2,7 @@
 plugins=(
 "$XDG_CONFIG_HOME/zsh/zsh.d/zsh-completions/zsh-completions.plugin.zsh"
 "$XDG_CONFIG_HOME/zsh/zsh.d/zsh-history-substring-search/zsh-history-substring-search.plugin.zsh"
+"/usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh"
 "/usr/share/fzf/key-bindings.zsh"
 )
 for plg in $plugins; do
@@ -110,6 +111,8 @@ alias ip='ip -br -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
 compdef _git home # So we get git completion with the alias
 alias pacdiff="sudo -E pacdiff"
+
+alias publish="rsync -avz /srv/pub.linderud.dev/ pub.linderud.dev:public_html"
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 

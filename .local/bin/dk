@@ -12,12 +12,10 @@ conf=(
 
 local=(
     "--library $DARKTABLE_CONF/library-local.db"
-    '--conf ui_last/import_last_directory=/home/fox/Pictures'
-    '--conf session/base_directory_pattern=/home/fox/Pictures/albums'
+    '--conf session/base_directory_pattern=/home/fox/Pictures'
 )
 
 remote=(
-    '--conf ui_last/import_last_directory=/var/raid/Bilder'
     '--conf session/base_directory_pattern=/var/raid/Bilder'
 )
 

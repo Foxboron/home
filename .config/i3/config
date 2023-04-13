@@ -43,7 +43,7 @@ for_window [title="^stream"] scratchpad show
 force_focus_wrapping no
 hide_edge_borders both
 
-exec --no-startup-id feh --no-fehbg --bg-scale ~/.config/i3/bckg/mountain.png
+exec --no-startup-id ~/.local/bin/wallpaper
 exec --no-startup-id ~/.local/bin/lock 
 exec --no-startup-id ~/.config/rofi/bin/notes
 
@@ -121,16 +121,17 @@ bindsym $mod+Shift+e move container to workspace 8
 bindsym $mod+Shift+r move container to workspace 9
 bindsym $mod+Shift+t move container to workspace 10
 
-workspace 1 output primary eDP-1
+workspace 1 output primary eDP-1 DP-1
 workspace 2 output primary eDP-1
-workspace 3 output primary eDP-1
-workspace 4 output primary eDP-1
-workspace 5 output primary
-workspace 6 output DP-1-1 DP-1-3 DP-1-2 DP-2-1 DP-2-3
-workspace 7 output DP-1-1 DP-1-3 DP-2-3 DP-2-1
-workspace 8 output DP-1-1 DP-1-3 DP-2-3 DP-2-1
-workspace 9 output DP-1-1 DP-1-3 DP-2-3 DP-2-1
-workspace 10 output DP-1-1 DP-1-3 DP-2-3 DP-2-1
+workspace 3 output primary eDP-1 DP-1
+workspace 4 output primary eDP-1 DP-1
+workspace 5 output primary DP-1
+workspace 6 output DP-1-1 DP-1-3 DP-1-2 DP-2-1 DP-2-3 DP-1
+workspace 7 output DP-1-1 DP-1-3 DP-2-3 DP-2-1 DP-1
+workspace 8 output DP-1-1 DP-1-3 DP-2-3 DP-2-1 DP-1
+workspace 9 output DP-1-1 DP-1-3 DP-2-3 DP-2-1 DP-1
+workspace 10 output DP-1-1 DP-1-3 DP-2-3 DP-2-1 DP-1
+workspace 11 output eDP-1
 
 workspace_auto_back_and_forth yes
 
@@ -149,6 +150,8 @@ bindsym XF86AudioNext exec --no-startup-id playerctl next
 bindsym XF86AudioPrev exec --no-startup-id playerctl previous
 
 bindsym XF86Display exec --no-startup-id grobi update
+bindsym $mod+Control+p exec --no-startup-id grobi update
+bindsym $mod+F9 exec --no-startup-id grobi update
 
 set $resize resize (h,j,k,l,v,q)
 mode "$resize"{

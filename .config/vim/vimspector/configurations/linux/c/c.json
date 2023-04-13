@@ -4,7 +4,7 @@
       "adapter": "vscode-cpptools",
       "configuration": {
         "request": "launch",
-        "program": "${cwd}/build/day7",
+        "program": "${workspaceRoot}/build/day1/day1",
         "args": [],
         "environment": [],
         "externalConsole": true,
@@ -15,7 +15,7 @@
       "adapter": "vscode-cpptools",
       "configuration": {
         "request": "attach",
-        "program": "${workspaceRoot}/build/day7",
+        "program": "${workspaceRoot}",
         "MIMode": "gdb"
       }
     }
