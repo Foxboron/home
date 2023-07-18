@@ -54,4 +54,9 @@ message = "summit emails"
 query = to:summit2023@archlinux.org
 tags = +archsummit;-new;-INBOX
 
+[Filter.9]
+message = "Hackeriet styret"
+query = to:styret@hackeriet.no
+tags = +hackeriet;-new;-INBOX
+
 [InboxFilter]
