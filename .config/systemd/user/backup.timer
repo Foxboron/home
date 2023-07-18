@@ -1,0 +1,9 @@
+[Unit]
+Description=Backup timer
+
+[Timer]
+OnBootSec=hourly
+OnUnitInactiveSec=hourly
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,11 @@
+[Unit]
+Description=Borg backup
+
+
+[Service]
+CPUQuota=60%
+Type=simple
+ExecStart=%h/.local/bin/backup home
+
+[Install]
+WantedBy=default.target

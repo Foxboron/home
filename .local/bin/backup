@@ -1,0 +1,73 @@
+#!/bin/bash
+set -euo pipefail
+shopt -s nullglob globstar
+
+if [[ $# -eq 0 ]] ; then
+    echo 'No snapper config supplied'
+    exit 0
+fi
+
+readonly SNAPPER_CONFIG=$1
+if ! test -f "/etc/snapper/configs/$SNAPPER_CONFIG"; then
+    echo 'No snapper config with this name'
+    exit 0
+fi
+source "/etc/snapper/configs/$SNAPPER_CONFIG"
+
+notify_err() {
+ notify-send -u critical "Backup $SNAPPER_CONFIG failed!"
+}
+trap 'notify_err' ERR
+
+NETWORK_TIMEOUT=120
+i=0
+while [[ "$(nmcli -g connectivity general status)" == "none" ]]; do
+    i=$((i+1))
+    if [ $i -gt "$NETWORK_TIMEOUT" ]; then
+        echo "Network not up, skipping upload" >&2
+        exit 0
+    fi
+    sleep 1
+done
+
+# Replace with systemd credentials
+BORG_PASSPHRASE="$(cat ~/.cache/borg/key)"
+BORG_RSH="ssh -i /home/fox/.ssh/machine"
+
+BORG_REPO="borg@linderud.dev:backup/{hostname}/${SNAPPER_CONFIG}"
+export BORG_PASSPHRASE BORG_RSH BORG_REPO
+
+while read -r json; do
+    LATEST_SNAPSHOT_ID="$(jq -r '.number' - <<< "$json" )"
+    LATEST_DATE=$(jq -j '.date' - <<< "$json" | xargs -0 date "+%s" -d)
+done < <(snapper --json -c home list | jq -c '(.[] | reverse)[0]')
+
+if ! borg info "${BORG_REPO}" &> /dev/null; then
+    borg init --make-parent-dirs --umask 0027 --encryption=repokey-blake2 "${BORG_REPO}" || true
+fi
+
+if ! BORG_LIST=$(borg list --json "${BORG_REPO}" | jq -j '(.archives | reverse)[0] | .time' | xargs -0 date "+%s" -d) &> /dev/null; then
+    BORG_LIST=0
+fi
+
+# Always check if the snapper snapshot is newer then the borg snapshot
+test "$LATEST_DATE" -lt "${BORG_LIST//-}" && exit 0
+
+# Always just setup the config directory
+if mkdir -p ~/.config/borg; then
+    touch ~/.config/borg/exclude
+fi
+
+pushd "${SUBVOLUME%/}/.snapshots/$LATEST_SNAPSHOT_ID/snapshot" &> /dev/null
+
+if ! borg create --stats --umask 0027 -v -p -C zstd \
+    --patterns-from ~/.config/borg/exclude \
+    "${BORG_REPO}::{now}" .; then
+    notify-send -u critical "Backup $SNAPPER_CONFIG failed"
+fi
+
+borg prune --umask 0027 -v "${BORG_REPO}" \
+       --keep-hourly 24 \
+       --keep-daily   7 \
+       --keep-weekly  4 \
+       --keep-monthly 6
