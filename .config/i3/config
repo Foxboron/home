@@ -153,11 +153,16 @@ bindsym XF86Display exec --no-startup-id grobi update
 bindsym $mod+Control+p exec --no-startup-id grobi update
 bindsym $mod+F9 exec --no-startup-id grobi update
 
+
+bindsym XF86MonBrightnessUp exec --no-startup-id brightnessctl set +5%
+bindsym XF86MonBrightnessDown exec --no-startup-id brightnessctl set 5%-
+
+
 set $resize resize (h,j,k,l,v,q)
 mode "$resize"{
     bindsym h resize shrink width 10 px or 10 ppt
-    bindsym j resize grow height 10 px or 10 ppt
     bindsym k resize shrink height 10 px or 10 ppt
+    bindsym j resize grow height 10 px or 10 ppt
     bindsym l resize grow width 10 px or 10 ppt
 
     bindsym v floating enable; sticky enable; resize set 530 300; move absolute position 1391 0, mode "default"
