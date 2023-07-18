@@ -21,6 +21,7 @@ Pictures
 .config/vim/spell
 .config/vim/autoload/plug.vim.old
 .config/vim/.netrwhist
+.config/vim/vimspector/gadgets
 !.config/systemd*
 !.config/zsh*
 !.config/i3*
@@ -28,5 +29,4 @@ Pictures
 !.config/git*
 !.config/mutt*
 !.config/grobi*
-!.local/bin**
 !.local/bin**

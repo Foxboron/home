@@ -13,6 +13,8 @@
     s = status
     co = checkout
 
+    work = checkout @{upstream} -t -b
+
     dt = difftool
     dc = diff --cached
 
@@ -30,15 +32,19 @@
     noff = merge --no-ff
     fa = fetch --all
 
+    # Whats the default branch?
+    head = rev-parse --abbrev-ref origin/HEAD
 
     mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 
-    c = commit
+    c = commit -s
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
-    autosquash = "!git rebase -i --autosquash $(git rev-parse --abbrev-ref origin/HEAD)"
-    rr = "!git rebase --autosquash -i $(git rev-parse --abbrev-ref origin/HEAD)"
+    autosquash = "!git rebase -i --autosquash $(git head)"
+    rr = "!git rebase --autosquash -i $(git head)"
+
+    exec = "!f() { git rebase --exec \"$@\" $(git head) ; }; f"
 
 
     hd = show -p --pretty="tformat:"
@@ -72,6 +78,8 @@
     l = "!f() { git log $@ @{1}..; }; f"
     ll = "!f() { git l -p --no-merges $@; }; f"
     graph = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
+
+    lcrev = "show --reverse --no-merges @{1}.."
 
 # Worktree
     wt = "!f() { git worktree add -b morten/$1 ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
