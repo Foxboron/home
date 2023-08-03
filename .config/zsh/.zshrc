@@ -90,7 +90,7 @@ zle -N zle-line-init
 zle -N zle-keymap-select
 ZSH_THEME_GIT_PROMPT_DIRTY="*"
 
-PROMPT='%{$fg_bold[red]%}λ %{$fg[green]%}%c %{$fg_bold[red]%}$(git_prompt_info)» %{$reset_color%}'
+PROMPT='%{$fg_bold[red]%}λ %{$fg[green]%}%c %{$fg_bold[red]%}$(git_prompt_info)%{$fg_bold[red]%}» %{$reset_color%}'
 if [[ -f /run/.containerenv && -f /run/.toolboxenv ]]; then
   PROMPT=$(printf "\033[35m⬢\033[0m %s" $PROMPT)
 fi
@@ -171,7 +171,19 @@ vimrc(){
 }
 git_prompt_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$ZSH_THEME_GIT_PROMPT_SUFFIX"
+  git_status+="%{$fg[blue]%}"
+  [[ -z "$upstream" ]] && git_status+=" Ɇ"
+  (( ahead  > 0 ))     && git_status+=" >$ahead"
+  (( behind > 0 ))     && git_status+=" <$behind"
+
+  # Format push
+  git_status+="%{$fg_bold[blue]%}"
+  push_ab=( $(git rev-list --left-right --count @...@{push} 2>/dev/null) )
+  if (( $? == 0 )); then
+    (( push_ab[1] > 0 )) && git_status+=" ▲$push_ab[1]"
+    (( push_ab[2] > 0 )) && git_status+=" ▼$push_ab[2]"
+  fi
+  echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}${git_status} $ZSH_THEME_GIT_PROMPT_SUFFIX"
 }
 # }}}
 # zstyle{{{

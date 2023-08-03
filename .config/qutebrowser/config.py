@@ -51,7 +51,7 @@ config.bind(',c', 'spawn --userscript stream')
 config.bind(',p', 'spawn --userscript open-portal')
 config.bind(',s', 'open https://rss.linderud.dev/bookmarklet?uri={url}')
 
-c.editor.command = ['termite', '-e', 'vim {}']
+c.editor.command = ['alacritty', '-e', 'vim {}']
 
 c.qt.workarounds.remove_service_workers = True
 

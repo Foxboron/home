@@ -324,6 +324,8 @@ map <S-ScrollWheelDown> <nop>
 noremap <silent><C-S> :silent update<CR>
 inoremap <silent> <C-S> <C-O>:update<CR>
 nnoremap <leader><TAB> :tabnext<CR>
+nnoremap <silent> <C-PageUp>   :tabprevious<CR>
+nnoremap <silent> <C-PageDown> :tabnext<CR>
 
 " This monster lets us use star with a visual selection
 vnoremap <silent> * :<C-U>
@@ -434,6 +436,13 @@ imap <c-x><c-k> <plug>(fzf-complete-word)
 imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-j> <plug>(fzf-complete-file-ag)
 imap <c-x><c-l> <plug>(fzf-complete-line)
+
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit',
+  \ 'ctrl-q': 'fill_quickfix'}
+
 "}}}
 "{{{2 plugin: ultisnips
 " We dont really want expand trigger over tab.
@@ -467,5 +476,12 @@ function! VgrepFzf(query, fullscreen)
 endfunction
 
 command! -nargs=* -bang Vgrep call VgrepFzf(<q-args>, <bang>0)
+
+function! SignOff()
+    let commit_email = trim(system('git config user.email'))
+    let commit_name = trim(system('git config user.name'))
+    let signer = printf("Signed-off-by: %s <%s>", commit_name, commit_email)
+    call append(line('.'), ['', signer])
+endfunction
 
 " vim: fdm=marker
