@@ -1,0 +1,3 @@
+#!/usr/bin/bash
+gphoto2  --set-config /main/actions/autofocus=1
+gphoto2 --stdout --capture-movie | gst-launch-1.0 fdsrc ! image/jpeg,framerate=25/1,format=YUY2,width=1024,height=680 ! decodebin3 name=dec ! queue ! videoconvert ! tee ! v4l2sink device=/dev/video4 sync=false
