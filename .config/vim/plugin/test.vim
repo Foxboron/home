@@ -34,6 +34,9 @@ function! s:OnJumpToFrame() abort
   nmap <silent> <buffer> tq :call vimspector#Reset( { 'interactive': v:true } )<CR>
   nmap <silent> <buffer> <LocalLeader>k <Plug>VimspectorUpFrame
   nmap <silent> <buffer> <LocalLeader>j <Plug>VimspectorDownFrame
+  nmap <silent> <buffer> <C-K> <Plug>VimspectorUpFrame
+  nmap <silent> <buffer> <C-J> <Plug>VimspectorDownFrame
+  nmap <silent> <buffer> <C-T> <Plug>VimspectorToggleSteppingDirection
 
   let s:mapped[ string( bufnr() ) ] = &l:modifiable
   setlocal nomodifiable

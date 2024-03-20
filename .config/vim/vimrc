@@ -58,6 +58,7 @@ call plug#begin('~/.config/vim/bundle')
 " Style
     Plug 'vim-airline/vim-airline'
     "Plug 'whatyouhide/vim-gotham'
+    let g:nord_uniform_diff_background = 1
     Plug 'arcticicestudio/nord-vim'
     Plug 'airblade/vim-gitgutter'
 
@@ -309,6 +310,7 @@ nnoremap <leader>c  :bw<CR>
 " Fugitive
 nnoremap gd :Gdiffsplit!<cr>
 nnoremap gs :G<CR>
+nnoremap gs :tab G<CR>
 
 "}}}
 ""{{{2 New mappings
