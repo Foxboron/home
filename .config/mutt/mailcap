@@ -1,4 +1,4 @@
-text/html;  elinks -config-dir .config/elinks -dump %s                  ; copiousoutput ;       nametemplate=%s.html
+text/html;  elinks -dump -dump-color-mode 1                  ; copiousoutput ;       nametemplate=%s.html
 text/plain; /home/fox/.config/mutt/scripts/tiny.pl %s %{charset} 't'    ; copiousoutput	;       nametemplate=%s.html
 text/*; vim %s; edit=/usr/bin/vim %s; compose=/usr/bin/vim %s
 
