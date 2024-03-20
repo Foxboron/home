@@ -6,4 +6,4 @@ while read -r sink; do
     else
         printf "%.0f%%" $(bc -l <<<"(e(l($volume)/3) * 100)")
     fi
-done <<< "$(pw-dump -N | jq -r '.[] | .metadata[]? | select(.key == "default.audio.sink") | .value | @text' | jq -r '.name')"
+done < <(pw-dump -N | jq -r '.[] | .metadata[]? | select(.key == "default.audio.sink") | .value | @text' | jq -r '.name')
