@@ -308,9 +308,10 @@ nnoremap <leader>k  :bnext<CR>
 nnoremap <leader>c  :bw<CR>
 
 " Fugitive
-nnoremap gd :Gdiffsplit!<cr>
-nnoremap gs :G<CR>
 nnoremap gs :tab G<CR>
+" nnoremap <leader>gc :G c<CR>
+" nnoremap <leader>gf :G fixup<CR>
+" nnoremap <leader>grr :G rr<CR>
 
 "}}}
 ""{{{2 New mappings
