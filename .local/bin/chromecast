@@ -2,4 +2,4 @@
 [[ $IP == "" ]] && IP=$(dns-sd _googlecast._tcp.local)
 echo "Using $IP"
 #cvlc --sout "#chromecast" --sout-chromecast-ip=$IP "$1"
-youtube-dl "$1" -o - | cvlc --sout "#chromecast" --sout-chromecast-ip=$IP -
+yt-dlp "$1" -o - | cvlc --sout "#chromecast" --sout-chromecast-ip="$IP" -
