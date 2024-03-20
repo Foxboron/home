@@ -46,6 +46,8 @@
 
     exec = "!f() { git rebase --exec \"$@\" $(git head) ; }; f"
 
+    recent = ! git branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\" | head -10
+
 
     hd = show -p --pretty="tformat:"
     files = diff-tree --no-commit-id --name-only -r
@@ -90,8 +92,16 @@
 [init]
     template = ~/.config/git/templates
     defaultBranch = master
+[advice]
+    detachedHead = false
+[core]
+    hooksPath = ~/.config/git/hooks
+[branch]
+    autoSetupRebase = always
 [diff]
     tool = vimdiff
+    renames = copies
+    algorithm = histogram
 [difftool]
     prompt = false
 [difftool "vimdiff"]
@@ -102,6 +112,7 @@
     tool = vimdiff
     conflictStyle = zdiff3
     log = true
+    keepbackup = false
 [mergetool "fugitive3"]
     cmd = vim -f -c \"Gdiffsplit :1 | Gvdiffsplit!\" \"$MERGED\"
 [mergetool]
@@ -113,6 +124,9 @@
     rebase = false
 [rebase]
     autoStash = true
+    updateRefs = true
+[rerere]
+    enabled = true
 [sendemail]
     from = "Morten Linderud <morten@linderud.pw>"
     smtpserver = "/usr/bin/msmtp"
