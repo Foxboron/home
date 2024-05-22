@@ -49,6 +49,7 @@ call plug#begin('~/.config/vim/bundle')
     Plug 'honza/vim-snippets'
 
     Plug 'junegunn/fzf.vim'
+    Plug 'stsewd/fzf-checkout.vim'
 
     Plug 'vim-test/vim-test'
 
@@ -432,6 +433,7 @@ map <leader>f :FZF<CR>
 map <leader>t :Tags<CR>
 nmap <Space><Space> :Buffers<CR>
 map <leader>v :BCommits<CR>
+map <leader>b :GBranches<CR>
 imap <silent><c-l> <C-O>:Snippet<CR>
 nmap <silent><c-l> <C-O>:Snippet<CR>
 

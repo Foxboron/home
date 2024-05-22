@@ -96,7 +96,9 @@
     detachedHead = false
 [core]
     hooksPath = ~/.config/git/hooks
+    abbrev = 12
 [branch]
+    autoSetupMerge = inherit
     autoSetupRebase = always
 [diff]
     tool = vimdiff
@@ -118,6 +120,8 @@
 [mergetool]
     prompt = false
     keepBackup = false
+[pretty]
+    fixes = Fixes: %h (\"%s\")
 [push]
     default = current
 [pull]
