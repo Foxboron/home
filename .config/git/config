@@ -41,8 +41,9 @@
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
-    autosquash = "!git rebase -i --autosquash $(git head)"
-    rr = "!git rebase --autosquash -i $(git head)"
+    autosquash = "!git rebase -i --autosquash"
+    rr = "!git rebase --autosquash -i"
+    rrs = "!git rebase -S --autosquash -i"
 
     exec = "!f() { git rebase --exec \"$@\" $(git head) ; }; f"
 
@@ -100,6 +101,8 @@
 [branch]
     autoSetupMerge = inherit
     autoSetupRebase = always
+    autoSetupRemote = true
+    autoSetupMerge = inherit
 [diff]
     tool = vimdiff
     renames = copies
