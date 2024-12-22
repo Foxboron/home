@@ -58,3 +58,4 @@ c.qt.workarounds.remove_service_workers = True
 # Uncomment this to still load settings configured via autoconfig.yml
 config.load_autoconfig(False)
 
+c.content.user_stylesheets = ['~/.config/qutebrowser/user.css'] 
