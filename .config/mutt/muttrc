@@ -40,8 +40,9 @@ alternative_order text/plain text/html text/enriched
 auto_view text/html
 
 set reverse_name
-set sort=threads
-set sort_aux=last-date-received
+# set sort=threads
+# set sort_aux=last-date-received
+set use_threads=threads sort=last-date sort_aux=date
 
 set crypt_replyencrypt = yes
 set pgp_use_gpg_agent = yes
@@ -82,6 +83,8 @@ bind index,pager u        sync-mailbox
 
 macro pager,index ,g "<pipe-message>~/.config/mutt/scripts/open_ml_url.py<return>" "Open GMAME link"
 macro pager,index ,s "<pipe-message>~/.config/mutt/scripts/security_tracker.py<return>" "Open security.archlinux.org link"
+
+macro pager,index ,pp "<pipe-message>b4 shazam<return>"
 
 bind index,pager X change-vfolder
 bind index,pager B sidebar-toggle-virtual
