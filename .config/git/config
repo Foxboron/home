@@ -11,9 +11,6 @@
     ui = auto
 [alias]
     s = status
-    co = checkout
-
-    work = checkout @{upstream} -t -b
 
     dt = difftool
     dc = diff --cached
@@ -29,11 +26,8 @@
 
     ff = merge --ff-only
     pullff = pull --ff-only
-    noff = merge --no-ff
+    noff = merge --no-ff -v --stat
     fa = fetch --all
-
-    # Whats the default branch?
-    head = rev-parse --abbrev-ref origin/HEAD
 
     mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
 
@@ -42,13 +36,12 @@
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
     frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
     autosquash = "!git rebase -i --autosquash"
-    rr = "!git rebase --autosquash -i"
-    rrs = "!git rebase -S --autosquash -i"
+    rr = "rebase --autosquash -i"
+    rrs = "git rebase -S --autosquash -i"
 
-    exec = "!f() { git rebase --exec \"$@\" $(git head) ; }; f"
+    exec = "!f() { git rebase --exec \"$@\" ; }; f"
 
     recent = ! git branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\" | head -10
-
 
     hd = show -p --pretty="tformat:"
     files = diff-tree --no-commit-id --name-only -r
@@ -87,6 +80,7 @@
 # Worktree
     wt = "!f() { git worktree add -b morten/$1 ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
     wl = "!f() { git worktree list | fzf --height 40% --reverse; }; f"
+    ww = "!f() { cd $(git wl | awk '{print $1}'); }; f"
     wa = "!f() { git worktree add --force ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
     
 
@@ -150,6 +144,8 @@
     path = ~/.config/git/config.community
 [includeIf "gitdir:~/tmp/blug/alice/"]
     path = ~/.config/git/config.blug
+[includeIf "gitdir:~/"]
+    path = ~/.config/git/home
 ; [tig]
 ;     line-graphics = utf-8
 ;     main-view-date = relative-compact
