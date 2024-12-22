@@ -3,6 +3,7 @@ set directory=~/.cache/vim/swap
 set backupdir=~/.cache/vim/backup
 set viewdir=~/.cache/vim/view
 set runtimepath=~/.config/vim,$VIMRUNTIME,/usr/share/vim/vimfiles/,~/.config/vim/after
+" set runtimepath+=$XDG_CONFIG_HOME/vim,$XDG_CONFIG_HOME/vim/after,$VIM,$VIMRUNTIME
 
 " {{{1 Plugin
 call plug#begin('~/.config/vim/bundle')
@@ -41,7 +42,7 @@ call plug#begin('~/.config/vim/bundle')
     Plug  'tpope/vim-sleuth'
 
 "   Commenting
-    Plug 'tpope/vim-commentary'
+"   Plug 'tpope/vim-commentary'
     Plug 'tpope/vim-surround'
 
 "   Trying out snippets
@@ -59,7 +60,7 @@ call plug#begin('~/.config/vim/bundle')
 " Style
     Plug 'vim-airline/vim-airline'
     "Plug 'whatyouhide/vim-gotham'
-    let g:nord_uniform_diff_background = 1
+    let g:nord_uniform_diff_background = 0
     Plug 'arcticicestudio/nord-vim'
     Plug 'airblade/vim-gitgutter'
 
@@ -404,6 +405,8 @@ autocmd User GoyoLeave nested call <SID>goyo_leave()
 "{{{1 Plugins
 "{{{2 internal: matchit
 packadd! matchit
+packadd! editorconfig
+packadd! comment
 "}}}
 "{{{2 plugin: vimtex
 let g:vimtex_complete_enabled = 1
@@ -412,6 +415,7 @@ let g:vimtex_complete_bib = {"recursive": 1, "simple": 1}
 "{{{2 plugin: airline
 let g:airline_theme='nord'
 let g:airline_extensions = ['branch', 'tabline', 'ale']
+let g:airline#extensions#tabline#enabled = 1
 "}}}
 "{{{2 plugin: fzf 
 let g:fzf_colors =
