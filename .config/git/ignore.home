@@ -30,3 +30,5 @@ Pictures
 !.config/mutt*
 !.config/grobi*
 !.local/bin**
+!.config/nvim**
+.config/nvim/bundle
