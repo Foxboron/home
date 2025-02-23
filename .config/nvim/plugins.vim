@@ -16,6 +16,10 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-git'
     Plug 'NeogitOrg/neogit'
+    Plug 'lewis6991/gitsigns.nvim'
+
+    Plug 'tpope/vim-unimpaired'
+
 
     Plug 'arcticicestudio/nord-vim'
     Plug 'airblade/vim-gitgutter'
@@ -30,9 +34,8 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'nvim-lualine/lualine.nvim'
     Plug 'SmiteshP/nvim-navic'
 
-    " IDK
-    Plug 'nvim-lua/plenary.nvim'
-
+    " Markdown
+    Plug 'OXY2DEV/markview.nvim'
 
     " Lsp
     Plug 'neovim/nvim-lspconfig'
@@ -56,6 +59,9 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'nvim-neotest/neotest'
     Plug 'fredrikaverpil/neotest-golang'
 
+    Plug 'folke/trouble.nvim'
+
 call plug#end()
 
 lua require("luasnip.loaders.from_vscode").lazy_load()
+lua require("gitsigns").setup()

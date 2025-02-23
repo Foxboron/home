@@ -1,11 +1,20 @@
 -- LSP
 local lspconfig = require('lspconfig')
 local navic = require('nvim-navic')
+local builtin = require('telescope.builtin')
 
 local on_attach = function(client, bufnr)
     if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
     end
+
+    vim.lsp.handlers['textDocument/codeAction'] = builtin.lsp_code_actions
+    vim.lsp.handlers['textDocument/references'] = builtin.lsp_references
+    vim.lsp.handlers['textDocument/definition'] = builtin.lsp_definitions
+    vim.lsp.handlers['textDocument/typeDefinition'] = builtin.lsp_type_definitions
+    vim.lsp.handlers['textDocument/implementation'] = builtin.lsp_implementations
+    vim.lsp.handlers['textDocument/documentSymbol'] = builtin.lsp_document_symbols
+    vim.lsp.handlers['workspace/symbol'] = builtin.lsp_workspace_symbols
 
   -- TODO: This spams no code action
   -- vim.api.nvim_create_autocmd("BufWritePre", {
@@ -18,7 +27,7 @@ local on_attach = function(client, bufnr)
   -- })
   vim.api.nvim_create_autocmd("BufWritePre", {
       pattern = { "*.go" },
-      callback = function()
+      callback = function(event)
           vim.lsp.buf.format()
 
           local params = vim.lsp.util.make_range_params()
@@ -43,27 +52,58 @@ local on_attach = function(client, bufnr)
           end)
       end,
   })
-
-  -- TODO: Default maps in some future version
-  vim.keymap.set('n', 'grn', function()
-    vim.lsp.buf.rename()
-  end, { desc = 'vim.lsp.buf.rename()' })
-
-  vim.keymap.set({ 'n', 'x' }, 'gra', function()
-    vim.lsp.buf.code_action()
-  end, { desc = 'vim.lsp.buf.code_action()' })
-
-  vim.keymap.set('n', 'grr', function()
-    vim.lsp.buf.references()
-  end, { desc = 'vim.lsp.buf.references()' })
-
-  vim.keymap.set('i', '<C-S>', function()
-    vim.lsp.buf.signature_help()
-  end, { desc = 'vim.lsp.buf.signature_help()' })
 end
 
+
+vim.api.nvim_create_autocmd('LspAttach', {
+  callback = function(event)
+    local map = function(keys, func, desc, mode)
+        mode = mode or 'n'
+        vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
+    end
+
+  -- TODO: Default maps in some future version
+    map('grn', vim.lsp.buf.rename, 'Code Rename')
+    map('gra', vim.lsp.buf.code_action , 'Code Action', {'n', 'x'})
+    map('grr', vim.lsp.buf.references , 'References')
+    map('<C-S>', vim.lsp.buf.signature_help, 'Signature Help', 'i')
+  
+    map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
+    map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
+
+    local client = vim.lsp.get_client_by_id(event.data.client_id)
+    if client and client.server_capabilities.documentHighlightProvider then
+      local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
+      vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.document_highlight,
+      })
+
+      vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
+        buffer = event.buf,
+        group = highlight_augroup,
+        callback = vim.lsp.buf.clear_references,
+      })
+
+      vim.api.nvim_create_autocmd('LspDetach', {
+        group = vim.api.nvim_create_augroup('kickstart-lsp-detach', { clear = true }),
+        callback = function(event2)
+          vim.lsp.buf.clear_references()
+          vim.api.nvim_clear_autocmds { group = 'kickstart-lsp-highlight', buffer = event2.buf }
+        end,
+      })
+    end
+
+    if client and client:supports_method(vim.lsp.protocol.Methods.textDocument_inlayHint) then
+      map('<leader>th', function()
+        vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf })
+      end, '[T]oggle Inlay [H]ints')
+    end
+  end,
+})
+
 local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.insertReplaceSupport = false
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
 lspconfig.gopls.setup{
@@ -76,10 +116,40 @@ lspconfig.gopls.setup{
     gopls = {
       gofumpt = true,
       staticcheck = true,
+      completeUnimported = true,
+      experimentalPostfixCompletions = true,
+      semanticTokens = true,
+      staticcheck = true,
+      usePlaceholders = true,
+
       templateExtensions = { "gotmpl" },
       vulncheck = "Imports",
       analyses = {
+        modernize = true,
+        nilness = true,
+        shadow = true,
         unusedparams = true,
+        unusedwrite = true,
+        useany = true,
+      },
+      hints = {
+          assignVariableTypes = true,
+          compositeLiteralFields = true,
+          compositeLiteralTypes = true,
+          constantValues = true,
+          functionTypeParameters = true,
+          parameterNames = true,
+          rangeVariableTypes = true,
+      },
+      codelenses = {
+          gc_details = false,
+          generate = true,
+          regenerate_cgo = true,
+          run_govulncheck = true,
+          test = true,
+          tidy = true,
+          upgrade_dependency = true,
+          vendor = true,
       },
     },
   },
@@ -90,3 +160,6 @@ lspconfig.gopls.setup{
 
 -- need this as global keymap
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'vim.lsp.buf.hover()' })
+
+
+

@@ -108,3 +108,70 @@ vim.api.nvim_create_autocmd("BufWinEnter", {
     end
   end,
 })
+
+-- Stuff for testing
+local presets = require("markview.presets");
+
+require("markview").setup({
+    markdown = {
+        headings = presets.headings.slanted
+    }
+});
+
+vim.api.nvim_create_autocmd({ "DiagnosticChanged" }, {
+    group = vim.api.nvim_create_augroup("user_diagnostic_qflist", {}),
+    callback = function(args)
+    -- Use pcall because I was getting inconsistent errors when quitting vim.
+    -- Possibly timing errors from trying to get/create diagnostics/qflists
+    -- that don't exist anymore. DiagnosticChanged fires at some strange times.
+    local has_diagnostics, diagnostics = pcall(vim.diagnostic.get)
+    local has_qflist, qflist = pcall(vim.fn.getqflist, { title = 0, id = 0, items = 0 })
+    if not has_diagnostics or not has_qflist then return end
+
+    -- Sometimes the event fires with an empty diagnostic list in the data.
+    -- This conditional prevents re-creating the qflist with the same
+    -- diagnostics, which reverts selection to the first item.
+    if
+      #args.data.diagnostics == 0
+      and #diagnostics > 0
+      and qflist.title == "All Diagnostics"
+      and #qflist.items == #diagnostics
+    then
+      return
+    end
+
+    vim.schedule(function()
+      -- If the last qflist was created by this autocmd, replace it so other
+      -- lists (e.g., vimgrep results) aren't buried due to diagnostic changes.
+      pcall(vim.fn.setqflist, {}, qflist.title == "All Diagnostics" and "r" or " ", {
+        title = "All Diagnostics",
+        items = vim.diagnostic.toqflist(diagnostics),
+      })
+
+      -- Don't steal focus from other qflists. For example, when working
+      -- through vimgrep results, you likely want :cnext to take you to the
+      -- next match, rather than the next diagnostic. Use :cnew to switch to
+      -- the diagnostic qflist when you want it.
+      if qflist.id ~= 0 and qflist.title ~= "All Diagnostics" then pcall(vim.cmd.cold) end
+    end)
+  end,
+})
+
+local noremap_silent = { noremap = true, silent = true }
+
+vim.keymap.set('n', '<leader>l', function()
+    local win = vim.api.nvim_get_current_win()
+    local qf_winid = vim.fn.getloclist(win, { winid = 0 }).winid
+    local action = qf_winid > 0 and 'lclose' or 'lopen'
+    vim.cmd(action)
+end, noremap_silent)
+
+vim.keymap.set('n', '<leader>q', function()
+    local qf_winid = vim.fn.getqflist({ winid = 0 }).winid
+    local action = qf_winid > 0 and 'cclose' or 'copen'
+    vim.cmd('botright '..action)
+end, noremap_silent)
+
+vim.keymap.set('n', '<leader>xx', function()
+  require("trouble").toggle("diagnostics") 
+end, noremap_silent)
