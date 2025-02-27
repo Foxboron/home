@@ -1,34 +1,31 @@
+# Global ignore everything
 *
-!.*
-.cache
-.java
-.*history
-.*log
-*zcompdump*
-.netrc
-.password-store
-Git
-jobb
-Documents
-Downloads
-Media
-Notes
-Pictures
-.config/*
+.*
+
+# Config
 !.config
+!.config/i3**
+!.config/git**
+!.config/zsh**
+!.config/afew**
+!.config/mutt**
+!.config/rofi**
+!.config/grobi**
+!.config/systemd**
+!.config/environment.d**
+
+# Local
+!.local
+!.local/bin**
+
+# Neovim
+!.config/nvim**
+.config/nvim/bundle
+
+# vim
 !.config/vim**
 .config/vim/bundle
 .config/vim/spell
 .config/vim/autoload/plug.vim.old
 .config/vim/.netrwhist
 .config/vim/vimspector/gadgets
-!.config/systemd*
-!.config/zsh*
-!.config/i3*
-!.config/rofi*
-!.config/git*
-!.config/mutt*
-!.config/grobi*
-!.local/bin**
-!.config/nvim**
-.config/nvim/bundle
