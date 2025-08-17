@@ -1,8 +1,12 @@
-#!/usr/bin/bash -e
-read -r _ _ _ ptr _ < <(resolvectl --type=PTR query "$1")
-# resolvectl --type=PTR query "$1"
-read -r _ _ _ _ _ _ srv _ < <(resolvectl --type=SRV query "$ptr")
-# resolvectl --type=SRV query "$ptr"
-read -r _ IP _ < <(resolvectl query "$srv")
-# resolvectl query "$srv"
-printf $IP
+#!/usr/bin/bash
+set -e
+
+resolvectl --json=short --type=PTR query "$1" | jq -r '.name' | \
+while read -r ptr; do
+	resolvectl --json=short --type=SRV query "$ptr" | jq -r '.name'
+done  | \
+while read -r srv; do
+	IP=$(resolvectl --json=short --type=A query "$srv" | jq -r '.address | join(".")')
+	NAME=$(curl -s -k "https://$IP:8443/setup/eureka_info?options=detail" | jq -r '.name')
+	printf "%s\t%s\n" "$IP" "$NAME"
+done
