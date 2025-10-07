@@ -29,8 +29,6 @@
     noff = merge --no-ff -v --stat
     fa = fetch --all
 
-    mr = !sh -c 'git fetch $1 merge-requests/$2/head:mr-$1-$2 && git checkout mr-$1-$2' -
-
     c = commit -s
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
@@ -41,7 +39,7 @@
 
     exec = "!f() { git rebase --exec \"$@\" ; }; f"
 
-    recent = ! git branch --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\" | head -10
+    recent = ! git branch -a --sort=-committerdate --format=\"%(committerdate:relative)%09%(refname:short)\" | head -10
 
     hd = show -p --pretty="tformat:"
     files = diff-tree --no-commit-id --name-only -r
@@ -50,8 +48,10 @@
 
     fetch-pr = "!f() { \
         remote=${1:-origin}; \
-        git fetch ${1:-origin} \"+refs/pull/*/head:refs/remotes/${remote}/pull/*\" \"+refs/merge-requests/*/head:refs/remotes/${remote}/merge-requests/*\"; \
+        git fetch -p ${1:-origin} \"+refs/pull/*/head:refs/remotes/${remote}/pull/*\" \"+refs/merge-requests/*/head:refs/remotes/${remote}/merge-requests/*\"; \
         }; f"
+    recent-pr = "for-each-ref --count=10 --no-merged=HEAD --sort=-committerdate --format='%(HEAD) %(align:35)%(color:yellow)%(refname:short)%(color:reset)%(end) - %(color:red)%(objectname:short)%(color:reset) - %(align:40)%(contents:subject)%(end) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' '**/merge-requests/*' '**/pull/*'"
+
     pull-pr = "!f() { \
         if git rev-parse --verify remotes/${2:-origin}/pull/${1} &> /dev/null; then \
             git fetch ${2:-origin} pull/\"${1}\"/head:pr-\"${1}\"; \
@@ -89,6 +89,9 @@
     defaultBranch = master
 [advice]
     detachedHead = false
+[absorb]
+    autoStageIfNothingStaged = true
+    maxStack = 50
 [core]
     hooksPath = ~/.config/git/hooks
     abbrev = 12
@@ -105,8 +108,6 @@
     prompt = false
 [difftool "vimdiff"]
     cmd = vim -d $BASE $LOCAL 
-[difftool.latex]
-    cmd = latexdiff --flatten "$LOCAL" "$REMOTE"
 [merge]
     tool = vimdiff
     conflictStyle = zdiff3
@@ -140,10 +141,6 @@
     path = ~/work/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
     path = ~/.config/git/config.home
-[includeIf "gitdir:~/Git/PKGBUILD/community-checkout"]
-    path = ~/.config/git/config.community
-[includeIf "gitdir:~/tmp/blug/alice/"]
-    path = ~/.config/git/config.blug
 [includeIf "gitdir:~/"]
     path = ~/.config/git/home
 ; [tig]
