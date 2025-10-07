@@ -1,5 +1,6 @@
-vim.cmd("source ~/.config/nvim/plugins.vim")
+require('config.vimwiki')
 
+vim.cmd("source ~/.config/nvim/plugins.vim")
 
 -- Helpers
 -- TODO: Remove and simplify
@@ -44,18 +45,18 @@ require('lualine').setup {
   inactive_sections = {
     lualine_a = {},
     lualine_b = {},
-    lualine_c = {'filename'},
+    lualine_c = { 'filename' },
     lualine_x = {'location'},
     lualine_y = {},
     lualine_z = {}
   },
   tabline = {
-  lualine_a = {'buffers'},
-  lualine_b = {},
-  lualine_c = {},
-  lualine_x = {},
-  lualine_y = {},
-  lualine_z = {'tabs'}
+    lualine_a = {'buffers'},
+    lualine_b = {},
+    lualine_c = {},
+    lualine_x = {},
+    lualine_y = {},
+    lualine_z = {'tabs'}
   },
   extensions = {}
 }
@@ -115,7 +116,10 @@ local presets = require("markview.presets");
 require("markview").setup({
     markdown = {
         headings = presets.headings.slanted
-    }
+    },
+    preview = {
+      filetypes = { "markdown", "vimwiki" },
+    },
 });
 
 vim.api.nvim_create_autocmd({ "DiagnosticChanged" }, {
@@ -163,7 +167,7 @@ vim.keymap.set('n', '<leader>l', function()
     local win = vim.api.nvim_get_current_win()
     local qf_winid = vim.fn.getloclist(win, { winid = 0 }).winid
     local action = qf_winid > 0 and 'lclose' or 'lopen'
-    vim.cmd(action)
+    pcall(vim.cmd, action)
 end, noremap_silent)
 
 vim.keymap.set('n', '<leader>q', function()
