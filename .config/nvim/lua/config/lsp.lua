@@ -3,18 +3,19 @@ local lspconfig = require('lspconfig')
 local navic = require('nvim-navic')
 local builtin = require('telescope.builtin')
 
+vim.lsp.handlers['textDocument/codeAction'] = builtin.lsp_code_actions
+vim.lsp.handlers['textDocument/references'] = builtin.lsp_references
+vim.lsp.handlers['textDocument/definition'] = builtin.lsp_definitions
+vim.lsp.handlers['textDocument/typeDefinition'] = builtin.lsp_type_definitions
+vim.lsp.handlers['textDocument/implementation'] = builtin.lsp_implementations
+vim.lsp.handlers['textDocument/documentSymbol'] = builtin.lsp_document_symbols
+vim.lsp.handlers['workspace/symbol'] = builtin.lsp_workspace_symbols
+
 local on_attach = function(client, bufnr)
     if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
     end
 
-    vim.lsp.handlers['textDocument/codeAction'] = builtin.lsp_code_actions
-    vim.lsp.handlers['textDocument/references'] = builtin.lsp_references
-    vim.lsp.handlers['textDocument/definition'] = builtin.lsp_definitions
-    vim.lsp.handlers['textDocument/typeDefinition'] = builtin.lsp_type_definitions
-    vim.lsp.handlers['textDocument/implementation'] = builtin.lsp_implementations
-    vim.lsp.handlers['textDocument/documentSymbol'] = builtin.lsp_document_symbols
-    vim.lsp.handlers['workspace/symbol'] = builtin.lsp_workspace_symbols
 
   -- TODO: This spams no code action
   -- vim.api.nvim_create_autocmd("BufWritePre", {
@@ -63,9 +64,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
     end
 
   -- TODO: Default maps in some future version
-    map('grn', vim.lsp.buf.rename, 'Code Rename')
-    map('gra', vim.lsp.buf.code_action , 'Code Action', {'n', 'x'})
-    map('grr', vim.lsp.buf.references , 'References')
     map('<C-S>', vim.lsp.buf.signature_help, 'Signature Help', 'i')
   
     map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction', { 'n', 'x' })
@@ -106,7 +104,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities.textDocument.completion.completionItem.snippetSupport = true
 
-lspconfig.gopls.setup{
+vim.lsp.config.gopls = {
   on_attach = on_attach,
   capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities),
   init_options = {
@@ -142,7 +140,7 @@ lspconfig.gopls.setup{
           rangeVariableTypes = true,
       },
       codelenses = {
-          gc_details = false,
+          gc_details = true,
           generate = true,
           regenerate_cgo = true,
           run_govulncheck = true,
@@ -158,8 +156,8 @@ lspconfig.gopls.setup{
   single_file_support = true,
 }
 
+vim.lsp.enable 'gopls'
+vim.lsp.enable 'bashls'
+
 -- need this as global keymap
 vim.keymap.set('n', 'K', vim.lsp.buf.hover, { desc = 'vim.lsp.buf.hover()' })
-
-
-
