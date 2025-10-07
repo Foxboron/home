@@ -17,12 +17,13 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'tpope/vim-git'
     Plug 'NeogitOrg/neogit'
     Plug 'lewis6991/gitsigns.nvim'
+    Plug 'FabijanZulj/blame.nvim'
 
     Plug 'tpope/vim-unimpaired'
 
 
     Plug 'arcticicestudio/nord-vim'
-    Plug 'airblade/vim-gitgutter'
+    " Plug 'airblade/vim-gitgutter'
     Plug 'sindrets/diffview.nvim'
 
     " Telescope
@@ -34,8 +35,6 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'nvim-lualine/lualine.nvim'
     Plug 'SmiteshP/nvim-navic'
 
-    " Markdown
-    Plug 'OXY2DEV/markview.nvim'
 
     " Lsp
     Plug 'neovim/nvim-lspconfig'
@@ -60,6 +59,10 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'fredrikaverpil/neotest-golang'
 
     Plug 'folke/trouble.nvim'
+
+    " Vimwiki
+    Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
+    Plug 'OXY2DEV/markview.nvim'
 
 call plug#end()
 
