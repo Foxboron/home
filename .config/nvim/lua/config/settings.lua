@@ -74,4 +74,5 @@ nnoremap <leader>j  :bprev<CR>
 nnoremap <leader>k  :bnext<CR>
 nnoremap <leader>c  :bw<CR>
 
+nnoremap <leader>tc  :tabclose<CR>
 ]])
