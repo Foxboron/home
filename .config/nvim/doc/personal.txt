@@ -1,0 +1,29 @@
+*personal.txt* Personal things to remember
+*personal*
+
+==============================================================================
+1. Help                                                        *personal_help*
+
+
+• |grn| in Normal mode maps to |vim.lsp.buf.rename()|
+• |grr| in Normal mode maps to |vim.lsp.buf.references()|
+• |gri| in Normal mode maps to |vim.lsp.buf.implementation()|
+• |gO| in Normal mode maps to |vim.lsp.buf.document_symbol()|
+• |gra| in Normal and Visual mode maps to |vim.lsp.buf.code_action()|
+• |grt| in Normal mode maps to |vim.lsp.buf.type_definition()|
+
+• |gt| next tab
+• |gT| previous tab
+
+• Mappings inspired by Tim Pope's vim-unimpaired:
+    • |[q|, |]q|, |[Q|, |]Q|, |[CTRL-Q|, |]CTRL-Q| navigate through the |quickfix| list
+    • |[l|, |]l|, |[L|, |]L|, |[CTRL-L|, |]CTRL-L| navigate through the |location-list|
+    • |[t|, |]t|, |[T|, |]T|, |[CTRL-T|, |]CTRL-T| navigate through the |tag-matchlist|
+    • |[a|, |]a|, |[A|, |]A| navigate through the |argument-list|
+    • |[b|, |]b|, |[B|, |]B| navigate through the |buffer-list|
+    • |[<Space>|, |]<Space>| add an empty line above and below the cursor
+    • |[[| and |]]| in Normal mode jump between shell prompts for shells which emit
+    OSC 133 sequences ("shell integration" or "semantic prompts").
+
+------------------------------------------------------------------------------
+vim:tw=78:ts=8:ft=help:norl:
