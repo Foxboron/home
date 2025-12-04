@@ -1,9 +1,9 @@
 [Unit]
-Description=Borg backup
+Description=System backup
 
 
 [Service]
-CPUQuota=60%
+CPUQuota=10%
 Type=simple
 ExecStart=%h/.local/bin/backup home
 

@@ -208,6 +208,6 @@ fi
 gpg-connect-agent UPDATESTARTUPTTY /bye > /dev/null
 # }}}
 
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"
 
 # vim: fdm=marker

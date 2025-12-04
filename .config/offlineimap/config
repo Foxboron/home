@@ -27,6 +27,7 @@ type = IMAP
 remotehost = imap.linderud.pw
 remoteuser = morten@linderud.pw
 remotepassfile = ~/mail/velox-pass
+#remotepassfile = /run/user/1000/credentials/offlineimap.service/mail
 ssl = yes
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 maxconnections = 8
@@ -37,19 +38,8 @@ type = IMAP
 remotehost = linderud.pw
 remoteuser = morten@linderud.pw
 remotepassfile = ~/mail/velox-pass
+#remotepassfile = /run/user/1000/credentials/offlineimap.service/mail
 ssl = yes
 sslcacertfile = /etc/ssl/certs/ca-certificates.crt
 maxconnections = 4
 #readonly = yes
-
-[Repository glundandra-remote]
-type = IMAP
-remotehost = glundandra.arbol.no
-remoteuser = morten@linderud.pw
-remotepassfile = ~/mail/glundandra-pass
-ssl = yes
-cert_fingerprint = AB05564EDC9484160BCC41E420E10FE2D4225E9A
-#sslcacertfile = /etc/ssl/certs/ca-certificates.crt
-maxconnections = 4
-readonly = yes
-

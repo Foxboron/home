@@ -5,6 +5,7 @@ Documentation=man:offlineimap(1)
 [Service]
 Type=oneshot
 ExecStart=/usr/bin/offlineimap -o -u basic
+LoadCredentialEncrypted=mail
 KillSignal=SIGUSR2
 TimeoutSec=120
 

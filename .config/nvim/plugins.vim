@@ -59,6 +59,7 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'fredrikaverpil/neotest-golang'
 
     Plug 'folke/trouble.nvim'
+    Plug 'folke/todo-comments.nvim'
 
     " Vimwiki
     Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }

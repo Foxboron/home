@@ -45,10 +45,16 @@ set scrolloff=10
 
 set completeopt=menu,menuone,popup,noselect,noinsert
 
-nnoremap <silent> <C-J> }
-nnoremap <silent> <C-K> {
-vnoremap <silent> <C-J> }
-vnoremap <silent> <C-K> {
+"nnoremap <silent> <C-J> }
+"nnoremap <silent> <C-K> {
+"vnoremap <silent> <C-J> }
+"vnoremap <silent> <C-K> {
+" Omit jumps from jumptable
+noremap <silent> <C-J> :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+noremap <silent> <C-K> :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+vnoremap <silent> <C-J> :<C-u>execute "keepjumps norm! " . v:count1 . "}"<CR>
+vnoremap <silent> <C-K> :<C-u>execute "keepjumps norm! " . v:count1 . "{"<CR>
+
 cnoremap <C-K> <Up>
 cnoremap <C-J> <Down>
 cnoremap <C-A> <Home>
@@ -59,6 +65,11 @@ nnoremap <C-I> <C-I>
 nnoremap <Tab><Tab> <C-^>
 
 " Emacs things
+
+nnoremap + <C-a>
+nnoremap - <C-x>
+vnoremap + <C-a>gv
+vnoremap - <C-x>gv
 noremap <C-A> ^
 noremap <C-E> $
 noremap <C-Q> %

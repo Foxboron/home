@@ -15,7 +15,8 @@ export LESSHISTFILE="$XDG_CACHE_HOME/lesshst"
 
 export TMUX_TMPDIR="$XDG_RUNTIME_DIR"
 export XAUTHORITY="$XDG_RUNTIME_DIR/Xauthority"
-export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-agent.socket"
+export SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"
+export SSH_TPM_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"
 
 
 # XDG Patches

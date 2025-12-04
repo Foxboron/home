@@ -176,6 +176,8 @@ vim.keymap.set('n', '<leader>q', function()
     vim.cmd('botright '..action)
 end, noremap_silent)
 
+require("trouble").setup()
 vim.keymap.set('n', '<leader>xx', function()
   require("trouble").toggle("diagnostics") 
 end, noremap_silent)
+require("todo-comments").setup()

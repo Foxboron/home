@@ -12,7 +12,6 @@ require('diffview').setup({
         },
       },
 })
-vim.keymap.set('n', 'gq', ':DiffviewClose<CR>')
 
 
 -- TODO: is this nice?
