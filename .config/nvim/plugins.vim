@@ -65,6 +65,8 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'vimwiki/vimwiki', {'on' : ['VimwikiIndex', 'VimwikiUISelect'], 'for': 'wiki' }
     Plug 'OXY2DEV/markview.nvim'
 
+    Plug 'nvim-tree/nvim-web-devicons'
+
 call plug#end()
 
 lua require("luasnip.loaders.from_vscode").lazy_load()

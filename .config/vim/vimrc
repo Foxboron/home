@@ -173,6 +173,7 @@ set mouse=""              " We don't want the mouse
 set clipboard=unnamed   " We want to access clipboard from X
 set scrolloff=10 	    " 10 lines space between frame and cursor
 set splitright          " Splitting right feels more natrual
+" set splitkeep=topline
 " set splitbelow
 set ttyfast
 set diffopt=filler,vertical,foldcolumn:0,context:4,indent-heuristic,algorithm:patience,hiddenoff
