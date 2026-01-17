@@ -110,11 +110,14 @@
     cmd = vim -d $BASE $LOCAL 
 [merge]
     tool = vimdiff
-    conflictStyle = zdiff3
+    conflictStyle = diff3
     log = true
     keepbackup = false
 [mergetool "fugitive3"]
     cmd = vim -f -c \"Gdiffsplit :1 | Gvdiffsplit!\" \"$MERGED\"
+[merge "mergiraf"]
+    name = mergiraf
+    driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
 [mergetool]
     prompt = false
     keepBackup = false
