@@ -1,5 +1,0 @@
-#!/usr/bin/bash
-tempfile=$(mktemp /tmp/asciirec.XXXXX.asciinema.json)
-/usr/bin/asciinema rec "$tempfile"
-fb "$tempfile" | xsel
-rm "$tempfile"

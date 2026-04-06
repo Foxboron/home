@@ -1,4 +1,12 @@
 #!/bin/bash
+
+echo "lol"
+
+sleep 5
+
+/usr/bin/env
+exit 0
+
 set -euo pipefail
 shopt -s nullglob globstar
 
@@ -66,7 +74,7 @@ if ! borg create --stats --umask 0027 -v -p -C zstd \
     notify-send -u critical "Backup $SNAPPER_CONFIG failed"
 fi
 
-borg prune --umask 0027 -v "${BORG_REPO}" \
+/usr/bin/restic forget -v "${BORG_REPO}" \
        --keep-hourly 24 \
        --keep-daily   7 \
        --keep-weekly  4 \

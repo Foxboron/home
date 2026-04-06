@@ -1,7 +1,7 @@
 #!/bin/bash
 
 fetch(){
-    pkgs=$(curl -s "https://aur.archlinux.org/rpc/?v=5&type=search&search_by=maintainer&arg=$1" | jq -r '.results[].PackageBase' | sort -u)
+    pkgs=$(curl -s "https://aur.archlinux.org/rpc/v5/search/$1?by=maintainer" | jq -r '.results[].PackageBase' | sort -u)
     for pkg in $pkgs; do
         printf "===> Downloading %s...\n" $pkg
         curl -s https://aur.archlinux.org/cgit/aur.git/snapshot/$pkg.tar.gz | tar xzm
