@@ -1,5 +1,4 @@
 -- LSP
-local lspconfig = require('lspconfig')
 local navic = require('nvim-navic')
 local builtin = require('telescope.builtin')
 
@@ -15,7 +14,7 @@ local on_attach = function(client, bufnr)
     if client.server_capabilities.documentSymbolProvider then
         navic.attach(client, bufnr)
     end
-
+  
 
   -- TODO: This spams no code action
   -- vim.api.nvim_create_autocmd("BufWritePre", {

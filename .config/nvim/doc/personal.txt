@@ -25,5 +25,23 @@
     • |[[| and |]]| in Normal mode jump between shell prompts for shells which emit
     OSC 133 sequences ("shell integration" or "semantic prompts").
 
+Git stuff:
+
+• |[c|  prev hunk
+• |]c| next hunk
+• |<leader>hs| stage hunk (v,n)
+• |<leader>hr| reset hunk (v,n)
+• |<leader>hS| stage buffer
+• |<leader>hR| reset buffer
+• |<leader>hp| preview hunk
+• |<leader>hi| preview hunk inline
+• |<leader>hb| blame line
+• |<leader>hd| diffthis
+• |<leader>hD| diffthis buffer
+• |<leader>hq| gitsings quicklist
+• |<leader>tb| gitsings quicklist
+• |<leader>tw| gitsings quicklist
+• |ih| select hunk, text object
+
 ------------------------------------------------------------------------------
 vim:tw=78:ts=8:ft=help:norl:

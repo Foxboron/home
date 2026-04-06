@@ -11,14 +11,11 @@ end
 
 require('config.settings')
 
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all"
+require'nvim-treesitter'.setup {
   ensure_installed = { "go" },
-
   highlight = { enable = true },
-
-  -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
+  indent = { enable = true },
 }
 
 require('lualine').setup {
@@ -34,9 +31,8 @@ require('lualine').setup {
     lualine_a = {'mode'},
     lualine_b = {'branch', 'diff', 'diagnostics'},
     lualine_c = {
-        "navic",
-        color_correction = nil,
-        navic_opts = nil
+      { "navic", color_correction = nil, navic_opts = nil},
+      { "filename", path = 1 },
     },
     lualine_x = {'filetype'},
     lualine_y = {'progress'},
@@ -96,6 +92,8 @@ require('config.dap').setup()
 
 require('config.tests')
 require('config.git')
+
+require('config.luasnip')
 
 -- Git
 -- Autocmd
@@ -180,4 +178,24 @@ require("trouble").setup()
 vim.keymap.set('n', '<leader>xx', function()
   require("trouble").toggle("diagnostics") 
 end, noremap_silent)
+vim.keymap.set('n', '<leader>xq', function()
+  require("trouble").toggle("diagnostics") 
+end, noremap_silent)
 require("todo-comments").setup()
+
+
+function close_floats()
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_config(win).relative == "win" then
+      vim.api.nvim_win_close(win, false)
+    end
+  end
+end
+
+-- Close floats, and clear highlights with <Esc>
+vim.keymap.set("n", "<Esc>", function()
+  close_floats()
+  -- if #vim.api.nvim_list_wins() > 1 then
+  --   return vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<C-w>c", true, true, true), "in", true)
+  -- end
+end, { desc = "Close floats, clear highlights" })

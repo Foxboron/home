@@ -224,6 +224,7 @@ function M.start(opts)
   ---@type dap.Configuration[]
   local configurations = require('dap').configurations[adapter] or {}
 
+
   -- apply pre-filter to prune out
   ---@param configuration dapext.Configuration
   configurations = vim.tbl_filter(function(configuration)
@@ -403,15 +404,22 @@ M.setup_session_keymaps = function()
   -- Override "global" keymaps when DAP session initiailzes.
   dap.listeners.after.event_initialized["dap_keymaps"] = function() M._bind_session_keymaps() end
   M._bind_session_keymaps = function()
-    debug_nmap('<leader>c', '<cmd>DapContinue<CR>')  -- Continue
+    debug_nmap('<leader><leader>', '<cmd>DapContinue<CR>')  -- Continue
     debug_nmap('<leader>n', '<cmd>DapStepOver<CR>')  -- Next
     debug_nmap('<leader>s', '<cmd>DapStepInto<CR>')  --  Step
     debug_nmap('<leader>t', '<cmd>DapRunToCursor<CR>')  -- run To cursor
     debug_nmap('<leader>f', '<cmd>DapStepOut<CR>')  -- Finish
     debug_nmap('<leader>r', '<cmd>DapStepOut<CR>')  -- Return
-    debug_nmap('<leader>q', '<cmd>DapTerminate<CR>')  -- Return
+    debug_nmap('<leader>q', '<cmd>DapClose<CR>')  -- Return
 
-    debug_nmap('K', function() require('dapui').eval() end,
+    debug_nmap('<leader>C', function()
+     require('nvim-dap-rr').reverse_continue()
+    end)
+
+    debug_nmap('K', function() 
+      require('dapui').eval()
+      require('dapui').eval()
+    end,
         { desc = 'Evaluate or examine the expression on the cursor.'})
     debug_nmap('?', function() M.DebugEval() end,
         { desc = 'Evaluate an arbitrary expression using input dialog.'})
@@ -568,6 +576,23 @@ end
 -- Entrypoint.
 M.setup = function()
   -- Essentials
+  require('dap-go').setup {
+    dap_configurations = {
+      {
+        type = "go",
+        name = "Debug test (rr)",
+        request = "launch",
+        mode = "test",
+        backend = "rr",
+        program = "${file}",
+        buildFlags = "",
+        outputMode = "remote",
+      },
+    },
+  }
+
+  require("nvim-dap-rr").setup({})
+
   M.setup_sign()
   M.setup_ui()
   M.setup_cmds_and_keymaps()

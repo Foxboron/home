@@ -3,7 +3,7 @@ call plug#begin('~/.config/nvim/bundle')
 
     Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 
-    Plug 'nvim-treesitter/nvim-treesitter'
+    Plug 'nvim-treesitter/nvim-treesitter', { 'branch': 'main', 'do' : ':TSUpdate' }
 
     " Debugger
     Plug 'mfussenegger/nvim-dap'
@@ -13,13 +13,16 @@ call plug#begin('~/.config/nvim/bundle')
     Plug 'jonboh/nvim-dap-rr'
     Plug 'leoluz/nvim-dap-go'
 
+    " Git
     Plug 'tpope/vim-fugitive'
     Plug 'tpope/vim-git'
+    Plug 'nvim-tree/nvim-web-devicons'
     Plug 'NeogitOrg/neogit'
     Plug 'lewis6991/gitsigns.nvim'
     Plug 'FabijanZulj/blame.nvim'
 
     Plug 'tpope/vim-unimpaired'
+    Plug 'tpope/vim-sleuth'
 
 
     Plug 'arcticicestudio/nord-vim'
@@ -53,7 +56,14 @@ call plug#begin('~/.config/nvim/bundle')
 
     Plug 'saadparwaiz1/cmp_luasnip'
 
+    " Signature helper
+    Plug 'ray-x/lsp_signature.nvim'
+
+
+
     " Tests
+    Plug 'nvim-lua/plenary.nvim'
+    Plug 'antoinemadec/FixCursorHold.nvim'
     Plug 'nvim-neotest/nvim-nio'
     Plug 'nvim-neotest/neotest'
     Plug 'fredrikaverpil/neotest-golang'
@@ -70,4 +80,3 @@ call plug#begin('~/.config/nvim/bundle')
 call plug#end()
 
 lua require("luasnip.loaders.from_vscode").lazy_load()
-lua require("gitsigns").setup()
