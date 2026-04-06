@@ -32,7 +32,7 @@
     c = commit -s
     amend = c --amend
     fixup = "!git c --fixup=$(git rev-parse HEAD)"
-    frbi = "!f() { git rebase -i $(git log --pretty=oneline --color=always | fzf --ansi | awk '{print $1}')^ ; }; f"
+
     autosquash = "!git rebase -i --autosquash"
     rr = "rebase --autosquash -i"
     rrs = "git rebase -S --autosquash -i"
@@ -46,12 +46,15 @@
     edit = "!vim $(git ls-files -m) -p"
     edit-commit = !vim `git diff-tree --no-commit-id --name-only -r  ${1-$(git rev-parse HEAD)}`
 
+    jump = "!/usr/share/git/git-jump/git-jump"
+    unstage = restore --staged --patch
+    ignored = status --ignored
+
     fetch-pr = "!f() { \
         remote=${1:-origin}; \
         git fetch -p ${1:-origin} \"+refs/pull/*/head:refs/remotes/${remote}/pull/*\" \"+refs/merge-requests/*/head:refs/remotes/${remote}/merge-requests/*\"; \
         }; f"
     recent-pr = "for-each-ref --count=10 --no-merged=HEAD --sort=-committerdate --format='%(HEAD) %(align:35)%(color:yellow)%(refname:short)%(color:reset)%(end) - %(color:red)%(objectname:short)%(color:reset) - %(align:40)%(contents:subject)%(end) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))' '**/merge-requests/*' '**/pull/*'"
-
     pull-pr = "!f() { \
         if git rev-parse --verify remotes/${2:-origin}/pull/${1} &> /dev/null; then \
             git fetch ${2:-origin} pull/\"${1}\"/head:pr-\"${1}\"; \
@@ -59,30 +62,6 @@
             git fetch ${2:-origin} merge-requests/${1}/head:pr-${1}; \
         fi; \
         }; f"
-    pr = "! f() { gh pr list | fzf | awk '{print $1}' | xargs -I '{}' git pull-pr '{}' ${1:-origin}; }; f"
-
-    sl = "!git shortlog --no-merges $(git describe --tags --abbrev=0)..HEAD"
-
-    difftex = difftool -y -t latex
-
-    jump = "!/usr/share/git/git-jump/git-jump"
-
-    unstage = restore --staged --patch
-    
-    ignored = status --ignored
-
-    l = "!f() { git log $@ @{1}..; }; f"
-    ll = "!f() { git l -p --no-merges $@; }; f"
-    graph = log --all --color --graph --pretty=format:'%Cred%h%Creset %G?%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
-
-    lcrev = "show --reverse --no-merges @{1}.."
-
-# Worktree
-    wt = "!f() { git worktree add -b morten/$1 ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
-    wl = "!f() { git worktree list | fzf --height 40% --reverse; }; f"
-    ww = "!f() { cd $(git wl | awk '{print $1}'); }; f"
-    wa = "!f() { git worktree add --force ${PWD}-$1 $(git symbolic-ref --short HEAD); cd ${PWD}-$1; }; f"
-    
 
 [init]
     template = ~/.config/git/templates
@@ -113,8 +92,6 @@
     conflictStyle = diff3
     log = true
     keepbackup = false
-[mergetool "fugitive3"]
-    cmd = vim -f -c \"Gdiffsplit :1 | Gvdiffsplit!\" \"$MERGED\"
 [merge "mergiraf"]
     name = mergiraf
     driver = mergiraf merge --git %O %A %B -s %S -x %X -y %Y -p %P -l %L
@@ -144,16 +121,6 @@
     path = ~/work/.gitconfig
 [includeIf "gitdir:~/.config/home.git"]
     path = ~/.config/git/config.home
-[includeIf "gitdir:~/"]
-    path = ~/.config/git/home
-; [tig]
-;     line-graphics = utf-8
-;     main-view-date = relative-compact
-;     main-view = line-number:no,interval=5 id:no date:default author:full commit-title:yes,graph=no,refs,overflow=no
-;     refresh-mode = periodic
-;     refresh-interval = 5
-[tig "bind"]
-    status = C !git c
 [credential "https://github.com"]
 	helper = 
 	helper = !/usr/bin/gh auth git-credential

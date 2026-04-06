@@ -11,7 +11,11 @@
 !.config/mutt**
 !.config/rofi**
 !.config/grobi**
-!.config/systemd**
+!.config/systemd
+!.config/systemd/user
+!.config/systemd/**/*.service
+!.config/systemd/**/*.socket
+!.config/systemd/**/*.conf
 !.config/environment.d**
 
 # Local
