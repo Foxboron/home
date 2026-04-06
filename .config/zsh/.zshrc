@@ -111,16 +111,14 @@ alias ip='ip -br -c'
 alias home="git --work-tree=$HOME --git-dir=$HOME/.config/home.git"
 compdef _git home # So we get git completion with the alias
 alias pacdiff="sudo -E pacdiff"
+alias step="step-cli"
+compdef _step-cli step
 
 alias publish="rsync -avz /srv/pub.linderud.dev/ pub.linderud.dev:public_html"
 
 alias mksrcinfo='makepkg --printsrcinfo > .SRCINFO'
 
 alias yubikey-refresh='gpg-connect-agent "scd serialno" "learn --force" /bye'
-
-
-alias nvim='VIMINIT="" nvim'
-
 
 alias -g G='| grep'
 alias -g L='| less'

@@ -1,5 +1,3 @@
-export PATH="$HOME/.local/bin:$HOME/.go/bin:$PATH"
-
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_CACHE_HOME="$HOME/.cache"
@@ -20,7 +18,7 @@ export SSH_TPM_AUTH_SOCK="$XDG_RUNTIME_DIR/ssh-tpm-agent.sock"
 
 
 # XDG Patches
-export VIMINIT=":source $XDG_CONFIG_HOME/vim/vimrc"
+#export VIMINIT=":source $XDG_CONFIG_HOME/vim/vimrc"
 export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
