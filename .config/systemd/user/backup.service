@@ -3,9 +3,12 @@ Description=System backup
 
 
 [Service]
-CPUQuota=10%
+CPUQuota=50%
+Nice=10
 Type=simple
-ExecStart=%h/.local/bin/backup home
+LoadCredentialEncrypted=backup
+Environment=GOMAXPROCS=1
+ExecStart=%h/.local/bin/restic velox backup %h
 
 [Install]
 WantedBy=default.target
