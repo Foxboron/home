@@ -1,1 +1,1 @@
-$TERMINAL --title="irc-rofi" -e mosh linderud.dev -- tmux attach-session -d -t 0 &
+$TERMINAL --title="irc-rofi" -e mosh linderud.pw -- tmux attach-session -d -t 0 &
